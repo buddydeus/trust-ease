@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>安心 App 配色审查</title>
+  <style>
+    :root {
+      --bg: #f5f2ec;
+      --ink: #2f3935;
+      --muted: #6c746f;
+      --card: #ffffff;
+      --border: #dde4df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 40px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "PingFang SC","Helvetica Neue",sans-serif;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+    }
+    p {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+    .grid {
+      display: grid;
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px 18px 22px;
+      box-shadow: 0 12px 40px rgba(42, 57, 51, 0.06);
+    }
+    .card h2 {
+      margin: 4px 0 16px;
+      font-size: 22px;
+    }
+    .card img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>安心 App 配色审查</h1>
+  <p>通过关键页面对比两套方案在不同提亮方向下的实际观感，重点看是否还压抑、是否保留信任感、是否贴合产品气质。</p>
+  <div class="grid">
+    
+            <section class="card">
+              <h2>方案 A｜信笺秩序</h2>
+              <img src="信笺秩序/palette-review/总览.svg" alt="方案 A｜信笺秩序" />
+            </section>
+            
+            <section class="card">
+              <h2>方案 B｜静默实用</h2>
+              <img src="静默实用/palette-review/总览.svg" alt="方案 B｜静默实用" />
+            </section>
+            
+  </div>
+</body>
+</html>
