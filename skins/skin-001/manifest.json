@@ -1,0 +1,97 @@
+{
+  "skinId": "skin-001",
+  "displayName": "海盐蓝绿",
+  "skinVersion": "1.0.0",
+  "minFeatureVersion": "0.0",
+  "maxFeatureVersion": "0.1",
+  "packageHash": "builtin:skin-001@1.0.0",
+  "assets": [],
+  "palette": {
+    "pageBg": "#F7FBFA",
+    "cardBg": "#FFFFFF",
+    "cardBorder": "#DEEBE6",
+    "textPrimary": "#243F39",
+    "textMuted": "#6F837D",
+    "actionPrimary": "#86B1A2",
+    "actionPrimaryText": "#FFFFFF",
+    "offlineAccent": "#DBEAE6",
+    "onlineAccent": "#EADFDB"
+  },
+  "pages": {
+    "welcome": {
+      "layoutMode": "stacked",
+      "componentOrder": [
+        "brandHeader",
+        "decorativeStack",
+        "heroTitle",
+        "heroBody",
+        "primaryAction"
+      ],
+      "componentVisibility": {
+        "brandHeader": true,
+        "decorativeStack": true,
+        "heroTitle": true,
+        "heroBody": true,
+        "primaryAction": true
+      }
+    },
+    "home": {
+      "layoutMode": "hero-top",
+      "componentOrder": [
+        "statusLabel",
+        "heroTitle",
+        "streakCard",
+        "reportButton",
+        "itemsSummary",
+        "helpersSummary"
+      ],
+      "componentVisibility": {
+        "statusLabel": true,
+        "heroTitle": true,
+        "streakCard": true,
+        "reportButton": true,
+        "itemsSummary": true,
+        "helpersSummary": true
+      }
+    },
+    "items": {
+      "layoutMode": "list-top",
+      "componentOrder": [
+        "primaryAction",
+        "filters",
+        "list",
+        "footerHint"
+      ],
+      "componentVisibility": {
+        "primaryAction": true,
+        "filters": true,
+        "list": true,
+        "footerHint": true
+      }
+    },
+    "report": {
+      "layoutMode": "centered",
+      "componentOrder": [
+        "heroTitle",
+        "primaryAction"
+      ],
+      "componentVisibility": {
+        "heroTitle": true,
+        "primaryAction": true
+      }
+    },
+    "my": {
+      "layoutMode": "settings-list",
+      "componentOrder": [
+        "triggerSection",
+        "identitySection",
+        "languageSection"
+      ],
+      "componentVisibility": {
+        "triggerSection": true,
+        "identitySection": true,
+        "languageSection": true
+      }
+    }
+  }
+}
