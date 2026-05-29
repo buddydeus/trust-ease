@@ -29,7 +29,7 @@ pnpm thumbs
 
 ### `pnpm thumbs`
 
-运行 `pnpm thumbs` 会先执行 Expo Web 真实导出，再用 Playwright Chromium 渲染导出的 App bundle，按真实路由与真实国际化配置逐页截图，并把 PNG 输出到项目根目录的 `thumbs/`。
+运行 `pnpm thumbs` 会执行 [scripts/capture_runtime_thumbs.js](./scripts/capture_runtime_thumbs.js)，先执行 Expo Web 真实导出，再用 Playwright Chromium 渲染导出的 App bundle，按真实路由与真实国际化配置逐页截图，并把 PNG 输出到项目根目录的 `thumbs/`。
 
 `pnpm thumbs` 不使用 `scripts/render_current_app_screens.py`，也不调用手工绘制函数。它的输入必须是 Expo 导出的真实 App 页面内容；如果当前环境无法运行 Playwright 浏览器渲染，命令应失败，而不是退回到设计预览图。
 
@@ -57,6 +57,10 @@ pnpm thumbs
   全局 zustand 状态，以及 onboarding、reporting、preview 等运行时状态辅助模块
 - `tests/`
   Jest 测试
+- `scripts/`
+  截图、预览、检查等项目脚本
+- `docs/`
+  面向产品、架构、安全与运维的人类正式文档
 - `thumbs/`
   真实运行页面截图
 - `designs/`

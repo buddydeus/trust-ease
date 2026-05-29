@@ -80,7 +80,8 @@ pnpm fix:all
 - 新的 AI 工作流文档、临时计划、交接摘要放在 `.ai/`。
 - 面向产品、设计、开发者的人类正式文档不要放进 `.ai/`。
 - 临时中间文件放 `.ai/tmp/`，该目录已由 `.gitignore` 忽略。
-- 不要恢复旧的 `docs/superpowers/` 或把 `.superpowers/` 重新纳入版本控制。
+- OpenFlow / Superpowers 执行计划可按旧标准放在 `docs/superpowers/plans/`。
+  其它临时 AI 摘要仍放 `.ai/`，不要把 `.superpowers/` 重新纳入版本控制。
 
 ## 当前产品与页面事实
 

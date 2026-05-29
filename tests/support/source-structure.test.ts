@@ -43,6 +43,11 @@ function collectTrackedFiles(root: string): string[] {
     results.push(readme);
   }
 
+  const agents = path.join(root, 'AGENTS.md');
+  if (fs.existsSync(agents)) {
+    results.push(agents);
+  }
+
   return results;
 }
 
@@ -62,6 +67,15 @@ function readTrackedSources(): ITrackedSource[] {
 function isUnderSrc(filePath: string): boolean {
   const normalized = filePath.replace(/\\/g, '/');
   return normalized.includes('/src/');
+}
+
+function isRouteWrapper(filePath: string): boolean {
+  const normalized = filePath.replace(/\\/g, '/');
+  return (
+    normalized.includes('/src/app/') &&
+    normalized.endsWith('.tsx') &&
+    !normalized.endsWith('.styled.tsx')
+  );
 }
 
 test('活跃源码使用 pages 与 components 等目录，而非旧命名', () => {
@@ -95,6 +109,47 @@ test('活跃源码使用 pages 与 components 等目录，而非旧命名', () =
       expect(source).toContain('src/store/');
       expect(source).toContain('src/constants/');
     }
+  }
+});
+
+test('根文档记录当前结构与截图脚本契约', () => {
+  const root = process.cwd();
+  const readme = fs.readFileSync(path.join(root, 'README.md'), 'utf8');
+  const agents = fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8');
+  const combined = `${readme}\n${agents}`;
+
+  for (const expected of [
+    'src/app/',
+    'src/pages/',
+    'src/store/',
+    'src/skin/',
+    'scripts/',
+    'scripts/render_current_app_screens.py',
+    'scripts/capture_runtime_thumbs.js',
+    'zh-CN',
+    'zh-TW',
+    'en-US'
+  ]) {
+    expect(combined).toContain(expected);
+  }
+
+  expect(readme).toContain('scripts/capture_runtime_thumbs.js');
+  expect(agents).toContain('scripts/capture_runtime_thumbs.js');
+});
+
+test('路由包装层不承载皮肤清单解析或旧目录依赖', () => {
+  const files = readTrackedSources().filter(({ filePath }: ITrackedSource) =>
+    isRouteWrapper(filePath)
+  );
+
+  for (const { source } of files) {
+    expect(source).not.toContain('parseSkinManifest');
+    expect(source).not.toContain('SkinManifestParseError');
+    expect(source).not.toContain('componentKeys');
+    expect(source).not.toContain('paletteKeys');
+    expect(source).not.toMatch(/from ['"](?:\.\.\/)+features\//);
+    expect(source).not.toMatch(/from ['"](?:\.\.\/)+domain\//);
+    expect(source).not.toMatch(/from ['"](?:\.\.\/)+ui\//);
   }
 });
 
