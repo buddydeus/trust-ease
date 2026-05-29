@@ -4,12 +4,10 @@ node_modules/
 android/
 ios/
 
-thumbs/
 designs/
 
 .tmp/
 .superpowers/
-.ai/
 
 .DS_Store
 
