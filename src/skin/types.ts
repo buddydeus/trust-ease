@@ -110,6 +110,56 @@ export type SkinPackageState =
   | 'incompatible';
 
 /**
+ * 皮肤包状态表使用的稳定键，格式为 `skinId@skinVersion`。
+ */
+export type SkinPackageKey = string & { readonly __brand: 'SkinPackageKey' };
+
+/**
+ * 下载或初始化过程中可恢复失败的归因。
+ */
+export type SkinPackageFailureReason =
+  | 'source-unavailable'
+  | 'manifest-invalid'
+  | 'skin-id-mismatch'
+  | 'asset-hash-mismatch'
+  | 'package-hash-mismatch'
+  | 'incompatible'
+  | 'storage-unavailable'
+  | 'promotion-failed';
+
+/**
+ * 皮肤初始化对外暴露的最小状态。
+ */
+export type SkinInitStatus =
+  | 'idle'
+  | 'initializing'
+  | 'ready'
+  | 'fallback'
+  | 'failed';
+
+/**
+ * 皮肤包身份，用于在下载器、状态机和持久化状态之间传递。
+ */
+export interface SkinPackageIdentity {
+  /** 皮肤 id。 */
+  skinId: string;
+  /** 皮肤包自身版本。 */
+  skinVersion: string;
+}
+
+/**
+ * 皮肤包操作完成后的结果。
+ */
+export interface SkinPackageOperationResult {
+  /** 操作对应的皮肤包身份。 */
+  identity: SkinPackageIdentity;
+  /** 操作后的包状态。 */
+  state: SkinPackageState;
+  /** 可恢复失败时的原因。 */
+  failureReason?: SkinPackageFailureReason;
+}
+
+/**
  * 运行时消费的皮肤清单解析结果。
  */
 export interface SkinManifest {

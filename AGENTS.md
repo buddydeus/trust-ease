@@ -150,6 +150,10 @@ pnpm fix:all
 - 每个皮肤有自己的 `skinVersion`，并声明可适配的 `featureVersion` 范围。
 - 皮肤要求的功能版本高于当前 app 时，应提示升级 app 或更换风格。
 - 只有完整下载并通过校验的皮肤包才允许切换或加载。
+- 下载皮肤包先进入运行时 staging 目录，只有 manifest、资源 hash、package
+  hash 和 featureVersion 兼容性全部通过后才允许进入 ready 状态。
+- 启动时优先恢复已 ready 的选中皮肤；失败、缺失或不兼容时回退到最近 ready
+  皮肤，最终兜底为内置 `skin-001`。
 - `skins/skin-001/manifest.json` 是构建期 bundled skin 源。
 - 真实 App 运行时下载的 skin 包应写入 Expo FileSystem 的
   `documentDirectory/skins/`。
@@ -163,6 +167,9 @@ pnpm fix:all
 - `src/skin/compatibility.ts`
 - `src/skin/runtime.ts`
 - `src/skin/storage.ts`
+- `src/skin/packageValidation.ts`
+- `src/skin/downloader.ts`
+- `src/skin/initStateMachine.ts`
 - `skins/skin-001/manifest.json`
 - `tests/skin/*`
 

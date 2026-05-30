@@ -84,12 +84,17 @@ pnpm thumbs
 - [src/skin/registry.ts](./src/skin/registry.ts)
 - [skins/skin-001/manifest.json](./skins/skin-001/manifest.json)
 - [src/skin/paths.ts](./src/skin/paths.ts)
+- [src/skin/packageValidation.ts](./src/skin/packageValidation.ts)
+- [src/skin/downloader.ts](./src/skin/downloader.ts)
+- [src/skin/initStateMachine.ts](./src/skin/initStateMachine.ts)
 - [src/skin/runtime.ts](./src/skin/runtime.ts)
 - [src/skin/storage.ts](./src/skin/storage.ts)
 
 `skin-001` 当前已经从 TS 对象迁移为项目根 `skins/skin-001/manifest.json`。这个目录是构建期 bundled skin 源，不是移动端运行时可读写目录。
 
 真实 App 运行时下载的 skin 包应写入 Expo FileSystem 的 `documentDirectory/skins/`。项目根 `skins/` 不能作为移动端运行时读写目录使用；后续下载到本地的 skin 包应复用同一套 `manifest.json` 解析与兼容性检查入口。
+
+下载皮肤包会先进入运行时 staging 目录，只有 manifest、资源 hash、package hash 和 featureVersion 兼容性全部通过后才会进入 ready 状态。启动时会优先恢复已 ready 的选中皮肤；失败、缺失或不兼容时回退到最近 ready 皮肤，最终兜底为内置 `skin-001`。
 
 `SkinRuntime` 当前对外暴露只读快照，避免 UI 层误改运行时对象后污染全局状态。
 
@@ -101,5 +106,8 @@ pnpm thumbs
 - [tests/skin/compatibility.test.ts](./tests/skin/compatibility.test.ts)
 - [tests/skin/runtime.test.ts](./tests/skin/runtime.test.ts)
 - [tests/skin/storage.test.ts](./tests/skin/storage.test.ts)
+- [tests/skin/init-state-machine.test.ts](./tests/skin/init-state-machine.test.ts)
+- [tests/skin/package-validation.test.ts](./tests/skin/package-validation.test.ts)
+- [tests/skin/downloader.test.ts](./tests/skin/downloader.test.ts)
 
 如果继续推进皮肤初始化、下载和页面接入，建议优先沿用现有的 `tests/skin/*` 分层方式补测试。

@@ -2,7 +2,11 @@ import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
 import { defaultHomeSummary, type HomeSummary } from '../constants';
 import { LocaleType, type LocaleMode } from '../i18n';
-import { appSkinConfig, type SkinPackageState } from '../skin';
+import {
+  appSkinConfig,
+  type SkinInitStatus,
+  type SkinPackageState
+} from '../skin';
 
 /**
  * 内置默认皮肤的 `skinPackageStates` 初始项（冷启动时视为已就绪）。
@@ -32,6 +36,10 @@ export interface AppState {
   lastReadySkinId: string;
   /** 以 `skinId@skinVersion` 为键的包就绪状态表。 */
   skinPackageStates: Record<string, SkinPackageState>;
+  /** 皮肤初始化的最小可观察状态。 */
+  skinInitStatus: SkinInitStatus;
+  /** 最近一次初始化是否发生了安全回退。 */
+  skinInitUsedFallback: boolean;
   /**
    * 写入用户显式语言选择并停止跟随系统。
    *
@@ -71,6 +79,14 @@ export interface AppState {
     stateValue: SkinPackageState
   ) => void;
   /**
+   * 更新皮肤初始化状态。
+   *
+   * @param status - 初始化状态。
+   * @param usedFallback - 是否发生安全回退。
+   * @returns void
+   */
+  setSkinInitStatus: (status: SkinInitStatus, usedFallback?: boolean) => void;
+  /**
    * 标记当日正式申报已完成。
    *
    * @param reportedAt - 写入 `lastReportedAt` 的 ISO 时间戳。
@@ -93,6 +109,8 @@ export const useAppStore: UseBoundStore<StoreApi<AppState>> = create<AppState>(
     activeSkinId: appSkinConfig.defaultSkinId,
     lastReadySkinId: appSkinConfig.defaultSkinId,
     skinPackageStates: { ...defaultSkinPackageStates },
+    skinInitStatus: 'idle',
+    skinInitUsedFallback: false,
     setManualLocale: locale => set({ locale, localeMode: 'manual' }),
     useSystemLocale: () => set({ localeMode: 'system' }),
     setSelectedSkinId: skinId => set({ selectedSkinId: skinId }),
@@ -109,6 +127,11 @@ export const useAppStore: UseBoundStore<StoreApi<AppState>> = create<AppState>(
           [packageKey]: stateValue
         }
       })),
+    setSkinInitStatus: (skinInitStatus, skinInitUsedFallback = false) =>
+      set({
+        skinInitStatus,
+        skinInitUsedFallback
+      }),
     applyFormalReport: reportedAt =>
       set(state => ({
         homeSummary: {

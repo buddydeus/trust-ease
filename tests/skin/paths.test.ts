@@ -14,6 +14,7 @@ jest.mock('expo-file-system/legacy', () => ({
 import {
   ensureRuntimeSkinsDirectory,
   getRuntimeSkinPackageDirectoryUri,
+  getRuntimeSkinPackageStagingDirectoryUri,
   getRuntimeSkinsDirectoryUri
 } from '../../src/skin/paths';
 
@@ -27,6 +28,9 @@ test('将应用 documentDirectory 作为可写皮肤根目录', () => {
   expect(getRuntimeSkinsDirectoryUri()).toBe('file:///app/document/skins');
   expect(getRuntimeSkinPackageDirectoryUri('skin-001')).toBe(
     'file:///app/document/skins/skin-001'
+  );
+  expect(getRuntimeSkinPackageStagingDirectoryUri('skin-001')).toBe(
+    'file:///app/document/skins/.staging/skin-001'
   );
 });
 

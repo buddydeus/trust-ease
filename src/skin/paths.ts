@@ -2,6 +2,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 
 /** 应用沙盒下存放已下载皮肤的目录名。 */
 const RUNTIME_SKINS_DIR_NAME = 'skins';
+const RUNTIME_SKIN_STAGING_DIR_NAME = '.staging';
 
 /**
  * 拼接两段 URI 路径，保证仅有一个斜杠分界。
@@ -38,6 +39,21 @@ export const getRuntimeSkinsDirectoryUri = (): string => {
  */
 export const getRuntimeSkinPackageDirectoryUri = (skinId: string): string => {
   return joinUri(getRuntimeSkinsDirectoryUri(), skinId);
+};
+
+/**
+ * 返回某个皮肤 id 在运行时 staging 区的目录 URI。
+ *
+ * @param skinId - 作为 staging 目录名的皮肤标识。
+ * @returns 该皮肤包 staging 目录的绝对 URI。
+ */
+export const getRuntimeSkinPackageStagingDirectoryUri = (
+  skinId: string
+): string => {
+  return joinUri(
+    joinUri(getRuntimeSkinsDirectoryUri(), RUNTIME_SKIN_STAGING_DIR_NAME),
+    skinId
+  );
 };
 
 /**
