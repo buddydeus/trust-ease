@@ -7,10 +7,10 @@ ios/
 designs/
 
 .tmp/
+.npm-cache/
+.pnpm-store/
 .superpowers/
 
 .DS_Store
 
 __pycache__/
-
-pnpm-lock.yaml

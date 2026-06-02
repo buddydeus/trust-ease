@@ -31,6 +31,8 @@
 ## 技术栈
 
 - 包管理器：`pnpm`
+- 依赖锁定：`packageManager` 固定为 `pnpm@11.5.0`，`pnpm-lock.yaml`
+  需要提交到版本控制
 - 应用框架：Expo 55、Expo Router、React 19、React Native 0.85
 - 状态管理：Zustand
 - 表单与校验：React Hook Form、Zod
@@ -41,6 +43,7 @@
 ## 常用命令
 
 ```bash
+pnpm install
 pnpm start
 pnpm test
 pnpm check:type
@@ -56,6 +59,10 @@ pnpm fix:all
   导出，再用 Playwright 渲染真实 App bundle 并截图到 `thumbs/`。
 - `pnpm thumbs` 不应回退到设计预览图；如果真实浏览器渲染不可用，应让命令
   失败。
+- 新电脑或 CI 风格验证优先使用 `corepack pnpm install --frozen-lockfile`。
+  仓库默认 registry 是官方 npm registry；如本地网络需要镜像，用
+  `pnpm --config.registry=https://registry.npmmirror.com install` 临时覆盖，
+  不要把镜像地址写回仓库配置。
 
 ## 目录约定
 
@@ -152,6 +159,9 @@ pnpm fix:all
 - 只有完整下载并通过校验的皮肤包才允许切换或加载。
 - 下载皮肤包先进入运行时 staging 目录，只有 manifest、资源 hash、package
   hash 和 featureVersion 兼容性全部通过后才允许进入 ready 状态。
+- 远程 skin source adapter 只允许下载 manifest 与声明的静态资源，并写入
+  `documentDirectory/skins/` 下的 staging 目录；不允许执行远程 React 组件、
+  远程 JavaScript 或插件代码。
 - 启动时优先恢复已 ready 的选中皮肤；失败、缺失或不兼容时回退到最近 ready
   皮肤，最终兜底为内置 `skin-001`。
 - `skins/skin-001/manifest.json` 是构建期 bundled skin 源。

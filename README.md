@@ -11,9 +11,27 @@
 - 首次安装第一次打开时会先进入 `welcome`
 - 点击 `开始设置` 会直接完成一次正式申报并进入 `home`
 
+## 安装与依赖锁定
+
+本仓库使用 `pnpm@11.5.0`，并提交 `pnpm-lock.yaml` 作为跨电脑协作和
+CI 风格验证的依赖锁定来源。
+
+```bash
+corepack pnpm install --frozen-lockfile
+```
+
+如果本机没有启用 Corepack，也可以使用全局安装的同版本 pnpm 执行相同命令。
+仓库默认 registry 使用官方 npm registry。若本地网络需要镜像，请用命令行
+临时覆盖，不要把镜像地址写回仓库配置：
+
+```bash
+pnpm --config.registry=https://registry.npmmirror.com install
+```
+
 ## 常用命令
 
 ```bash
+pnpm install
 pnpm start
 pnpm test
 pnpm check:type
@@ -95,6 +113,11 @@ pnpm thumbs
 真实 App 运行时下载的 skin 包应写入 Expo FileSystem 的 `documentDirectory/skins/`。项目根 `skins/` 不能作为移动端运行时读写目录使用；后续下载到本地的 skin 包应复用同一套 `manifest.json` 解析与兼容性检查入口。
 
 下载皮肤包会先进入运行时 staging 目录，只有 manifest、资源 hash、package hash 和 featureVersion 兼容性全部通过后才会进入 ready 状态。启动时会优先恢复已 ready 的选中皮肤；失败、缺失或不兼容时回退到最近 ready 皮肤，最终兜底为内置 `skin-001`。
+
+远程 skin source adapter 只负责拉取远程 manifest 与声明的静态资源，并把它们写入
+`documentDirectory/skins/` 下的 staging 目录；它不会执行远程 React 组件、远程
+JavaScript 或插件代码。远程包仍必须经过现有 staging、manifest 解析、资源 hash、
+package hash、featureVersion 兼容性和 promotion 流程后才能 ready。
 
 `SkinRuntime` 当前对外暴露只读快照，避免 UI 层误改运行时对象后污染全局状态。
 
