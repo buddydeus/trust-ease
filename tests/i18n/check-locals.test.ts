@@ -72,11 +72,15 @@ test('detects locale key drift and unused baseline entries', () => {
   writeFile(
     path.join(root, 'src/pages/report/ReportScreen.tsx'),
     `
+      import { useI18n } from '../../src/i18n/useI18n';
+
       export function ReportScreen({ copy }: { copy: { streakTitle: string; primaryButton: string } }) {
+        const { getMessage } = useI18n();
         const resolvedCopy = copy;
         return (
           <>
             <Text>{resolvedCopy.streakTitle}</Text>
+            <Text>{getMessage('report.body')}</Text>
             <Text>{resolvedCopy.primaryButton}</Text>
           </>
         );
@@ -103,5 +107,5 @@ test('detects locale key drift and unused baseline entries', () => {
     extra: ['report.extraLabel']
   });
 
-  expect(result.unusedBaselinePaths).toEqual(['report.body', 'tabs.items']);
+  expect(result.unusedBaselinePaths).toEqual(['tabs.items']);
 });

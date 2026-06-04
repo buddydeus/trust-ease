@@ -138,6 +138,27 @@ function getAliasMatches(source, section) {
   return aliases;
 }
 
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function isBaselinePathUsed(source, keyPath) {
+  const escapedKeyPath = escapeRegExp(keyPath);
+  const singleArgumentGetMessagePattern = new RegExp(
+    `\\bgetMessage\\s*\\(\\s*(['"])${escapedKeyPath}\\1`
+  );
+
+  return (
+    source.includes(`messages.${keyPath}`) ||
+    source.includes(`messages['${keyPath}']`) ||
+    source.includes(`messages["${keyPath}"]`) ||
+    source.includes(`getMessage(messages, '${keyPath}')`) ||
+    source.includes(`getMessage(messages,"${keyPath}")`) ||
+    source.includes(`getMessage(messages, "${keyPath}")`) ||
+    singleArgumentGetMessagePattern.test(source)
+  );
+}
+
 function collectUsedBaselinePaths(rootDir, baselineKeys) {
   const files = collectCodeFiles(rootDir);
   const fileSources = files.map(filePath => ({
@@ -148,17 +169,7 @@ function collectUsedBaselinePaths(rootDir, baselineKeys) {
 
   for (const { source } of fileSources) {
     for (const keyPath of baselineKeys) {
-      const [section, ...rest] = keyPath.split('.');
-      const leafPath = rest.join('.');
-
-      if (
-        source.includes(`messages.${keyPath}`) ||
-        source.includes(`messages['${keyPath}']`) ||
-        source.includes(`messages["${keyPath}"]`) ||
-        source.includes(`getMessage(messages, '${keyPath}')`) ||
-        source.includes(`getMessage(messages,"${keyPath}")`) ||
-        source.includes(`getMessage(messages, "${keyPath}")`)
-      ) {
+      if (isBaselinePathUsed(source, keyPath)) {
         usedPaths.add(keyPath);
         continue;
       }
