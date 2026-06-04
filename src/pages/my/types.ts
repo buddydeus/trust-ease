@@ -1,5 +1,9 @@
 import { LocaleType } from '../../i18n';
-import { type SkinCompatibility } from '../../skin';
+import {
+  type SkinCompatibility,
+  type SkinInitStatus,
+  type SkinPackageState
+} from '../../skin';
 
 /**
  * 选择器中一行可选的内置皮肤数据。
@@ -11,6 +15,13 @@ export interface ISkinOption {
   displayName: string;
   /** 相对当前运行应用的兼容结论。 */
   compatibility: SkinCompatibility;
+}
+
+export interface ISkinRuntimeStatus {
+  activeSkinId: string;
+  skinInitStatus: SkinInitStatus;
+  skinInitUsedFallback: boolean;
+  skinPackageStates: Record<string, SkinPackageState>;
 }
 
 /**
@@ -49,6 +60,22 @@ export interface IMyScreenCopy {
   skinUpgradeRequired: string;
   /** 某皮肤不可选时的提示。 */
   skinUnavailable: string;
+  skinRuntimeTitle: string;
+  skinRuntimeActive: string;
+  skinRuntimeInitStatus: string;
+  skinRuntimeFallback: string;
+  skinRuntimePackageStates: string;
+  skinRuntimeStatusIdle: string;
+  skinRuntimeStatusInitializing: string;
+  skinRuntimeStatusReady: string;
+  skinRuntimeStatusFallback: string;
+  skinRuntimeStatusFailed: string;
+  skinPackageStateIdle: string;
+  skinPackageStateChecking: string;
+  skinPackageStateDownloading: string;
+  skinPackageStateReady: string;
+  skinPackageStateFailed: string;
+  skinPackageStateIncompatible: string;
   /** 打开触发状态页的 CTA 文案。 */
   openTriggerState: string;
   /** 「跟随系统」语言选项。 */
@@ -81,6 +108,7 @@ export interface IMyScreenProps {
   skinOptions?: ISkinOption[];
   /** 当前激活的皮肤 id。 */
   activeSkinId?: string;
+  skinRuntimeStatus?: ISkinRuntimeStatus;
   /**
    * 按 id 激活皮肤。
    *

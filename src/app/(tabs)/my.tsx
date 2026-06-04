@@ -19,6 +19,11 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
   const { getMessage, setManualLocale, useSystemLocale } = useI18n();
 
   const activeSkinId = useAppStore(state => state.activeSkinId);
+  const skinInitStatus = useAppStore(state => state.skinInitStatus);
+  const skinInitUsedFallback = useAppStore(
+    state => state.skinInitUsedFallback
+  );
+  const skinPackageStates = useAppStore(state => state.skinPackageStates);
   const setActiveSkinId = useAppStore(state => state.setActiveSkinId);
 
   const copy = {
@@ -38,6 +43,24 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
     skinCurrent: getMessage('my.skinCurrent'),
     skinUpgradeRequired: getMessage('my.skinUpgradeRequired'),
     skinUnavailable: getMessage('my.skinUnavailable'),
+    skinRuntimeTitle: getMessage('my.skinRuntimeTitle'),
+    skinRuntimeActive: getMessage('my.skinRuntimeActive'),
+    skinRuntimeInitStatus: getMessage('my.skinRuntimeInitStatus'),
+    skinRuntimeFallback: getMessage('my.skinRuntimeFallback'),
+    skinRuntimePackageStates: getMessage('my.skinRuntimePackageStates'),
+    skinRuntimeStatusIdle: getMessage('my.skinRuntimeStatusIdle'),
+    skinRuntimeStatusInitializing: getMessage(
+      'my.skinRuntimeStatusInitializing'
+    ),
+    skinRuntimeStatusReady: getMessage('my.skinRuntimeStatusReady'),
+    skinRuntimeStatusFallback: getMessage('my.skinRuntimeStatusFallback'),
+    skinRuntimeStatusFailed: getMessage('my.skinRuntimeStatusFailed'),
+    skinPackageStateIdle: getMessage('my.skinPackageStateIdle'),
+    skinPackageStateChecking: getMessage('my.skinPackageStateChecking'),
+    skinPackageStateDownloading: getMessage('my.skinPackageStateDownloading'),
+    skinPackageStateReady: getMessage('my.skinPackageStateReady'),
+    skinPackageStateFailed: getMessage('my.skinPackageStateFailed'),
+    skinPackageStateIncompatible: getMessage('my.skinPackageStateIncompatible'),
     openTriggerState: getMessage('my.openTriggerState'),
     followSystem: getMessage('my.followSystem'),
     simplifiedChinese: getMessage('my.simplifiedChinese'),
@@ -68,6 +91,12 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
       onSetManualLocale={setManualLocale}
       onUseSystemLocale={useSystemLocale}
       activeSkinId={activeSkinId}
+      skinRuntimeStatus={{
+        activeSkinId,
+        skinInitStatus,
+        skinInitUsedFallback,
+        skinPackageStates
+      }}
       skinOptions={skinOptions}
       onSetActiveSkin={setActiveSkinId}
     />

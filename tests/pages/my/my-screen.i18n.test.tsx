@@ -22,6 +22,22 @@ test('renders language preferences section on my screen', () => {
         skinCurrent: 'Current',
         skinUpgradeRequired: 'App update required',
         skinUnavailable: 'Unavailable',
+        skinRuntimeTitle: 'Style status',
+        skinRuntimeActive: 'Current style',
+        skinRuntimeInitStatus: 'Status',
+        skinRuntimeFallback: 'Using fallback style',
+        skinRuntimePackageStates: 'Package status',
+        skinRuntimeStatusIdle: 'Waiting',
+        skinRuntimeStatusInitializing: 'Checking style',
+        skinRuntimeStatusReady: 'Style ready',
+        skinRuntimeStatusFallback: 'Fallback active',
+        skinRuntimeStatusFailed: 'Style unavailable',
+        skinPackageStateIdle: 'Waiting',
+        skinPackageStateChecking: 'Checking',
+        skinPackageStateDownloading: 'Downloading',
+        skinPackageStateReady: 'Ready',
+        skinPackageStateFailed: 'Temporarily unavailable',
+        skinPackageStateIncompatible: 'Needs update or another style',
         openTriggerState: 'Open trigger status',
         followSystem: 'Follow System',
         simplifiedChinese: 'Simplified Chinese',
@@ -36,6 +52,7 @@ test('renders language preferences section on my screen', () => {
   expect(screen.getByText('Language')).toBeTruthy();
   expect(screen.getByText('Follow system or choose manually')).toBeTruthy();
   expect(screen.getByText('Style')).toBeTruthy();
+  expect(screen.getByText('Style status')).toBeTruthy();
   expect(screen.getByText('Follow System')).toBeTruthy();
 
   fireEvent.press(screen.getByRole('button', { name: 'Language' }));

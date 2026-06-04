@@ -15,6 +15,7 @@ import {
 import { LanguagePicker } from './LanguagePicker';
 import { SettingsCard } from './SettingsCard';
 import { SkinPicker } from './SkinPicker';
+import { SkinRuntimeStatus } from './SkinRuntimeStatus';
 import { type IMyScreenProps } from './types';
 
 export type { IMyScreenCopy, IMyScreenProps, ISkinOption } from './types';
@@ -33,12 +34,21 @@ export const MyScreen = React.memo<IMyScreenProps>(
     onSetManualLocale,
     skinOptions = [],
     activeSkinId,
+    skinRuntimeStatus,
     onSetActiveSkin
   } = {}) => {
     const { getMessage } = useI18n();
 
     const [isLanguagePickerOpen, setIsLanguagePickerOpen] = useState(false);
     const [isSkinPickerOpen, setIsSkinPickerOpen] = useState(false);
+    const resolvedSkinRuntimeStatus = skinRuntimeStatus ?? {
+      activeSkinId: activeSkinId || 'skin-001',
+      skinInitStatus: 'ready',
+      skinInitUsedFallback: false,
+      skinPackageStates: {
+        [`${activeSkinId || 'skin-001'}@1.0.0`]: 'ready'
+      }
+    };
 
     return (
       <AppScreen>
@@ -78,6 +88,13 @@ export const MyScreen = React.memo<IMyScreenProps>(
               onClose={() => setIsLanguagePickerOpen(false)}
               onUseSystemLocale={onUseSystemLocale}
               onSetManualLocale={onSetManualLocale}
+            />
+          </AppCard>
+          <AppCard>
+            <SkinRuntimeStatus
+              copy={copy}
+              skinOptions={skinOptions}
+              status={resolvedSkinRuntimeStatus}
             />
           </AppCard>
           <AppCard>

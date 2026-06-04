@@ -38,12 +38,93 @@ test('renders and switches runtime skin options from the my page dropdown', () =
   );
 
   expect(screen.getByText(zhCN['my.skinTitle'])).toBeTruthy();
-  expect(screen.getByText('Sea Salt Teal')).toBeTruthy();
+  expect(screen.getAllByText('Sea Salt Teal').length).toBeGreaterThan(0);
 
   fireEvent.press(screen.getByRole('button', { name: zhCN['my.skinTitle'] }));
-  fireEvent.press(screen.getAllByText('Sea Salt Teal')[1]);
+  const seaSaltOptions = screen.getAllByText('Sea Salt Teal');
+  fireEvent.press(seaSaltOptions[seaSaltOptions.length - 1]);
 
   expect(setActiveSkin).toHaveBeenCalledWith('skin-001');
+});
+
+test('renders the default skin runtime ready status', () => {
+  render(
+    <MyScreen
+      skinOptions={[
+        {
+          skinId: 'skin-001',
+          displayName: 'Sea Salt Teal',
+          compatibility: { kind: 'compatible' }
+        }
+      ]}
+      skinRuntimeStatus={{
+        activeSkinId: 'skin-001',
+        skinInitStatus: 'ready',
+        skinInitUsedFallback: false,
+        skinPackageStates: {
+          'skin-001@1.0.0': 'ready'
+        }
+      }}
+    />
+  );
+
+  expect(screen.getByText(zhCN['my.skinRuntimeTitle'])).toBeTruthy();
+  expect(screen.getAllByText('Sea Salt Teal').length).toBeGreaterThan(0);
+  expect(
+    screen.getAllByText(zhCN['my.skinRuntimeStatusReady']).length
+  ).toBeGreaterThan(0);
+});
+
+test('renders a fallback note when skin initialization used fallback', () => {
+  render(
+    <MyScreen
+      skinRuntimeStatus={{
+        activeSkinId: 'skin-001',
+        skinInitStatus: 'fallback',
+        skinInitUsedFallback: true,
+        skinPackageStates: {}
+      }}
+    />
+  );
+
+  expect(screen.getByText(zhCN['my.skinRuntimeFallback'])).toBeTruthy();
+});
+
+test('renders failed and incompatible package states calmly', () => {
+  render(
+    <MyScreen
+      skinOptions={[
+        {
+          skinId: 'skin-002',
+          displayName: 'Evening Blue',
+          compatibility: { kind: 'compatible' }
+        },
+        {
+          skinId: 'skin-003',
+          displayName: 'Soft Sand',
+          compatibility: { kind: 'compatible' }
+        }
+      ]}
+      skinRuntimeStatus={{
+        activeSkinId: 'skin-001',
+        skinInitStatus: 'ready',
+        skinInitUsedFallback: false,
+        skinPackageStates: {
+          'skin-002@1.0.0': 'failed',
+          'skin-003@1.0.0': 'incompatible'
+        }
+      }}
+    />
+  );
+
+  expect(screen.getAllByText('Evening Blue').length).toBeGreaterThan(0);
+  expect(
+    screen.getAllByText(zhCN['my.skinPackageStateFailed']).length
+  ).toBeGreaterThan(0);
+  expect(screen.getAllByText('Soft Sand').length).toBeGreaterThan(0);
+  expect(
+    screen.getByText(zhCN['my.skinPackageStateIncompatible'])
+  ).toBeTruthy();
 });
 
 test('renders and switches language options from the my page dropdown', () => {
