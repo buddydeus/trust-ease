@@ -52,6 +52,7 @@ pnpm design
 pnpm thumbs
 pnpm skin:package -- check <skin-dir>
 pnpm skin:package -- update <skin-dir>
+pnpm skin:qa:remote
 pnpm fix:all
 ```
 
@@ -66,6 +67,8 @@ pnpm fix:all
 - `pnpm skin:package -- update <skin-dir>` 将当前资源 hash 和 canonical
   `packageHash` 写回该目录下的 `manifest.json`。它用于构建期 bundled skin 源
   或未来远程 skin QA fixture，不写入移动端运行时目录。
+- `pnpm skin:qa:remote` 运行内部远程皮肤下载 QA harness，使用本地临时
+  fixture、依赖注入的 remote fetch 和现有 downloader；它不是用户可见皮肤商店。
 - 新电脑或 CI 风格验证优先使用 `corepack pnpm install --frozen-lockfile`。
   仓库默认 registry 是官方 npm registry；如本地网络需要镜像，用
   `pnpm --config.registry=https://registry.npmmirror.com install` 临时覆盖，
@@ -176,6 +179,8 @@ pnpm fix:all
   `documentDirectory/skins/`。
 - 项目根 `skins/` 不能作为移动端运行时读写目录使用。
 - `SkinRuntime` 对外暴露只读快照，UI 层不要直接修改运行时对象。
+- 远程下载 QA 入口仅用于开发/测试，应保持本地临时 fixture 和依赖注入，不要
+  引入真实网络依赖、用户可见入口或远程组件执行能力。
 
 修改皮肤能力时，优先检查并更新：
 

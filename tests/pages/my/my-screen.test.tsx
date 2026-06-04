@@ -149,6 +149,60 @@ test('renders and switches language options from the my page dropdown', () => {
   expect(setManualLocale).toHaveBeenCalledWith('en-US');
 });
 
+test('renders remote QA ready package state through status props', () => {
+  render(
+    <MyScreen
+      skinOptions={[
+        {
+          skinId: 'skin-qa-remote',
+          displayName: 'Remote QA Skin',
+          compatibility: { kind: 'compatible' }
+        }
+      ]}
+      skinRuntimeStatus={{
+        activeSkinId: 'skin-qa-remote',
+        skinInitStatus: 'ready',
+        skinInitUsedFallback: false,
+        skinPackageStates: {
+          'skin-qa-remote@1.0.0': 'ready'
+        }
+      }}
+    />
+  );
+
+  expect(screen.getAllByText('Remote QA Skin').length).toBeGreaterThan(0);
+  expect(
+    screen.getAllByText(zhCN['my.skinPackageStateReady']).length
+  ).toBeGreaterThan(0);
+});
+
+test('renders remote QA failed package state through status props', () => {
+  render(
+    <MyScreen
+      skinOptions={[
+        {
+          skinId: 'skin-qa-remote',
+          displayName: 'Remote QA Skin',
+          compatibility: { kind: 'compatible' }
+        }
+      ]}
+      skinRuntimeStatus={{
+        activeSkinId: 'skin-001',
+        skinInitStatus: 'ready',
+        skinInitUsedFallback: false,
+        skinPackageStates: {
+          'skin-qa-remote@1.0.0': 'failed'
+        }
+      }}
+    />
+  );
+
+  expect(screen.getAllByText('Remote QA Skin').length).toBeGreaterThan(0);
+  expect(
+    screen.getAllByText(zhCN['my.skinPackageStateFailed']).length
+  ).toBeGreaterThan(0);
+});
+
 test('my route opens the trigger-state settings page', () => {
   const pushMock = router.push as jest.Mock;
   pushMock.mockClear();

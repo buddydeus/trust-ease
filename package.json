@@ -13,6 +13,7 @@
     "design": "python3 scripts/render_current_app_screens.py",
     "thumbs": "node scripts/capture_runtime_thumbs.js",
     "skin:package": "node scripts/skin_package_tool.js",
+    "skin:qa:remote": "jest tests/skin/remote-download-qa.test.ts --runInBand",
     "check:type": "tsc --noEmit",
     "check:local": "node scripts/check-locals.js",
     "fix:all": "pnpm fix:eslint && pnpm fix:prettier",

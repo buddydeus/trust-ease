@@ -39,6 +39,7 @@ pnpm design
 pnpm thumbs
 pnpm skin:package -- check <skin-dir>
 pnpm skin:package -- update <skin-dir>
+pnpm skin:qa:remote
 ```
 
 ### `pnpm design`
@@ -67,6 +68,13 @@ hash 和 canonical `packageHash`，不会写入文件。
 运行 `pnpm skin:package -- update <skin-dir>` 会把当前资源 hash 和 canonical
 `packageHash` 写回该目录下的 `manifest.json`。这个命令用于构建期 bundled skin
 源或未来远程 skin QA fixture，不会写入 Expo `documentDirectory/skins/` 运行时目录。
+
+### `pnpm skin:qa:remote`
+
+运行 `pnpm skin:qa:remote` 会执行内部远程皮肤下载 QA harness。它使用本地临时目录生成
+remote-style skin fixture，复用 `skin:package` 的 canonical hash 逻辑，并通过 remote
+source adapter 与 downloader 验证 ready promotion 和可恢复失败。这个命令只用于开发/QA，
+不会开启用户可见的皮肤商店，也不会把项目根 `skins/` 当作移动端运行时目录。
 
 ## 目录说明
 
@@ -136,6 +144,8 @@ package hash、featureVersion 兼容性和 promotion 流程后才能 ready。
 manifest 中资源 hash 与 canonical package hash 时，使用
 `pnpm skin:package -- update <skin-dir>`。
 
+远程下载链路的内部 QA 可运行 `pnpm skin:qa:remote`，该命令使用临时 fixture、依赖注入的
+remote fetch 和现有 downloader，不执行远程组件或远程 JavaScript。
 `SkinRuntime` 当前对外暴露只读快照，避免 UI 层误改运行时对象后污染全局状态。
 
 ## 测试
@@ -151,5 +161,6 @@ manifest 中资源 hash 与 canonical package hash 时，使用
 - [tests/skin/package-hash.test.ts](./tests/skin/package-hash.test.ts)
 - [tests/skin/publishing-tool.test.ts](./tests/skin/publishing-tool.test.ts)
 - [tests/skin/downloader.test.ts](./tests/skin/downloader.test.ts)
+- [tests/skin/remote-download-qa.test.ts](./tests/skin/remote-download-qa.test.ts)
 
 如果继续推进皮肤初始化、下载和页面接入，建议优先沿用现有的 `tests/skin/*` 分层方式补测试。
