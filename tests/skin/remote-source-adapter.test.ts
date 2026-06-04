@@ -1,6 +1,7 @@
 import { coerceFeatureVersion } from '../../src/skin/featureVersion';
 import { downloadSkinPackage } from '../../src/skin/downloader';
 import { createSkinPackageKey } from '../../src/skin/initStateMachine';
+import { calculateSkinPackageHash } from '../../src/skin/packageHash';
 import {
   calculateRemoteSkinContentHash,
   createRemoteSkinPackageSource
@@ -101,7 +102,8 @@ const createDownloaderFileSystem = (): jest.Mocked<SkinDownloaderFileSystem> => 
 });
 
 const createDependencies = (
-  manifestSource = createManifestSource()
+  manifestSource = createManifestSource(),
+  overrides: Partial<IRemoteSkinPackageAdapterDependencies> = {}
 ): jest.Mocked<IRemoteSkinPackageAdapterDependencies> => ({
   fetchManifest: jest.fn().mockResolvedValue(manifestSource),
   fetchAsset: jest.fn().mockImplementation(async (url: string) => {
@@ -115,7 +117,8 @@ const createDependencies = (
   writeAsset: jest.fn().mockResolvedValue(undefined),
   makeDirectory: jest.fn().mockResolvedValue(undefined),
   wait: jest.fn().mockResolvedValue(undefined),
-  calculatePackageHash: jest.fn().mockReturnValue('pkg-ok')
+  calculatePackageHash: jest.fn().mockReturnValue('pkg-ok'),
+  ...overrides
 });
 
 describe('remote skin source adapter', () => {
@@ -222,6 +225,40 @@ describe('remote skin source adapter', () => {
         totalAssets: 2
       }
     ]);
+  });
+
+  test('uses canonical package hash when descriptor omits packageHash', async () => {
+    const manifestSource = createManifestSource({
+      packageHash: calculateSkinPackageHash({
+        identity: {
+          skinId: remoteDescriptor.skinId,
+          skinVersion: remoteDescriptor.skinVersion
+        },
+        manifestSource: createManifestSource(),
+        files: [
+          {
+            path: 'assets/logo.txt',
+            hash: logoHash
+          },
+          {
+            path: 'images/hero.txt',
+            hash: heroHash
+          }
+        ]
+      })
+    });
+    const dependencies = createDependencies(manifestSource, {
+      calculatePackageHash: undefined
+    });
+    const source = createRemoteSkinPackageSource(remoteDescriptor, {
+      dependencies
+    });
+
+    const payload = await source.stage(
+      'file:///app/document/skins/.staging/skin-002'
+    );
+
+    expect(payload.packageHash).toBe(manifestSource.packageHash);
   });
 
   test('retries manifest fetch before failing', async () => {

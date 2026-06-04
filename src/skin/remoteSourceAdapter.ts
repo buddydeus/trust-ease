@@ -4,6 +4,7 @@ import type {
   SkinPackageSourceAdapter,
   SkinPackageSourcePayload
 } from './downloader';
+import { calculateSkinPackageHash } from './packageHash';
 import type { SkinPackageIdentity } from './types';
 
 export type RemoteSkinPackageProgressPhase = 'manifest' | 'asset' | 'complete';
@@ -108,16 +109,6 @@ export const calculateRemoteSkinContentHash = (content: string): string => {
   return `fnv1a:${(hash >>> 0).toString(16).padStart(8, '0')}`;
 };
 
-const readManifestPackageHash = (manifestSource: unknown): string | void => {
-  if (!isRecord(manifestSource)) return;
-
-  const value = manifestSource.packageHash;
-
-  if (typeof value === 'string' && value.trim() !== '') {
-    return value;
-  }
-};
-
 const calculateDefaultPackageHash = ({
   descriptor,
   manifestSource,
@@ -125,14 +116,42 @@ const calculateDefaultPackageHash = ({
 }: IRemoteSkinPackageHashInput): string => {
   return (
     descriptor.packageHash ??
-    readManifestPackageHash(manifestSource) ??
-    calculateRemoteSkinContentHash(
-      JSON.stringify({
-        manifestSource,
-        assetHashes
-      })
-    )
+    calculateSkinPackageHash({
+      identity: {
+        skinId: descriptor.skinId,
+        skinVersion: descriptor.skinVersion
+      },
+      manifestSource,
+      files: Object.entries(assetHashes).map(([path, hash]) => ({
+        path,
+        hash
+      }))
+    })
   );
+};
+
+const mergeDependencies = (
+  overrides?: Partial<IRemoteSkinPackageAdapterDependencies>
+): IRemoteSkinPackageAdapterDependencies => {
+  const dependencies = createDefaultDependencies();
+
+  if (!overrides) {
+    return dependencies;
+  }
+
+  for (const key of Object.keys(overrides) as Array<
+    keyof IRemoteSkinPackageAdapterDependencies
+  >) {
+    const override = overrides[key];
+
+    if (override) {
+      Object.assign(dependencies, {
+        [key]: override
+      });
+    }
+  }
+
+  return dependencies;
 };
 
 const getFetch = (): ((
@@ -319,10 +338,7 @@ export const createRemoteSkinPackageSource = (
   descriptor: IRemoteSkinPackageDescriptor,
   options: IRemoteSkinPackageSourceOptions = {}
 ): SkinPackageSourceAdapter => {
-  const dependencies = {
-    ...createDefaultDependencies(),
-    ...options.dependencies
-  };
+  const dependencies = mergeDependencies(options.dependencies);
   const retryPolicy = options.retryPolicy ?? {};
 
   return {
