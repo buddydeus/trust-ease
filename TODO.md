@@ -1,25 +1,36 @@
 # Trust Ease Handoff TODO
 
-更新时间：2026-06-02
+更新时间：2026-06-04
 仓库：`D:\github\buddydeus\trust-ease`
+当前分支：`refactor/all`
 
 ## 当前状态
 
-- OpenSpec 当前没有 active change：`openspec list` 显示 `No active changes found.`。
-- `add-remote-skin-source-adapter` 已完成 build、close 和 archive。
-- `.ai/` 未被本轮工作修改。
-- 最近几个 OpenFlow change 已完成 build 和 close，并归档到
-  `openspec/changes/archive/`。
-- 最近成果已经包含依赖锁定策略和远程 skin source adapter；当前工作区仍有
-  本轮未提交改动。换电脑前建议先提交到 GitHub。
+- Git 工作区在更新本文档前是干净的，`refactor/all` 与 `origin/refactor/all` 同步。
+- OpenSpec 当前没有 active change：`npm.cmd exec -- openspec list` 显示 `No active changes found.`。
+- OpenSpec 全量严格校验通过：9 个 specs，0 failed。
+- `.ai/` 未被最近几轮实现、归档和修复工作修改。
+- 真实运行截图链路 `pnpm thumbs` 已修复并通过，可生成三语 21 张手机截图。
+
+最近关键提交：
+
+```text
+19ce6b5 fix: restore runtime thumbnail export
+0f15aa5 docs: archive skin runtime status UI spec
+1f5ffbd feat: add skin runtime status UI
+603de13 feat: add remote skin downloads and dependency locking
+e7da87d feat: add skin downloader and init state machine
+7adfe10 refactor: normalize project structure contracts
+d52bdd9 docs: monorepo product plan and agent contracts
+```
 
 ## 已完成内容
 
 ### 1. 仓库协作入口
 
-- 新增/完善根目录 `AGENTS.md`，作为本仓库 AI 代理协作入口，作用类似
-  Claude Code 的 `CLAUDE.md`。
-- 明确了项目定位、技术栈、目录边界、i18n 规则、皮肤运行时规则、测试命令和
+- 根目录 `AGENTS.md` 已作为本仓库 AI 代理协作入口，作用类似 Claude Code 的
+  `CLAUDE.md`。
+- 已明确项目定位、技术栈、目录边界、i18n 规则、皮肤运行时规则、测试命令和
   禁止事项。
 
 ### 2. 产品规划到技术方案
@@ -83,41 +94,32 @@
 - 扩展 runtime path：
   - `src/skin/paths.ts`
   - `tests/skin/paths.test.ts`
-- 扩展 skin 类型：
-  - `SkinPackageKey`
-  - `SkinPackageFailureReason`
-  - `SkinInitStatus`
-  - `SkinPackageIdentity`
-  - `SkinPackageOperationResult`
 - 扩展 store 最小初始化状态：
   - `skinInitStatus`
   - `skinInitUsedFallback`
-  - `setSkinInitStatus`
-- `src/app/useSkinStorageSync.ts` 现在通过 `resolveSkinInitState` 决定
+  - `skinPackageStates`
+- `src/app/useSkinStorageSync.ts` 通过 `resolveSkinInitState` 决定
   `activeSkinId` / `lastReadySkinId` / fallback，并写回持久化状态。
-- `README.md` 和 `AGENTS.md` 已同步 skin runtime 边界说明。
 - 主规格已合并：
   - `openspec/specs/app-init-state-machine/spec.md`
   - `openspec/specs/skin-downloader-runtime/spec.md`
 
 ### 5. 依赖锁定策略
 
-已完成并归档：
+已通过 OpenFlow / OpenSpec 完成并归档：
 
 - `define-dependency-lock-strategy`
 
 完成内容：
 
-- 新增正式规格：
-  - `openspec/specs/dependency-reproducibility/spec.md`
-- `package.json` 新增 `packageManager: pnpm@11.5.0`。
-- `pnpm-lock.yaml` 已生成并应提交到版本控制。
-- `.gitignore` 不再忽略 `pnpm-lock.yaml`，并忽略本地临时缓存：
+- 新增正式规格：`openspec/specs/dependency-reproducibility/spec.md`
+- `package.json` 固定 `packageManager: pnpm@11.5.0`。
+- `pnpm-lock.yaml` 已提交到版本控制。
+- `.npmrc` 默认 registry 使用官方 npm registry。
+- `.gitignore` 已忽略本地缓存：
   - `.npm-cache/`
   - `.pnpm-store/`
-- `.npmrc` 默认 registry 改为官方 npm registry：
-  - `registry=https://registry.npmjs.org/`
-- `README.md` 和 `AGENTS.md` 已补充新电脑安装、冻结锁文件和镜像临时覆盖说明。
+  - `.expo/`
 
 ### 6. 真实远程 skin source adapter
 
@@ -127,117 +129,112 @@
 
 完成内容：
 
-- 新增远程 source adapter：
-  - `src/skin/remoteSourceAdapter.ts`
-- 新增测试：
-  - `tests/skin/remote-source-adapter.test.ts`
-- 新增 Superpowers build 计划：
-  - `docs/superpowers/plans/2026-06-02-add-remote-skin-source-adapter.md`
+- 新增远程 source adapter：`src/skin/remoteSourceAdapter.ts`
+- 新增测试：`tests/skin/remote-source-adapter.test.ts`
 - 远程 adapter 支持：
-  - direct manifest URL。
-  - 可选 asset base URL。
-  - 远程 manifest 获取。
-  - manifest 声明 asset 的 URL 解析与 staging 写入。
-  - progress callback。
-  - retry policy。
-  - cancellation signal。
-  - fetch / file write / wait / package hash 的依赖注入。
+  - direct manifest URL
+  - 可选 asset base URL
+  - 远程 manifest 获取
+  - manifest 声明 asset 的 URL 解析与 staging 写入
+  - progress callback
+  - retry policy
+  - cancellation signal
+  - fetch / file write / wait / package hash 依赖注入
 - 远程包仍复用现有 `downloadSkinPackage` 的 staging、validation、promotion、
   fallback 和 package state 规则。
-- `README.md` 和 `AGENTS.md` 已补充远程 skin adapter 边界：只下载 manifest 与
-  静态资源，不执行远程 React 组件、远程 JavaScript 或插件代码。
+- 远程 adapter 只下载 manifest 与静态资源，不执行远程 React 组件、远程
+  JavaScript 或插件代码。
+
+### 7. Skin runtime status UI
+
+已通过 OpenFlow / OpenSpec 完成 build 和 close，并归档：
+
+- `add-skin-runtime-status-ui`
+
+完成内容：
+
+- My 页新增皮肤运行时状态卡：`src/pages/my/SkinRuntimeStatus.tsx`
+- `src/app/(tabs)/my.tsx` 从 store 注入：
+  - `activeSkinId`
+  - `skinInitStatus`
+  - `skinInitUsedFallback`
+  - `skinPackageStates`
+- 三语新增状态文案：
+  - `src/locals/zh-CN.json`
+  - `src/locals/zh-TW.json`
+  - `src/locals/en-US.json`
+- 新增/更新测试：
+  - `tests/pages/my/my-screen.test.tsx`
+  - `tests/pages/my/my-screen.i18n.test.tsx`
+- 覆盖 ready、fallback、failed、incompatible package state 展示。
 - 主规格已合并：
+  - `openspec/specs/app-init-state-machine/spec.md`
   - `openspec/specs/skin-downloader-runtime/spec.md`
 
-## 历史执行与验证摘要
+### 8. 真实运行截图链路
 
-最近已通过的验证：
+已修复并提交：
 
-```bash
-npm.cmd exec -- openspec validate add-skin-downloader-init-state-machine --strict
-jest tests/skin --runInBand
-jest tests/support/source-structure.test.ts --runInBand
-jest tests/pages/my/my-screen.test.tsx --runInBand
-tsc --noEmit
-git diff -- .ai
-npm.cmd exec -- openspec validate define-dependency-lock-strategy --strict
-npm.cmd exec -- openspec validate --all --strict
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm install --frozen-lockfile --lockfile-only --ignore-scripts --config.registry=https://registry.npmjs.org/ --store-dir .pnpm-store
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/support/source-structure.test.ts --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin/remote-source-adapter.test.ts --runInBand
-npm.cmd exec -- openspec validate add-remote-skin-source-adapter --strict
-```
+- `pnpm thumbs` 现在可以完成 Expo Web 真实导出，并用 Playwright/系统 Chrome 截图。
+- Windows 下 `pnpm.cmd` / cmd script spawn 已兼容。
+- `react-native-css-interop@0.2.4` 已声明为直接依赖，解决 pnpm 隔离依赖下 Expo
+  Web bundling 找不到 `react-native-css-interop/jsx-runtime` 的问题。
+- Playwright 托管 Chromium 缺失时，截图脚本可 fallback 到本机 Chrome / Edge。
+- Expo typed routes 生成后，预览路由跳转已收窄为受支持的页面路径。
+- `thumbs/` 已重新生成三语 21 张真实运行截图，尺寸为 `780x1688`。
 
-验证结果：
+## 最近验证摘要
 
-- `tests/skin`：10 个 test suite，44 个 tests，通过。
-- `tests/support/source-structure.test.ts`：通过。
-- `tests/pages/my/my-screen.test.tsx`：通过。
-- TypeScript：通过。
-- `.ai/` diff：空。
-- OpenSpec 全量严格校验：9 个 specs 通过，0 失败。
-- 依赖冻结锁文件校验：通过。
-- `add-remote-skin-source-adapter` OpenSpec 严格校验：通过。
-- `tests/skin/remote-source-adapter.test.ts`：8 个 tests，通过。
-- `git diff --check`：无空白错误，仅 Windows CRLF 提示。
-
-已知非阻塞情况：
-
-- `node scripts/check-locals.js` 当前会因为项目既有 unused baseline keys 失败。
-  本次没有新增用户可见文案，因此没有把它作为阻塞项。
-- 仓库 `.npmrc` 现在默认使用官方 npm registry。如果新电脑本地网络需要镜像，
-  可以临时覆盖 registry，不要把镜像地址写回仓库配置：
-
-```bash
-pnpm --config.registry=https://registry.npmmirror.com install
-```
-
-## 当前未提交内容
-
-截至本文件更新时，`git status --short --untracked-files=all` 显示的相关未提交内容包括：
-
-```text
-M  .gitignore
-M  .npmrc
-M  AGENTS.md
-M  README.md
-M  openspec/specs/skin-downloader-runtime/spec.md
-M  package.json
-M  TODO.md
-?? docs/superpowers/plans/2026-06-02-add-remote-skin-source-adapter.md
-?? openspec/changes/archive/2026-06-02-add-remote-skin-source-adapter/
-?? openspec/changes/archive/2026-06-02-define-dependency-lock-strategy/
-?? openspec/specs/dependency-reproducibility/spec.md
-?? pnpm-lock.yaml
-?? src/skin/remoteSourceAdapter.ts
-?? tests/skin/remote-source-adapter.test.ts
-```
-
-提交前建议再跑：
+最近已通过：
 
 ```bash
 npm.cmd exec -- openspec list
 npm.cmd exec -- openspec validate --all --strict
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm install --frozen-lockfile --lockfile-only --ignore-scripts --config.registry=https://registry.npmjs.org/ --store-dir .pnpm-store
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/support/source-structure.test.ts --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/i18n --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/my/my-screen.test.tsx --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/my/my-screen.i18n.test.tsx --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/support/source-structure.test.ts --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/support/thumbs-export.test.ts --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm thumbs
 git diff -- .ai
+git diff --check
+```
+
+验证结果：
+
+- OpenSpec：9 个 specs 全部通过，0 failed。
+- `tests/skin`：11 个 test suites，52 个 tests，通过。
+- `tests/i18n`：2 个 test suites，6 个 tests，通过。
+- My 页测试：7 个 tests，通过。
+- source structure 测试：5 个 tests，通过。
+- thumbs export 测试：6 个 tests，通过。
+- `pnpm thumbs`：三语 21 张真实运行截图生成成功。
+- `.ai/` diff：空。
+- `git diff --check`：无空白错误，仅 Windows CRLF 提示。
+
+已知非阻塞情况：
+
+- Git 可能提示 unreachable loose objects 较多，这是仓库维护提示；之前没有自动执行
+  `git prune`。
+- 如果本地缺少 Playwright 托管 Chromium，`pnpm thumbs` 会使用系统 Chrome / Edge
+  fallback。若希望完全使用 Playwright 托管浏览器，可另行运行：
+
+```bash
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm exec playwright install chromium
 ```
 
 ## 换电脑后恢复步骤
 
-1. 克隆仓库并切到包含本次提交的分支。
+1. 克隆仓库并切到 `refactor/all` 或包含上述提交的分支。
 2. 安装依赖：
 
 ```bash
 corepack pnpm install --frozen-lockfile
 ```
 
-如果本机没有启用 Corepack，也可以使用全局同版本 `pnpm@11.5.0`。如果本地
-网络需要镜像，使用临时覆盖：
+如果本机没有启用 Corepack，也可以使用全局同版本 `pnpm@11.5.0`。如果本地网络需要镜像，使用临时覆盖，不要写回仓库配置：
 
 ```bash
 pnpm --config.registry=https://registry.npmmirror.com install
@@ -254,63 +251,69 @@ npm.cmd exec -- openspec list
 4. 跑核心验证：
 
 ```bash
+pnpm check:type
 pnpm test tests/skin --runInBand
 pnpm test tests/support/source-structure.test.ts --runInBand
-pnpm check:type
+pnpm thumbs
 ```
 
 ## 后续建议
 
-### 优先级 P0：提交当前成果
+### P0：提交本 TODO 更新
 
-- 当前工作区包含已经完成并归档的 `define-dependency-lock-strategy` 和
-  `add-remote-skin-source-adapter`。
-- 建议先 commit 并推送到 GitHub，再开始下一个 OpenFlow change。
+本文档更新后，工作区会只包含 `TODO.md` 的文档变更。建议提交后再开下一个
+OpenFlow change。
 
-### 优先级 P1：skin UI 状态展示
+### P1：固化 skin package hash canonicalization
 
-当前 store 已暴露最小状态：
-
-- `skinInitStatus`
-- `skinInitUsedFallback`
-- `skinPackageStates`
-
-但页面没有新增 UI 文案或状态展示。后续可以决定是否在 My 页或设置页展示：
-
-- checking
-- downloading
-- failed
-- incompatible
-- fallback occurred
-
-如果做 UI，需要同步三语：
-
-- `src/locals/zh-CN.json`
-- `src/locals/zh-TW.json`
-- `src/locals/en-US.json`
-
-并运行：
+建议下一个 OpenFlow change：
 
 ```bash
-pnpm check:local
+/openflow proposal add-skin-package-hash-canonicalization
 ```
 
-注意：当前 `check-locals.js` 有既有 unused keys 失败，可能需要先修脚本策略或清理未使用文案。
+目标：
 
-### 优先级 P2：包 hash 真实算法
+- 明确 package hash 的 canonical 输入格式。
+- 固定文件排序规则。
+- 固定路径分隔符规则，保证跨平台一致。
+- 区分 manifest hash、asset hash、package hash / archive hash。
+- 增加跨平台稳定性测试。
 
-当前 package validation 已有 packageHash 和 asset hash 契约，但真实 package hash 计算策略仍可深化：
+这个优先级高，因为它直接影响远程 skin 包可信校验。
 
-- 确定文件排序。
-- 确定 hash 输入格式。
-- 区分 manifest hash、asset hash、archive hash。
-- 处理平台路径分隔符。
+### P1：增加 remote skin 下载 QA 入口
 
-建议放在 downloader 后续 change 中做。
+在 package hash 规则稳定后，再做一个内部 QA/dev 入口，把链路串起来：
 
-### 优先级 P2：完整 monorepo 物理拆分
+```text
+remote manifest URL -> source adapter -> downloader -> validation -> ready package -> My 状态 UI
+```
 
-产品/技术方案已经有 monorepo 规划规格，但当前代码仍是单 Expo app 项目。未来可以逐步拆：
+建议先做受控测试入口，不急着做正式用户皮肤商店。
+
+### P1：建立固定手动验收清单
+
+当前建议最小回归：
+
+```bash
+pnpm check:type
+pnpm test tests/skin --runInBand
+pnpm test tests/i18n --runInBand
+pnpm test tests/pages/my/my-screen.test.tsx --runInBand
+pnpm test tests/support/source-structure.test.ts --runInBand
+pnpm test tests/support/thumbs-export.test.ts --runInBand
+pnpm thumbs
+npm.cmd exec -- openspec validate --all --strict
+```
+
+### P2：清理 i18n unused keys / check:local
+
+后续应让 `pnpm check:local` 重新成为可靠阻塞项。若当前仍有历史 unused keys，应开一个小 change 清理或调整检查策略。
+
+### P2：monorepo 物理拆分
+
+产品/技术方案已经有 monorepo 规划规格，但当前代码仍是单 Expo app 项目。建议等 skin 下载链路和 hash 契约稳定后，再拆：
 
 - `apps/mobile`
 - `packages/core`
@@ -318,20 +321,11 @@ pnpm check:local
 - `packages/i18n`
 - `packages/config`
 
-拆分前建议先确保依赖锁定策略完成。
+### P2：OpenSpec Purpose 清理
 
-### 优先级 P2：文档 Purpose 清理
+部分主规格可能仍保留自动归档生成的 `Purpose TBD` 文案。可以后续开小 change 统一补齐，不影响当前实现。
 
-部分 OpenSpec archive 生成的主规格可能仍有自动生成的：
-
-```text
-Purpose
-TBD - created by archiving change ...
-```
-
-可以后续开一个小 change 统一补齐主规格 Purpose，不影响当前实现。
-
-## 继续工作时的边界提醒
+## 继续工作边界
 
 - 不要修改 `.ai/`，除非用户明确要求。
 - 新实现优先跟随：

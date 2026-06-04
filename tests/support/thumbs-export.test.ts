@@ -38,6 +38,28 @@ test('runtime thumbs script exports the real web bundle and opens the exported e
   expect(source).not.toContain('createServer');
 });
 
+test('runtime thumbs wrap Windows cmd scripts through cmd.exe', () => {
+  const source = readScriptSource();
+
+  expect(source).toContain('function resolveSpawnCommand');
+  expect(source).toContain("process.env.ComSpec || 'cmd.exe'");
+  expect(source).toContain("'/d'");
+  expect(source).toContain("'/s'");
+  expect(source).toContain("'/c'");
+  expect(source).toContain('quoteWindowsCommandArg');
+});
+
+test('runtime thumbs can fall back to a system Chromium browser', () => {
+  const source = readScriptSource();
+
+  expect(source).toContain('function resolveBrowserLaunchOptions');
+  expect(source).toContain('PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH');
+  expect(source).toContain('SYSTEM_BROWSER_CANDIDATES');
+  expect(source).toContain('Google\\\\Chrome\\\\Application\\\\chrome.exe');
+  expect(source).toContain('Microsoft\\\\Edge\\\\Application\\\\msedge.exe');
+  expect(source).toContain('chromium.launch(resolveBrowserLaunchOptions())');
+});
+
 test('runtime thumbs render at phone css size and export high-density pngs', () => {
   const source = readScriptSource();
 

@@ -37,6 +37,31 @@ const CONTENT_TYPES = {
   '.svg': 'image/svg+xml; charset=utf-8',
   '.css': 'text/css; charset=utf-8'
 };
+const SYSTEM_BROWSER_CANDIDATES =
+  process.platform === 'win32'
+    ? [
+        path.join(
+          process.env.PROGRAMFILES || 'C:\\Program Files',
+          'Google\\Chrome\\Application\\chrome.exe'
+        ),
+        path.join(
+          process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)',
+          'Google\\Chrome\\Application\\chrome.exe'
+        ),
+        path.join(
+          process.env.LOCALAPPDATA || '',
+          'Google\\Chrome\\Application\\chrome.exe'
+        ),
+        path.join(
+          process.env.PROGRAMFILES || 'C:\\Program Files',
+          'Microsoft\\Edge\\Application\\msedge.exe'
+        ),
+        path.join(
+          process.env['PROGRAMFILES(X86)'] || 'C:\\Program Files (x86)',
+          'Microsoft\\Edge\\Application\\msedge.exe'
+        )
+      ]
+    : [];
 
 function logStage(message) {
   console.log(`[thumbs] ${message}`);
@@ -56,6 +81,45 @@ function ensureDir(target) {
   fs.mkdirSync(target, { recursive: true });
 }
 
+function quoteWindowsCommandArg(value) {
+  if (value.length === 0) {
+    return '""';
+  }
+
+  if (!/[\s"]/u.test(value)) {
+    return value;
+  }
+
+  return `"${value.replace(/"/gu, '\\"')}"`;
+}
+
+function resolveSpawnCommand(command, args) {
+  if (process.platform !== 'win32') {
+    return { command, args };
+  }
+
+  return {
+    command: process.env.ComSpec || 'cmd.exe',
+    args: [
+      '/d',
+      '/s',
+      '/c',
+      [command, ...args].map(quoteWindowsCommandArg).join(' ')
+    ]
+  };
+}
+
+function resolveBrowserLaunchOptions() {
+  const executablePath =
+    process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ||
+    SYSTEM_BROWSER_CANDIDATES.find(candidate => fs.existsSync(candidate));
+
+  return {
+    headless: true,
+    ...(executablePath ? { executablePath } : {})
+  };
+}
+
 function buildPreviewUrl({ route, locale, homeState }) {
   const url = new URL(`${PREVIEW_ORIGIN}${route}`);
   url.searchParams.set('preview', '1');
@@ -69,7 +133,8 @@ function buildPreviewUrl({ route, locale, homeState }) {
 
 function runCommand(command, args, options = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, {
+    const spawnCommand = resolveSpawnCommand(command, args);
+    const child = spawn(spawnCommand.command, spawnCommand.args, {
       cwd: ROOT,
       ...options
     });
@@ -175,9 +240,7 @@ async function renderOneCapture(page, capture, locale, index, total) {
 }
 
 async function captureAll() {
-  const browser = await chromium.launch({
-    headless: true
-  });
+  const browser = await chromium.launch(resolveBrowserLaunchOptions());
   const context = await browser.newContext({
     viewport: {
       width: PHONE_WIDTH,

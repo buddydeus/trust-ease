@@ -2,6 +2,29 @@ import { router } from 'expo-router';
 
 import { useEffect } from 'react';
 
+type PreviewRoute =
+  | '/welcome'
+  | '/report'
+  | '/home'
+  | '/items'
+  | '/items/new'
+  | '/my'
+  | '/my/trigger-state';
+
+const previewRoutes = new Set<string>([
+  '/welcome',
+  '/report',
+  '/home',
+  '/items',
+  '/items/new',
+  '/my',
+  '/my/trigger-state'
+]);
+
+const isPreviewRoute = (route: string): route is PreviewRoute => {
+  return previewRoutes.has(route);
+};
+
 /**
  * 预览导出时使用的路由同步输入。
  */
@@ -27,6 +50,10 @@ export const usePreviewRouteSync = ({
 }: IPreviewRouteSyncOptions): void => {
   useEffect(() => {
     if (!enabled || !route) {
+      return;
+    }
+
+    if (!isPreviewRoute(route)) {
       return;
     }
 

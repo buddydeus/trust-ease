@@ -3,6 +3,7 @@
     "name": "安心",
     "slug": "anxin-app",
     "scheme": "anxin",
+    "userInterfaceStyle": "automatic",
     "web": {
       "bundler": "metro"
     },

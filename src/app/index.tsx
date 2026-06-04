@@ -13,7 +13,7 @@ export interface IIndexRouteProps {}
  * @returns 已 memo 的重定向门（加载中为 `null`）。
  */
 const IndexRoute = React.memo<IIndexRouteProps>(() => {
-  const [target, setTarget] = useState<string | null>(null);
+  const [target, setTarget] = useState<'/report' | '/welcome' | null>(null);
 
   useEffect(() => {
     let active = true;

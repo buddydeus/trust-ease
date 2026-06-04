@@ -6,7 +6,9 @@
     "src/**/*.d.ts",
     "jest.setup.ts",
     "env.d.ts",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
   ],
   "compilerOptions": {
     "strict": true
