@@ -227,18 +227,43 @@ git diff -- .ai
 
 ## 自动化前端 QA 循环
 
-当前用户要求：
+本轮执行状态：已完成。
 
-1. 更新 TODO 并提交。
-2. 用自动化方式基于当前已完成前端进行 QA。
-3. 如发现问题，在 `.bugs/` 目录用 Markdown 记录：
-   - 问题描述
-   - 问题定位
-   - 建议修复方式
-4. 后续尝试修复。
-5. 循环执行，直到没有问题。
+发现并修复的问题：
 
-建议 QA 命令顺序：
+- `pnpm check:local` 误报 76 个 unused baseline keys。
+- 问题记录：`.bugs/2026-06-05-check-local-unused-keys.md`
+- 修复提交：`f45f912 fix: detect current locale key usage`
+- 根因：`scripts/check-locals.js` 未识别当前代码中大量使用的单参数 `getMessage('key')` 形态。
+- 修复：扩展 key usage 检测并补充 `tests/i18n/check-locals.test.ts` 回归 fixture。
+
+本轮已通过的自动化 QA：
+
+```bash
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:local
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm skin:qa:remote
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm thumbs
+npm.cmd exec -- openspec validate --all --strict
+git diff -- .ai
+```
+
+截图 QA：
+
+- `pnpm thumbs` 已生成 21 张真实运行截图。
+- 自动化截图体检通过：21 张、尺寸 `780x1688`、非空白。
+- 抽查 `zh-CN/welcome.png`、`zh-CN/my.png`、`en-US/new-item.png`，未发现崩溃页或明显渲染错误。
+
+若后续继续发现前端问题：
+
+- 在 `.bugs/YYYY-MM-DD-<short-slug>.md` 中记录。
+- 文档必须包含问题描述、问题定位、建议修复方式。
+- 优先修复真实代码问题，不把失败测试简单改成放行。
+- 修复后重新运行对应失败命令和完整 QA 命令。
+- 每轮修复完成后按 commit-helper 提交。
+
+建议后续固定化的 QA 命令顺序：
 
 ```bash
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
