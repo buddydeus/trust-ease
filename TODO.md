@@ -6,15 +6,17 @@
 
 ## 当前状态
 
-- Git 工作区在更新本文档前是干净的，`refactor/all` 与 `origin/refactor/all` 同步。
+- Git 工作区在更新本文档前只包含本次 OpenFlow close 归档变更；`refactor/all`
+  已领先 `origin/refactor/all`，换电脑前需要 push。
 - OpenSpec 当前没有 active change：`npm.cmd exec -- openspec list` 显示 `No active changes found.`。
 - OpenSpec 全量严格校验通过：9 个 specs，0 failed。
-- `.ai/` 未被最近几轮实现、归档和修复工作修改。
+- `.ai/` 未被最近几轮实现、归档、close 和修复工作修改。
 - 真实运行截图链路 `pnpm thumbs` 已修复并通过，可生成三语 21 张手机截图。
 
 最近关键提交：
 
 ```text
+6c634de feat: canonicalize skin package hashes
 19ce6b5 fix: restore runtime thumbnail export
 0f15aa5 docs: archive skin runtime status UI spec
 1f5ffbd feat: add skin runtime status UI
@@ -171,7 +173,38 @@ d52bdd9 docs: monorepo product plan and agent contracts
   - `openspec/specs/app-init-state-machine/spec.md`
   - `openspec/specs/skin-downloader-runtime/spec.md`
 
-### 8. 真实运行截图链路
+### 8. Skin package hash canonicalization
+
+已通过 OpenFlow / OpenSpec 完成 build 和 close，并归档：
+
+- `add-skin-package-hash-canonicalization`
+
+完成内容：
+
+- 新增 canonical package hash helper：`src/skin/packageHash.ts`
+- package hash 输入显式包含：
+  - `skinId`
+  - `skinVersion`
+  - canonical manifest source
+  - normalized file entries
+- package hash canonicalization 已固定：
+  - Windows `\` 与 POSIX `/` 路径分隔符等价
+  - 文件按 normalized relative path 排序
+  - manifest object keys 递归排序
+  - manifest `packageHash` 从 canonical manifest input 中移除，避免自引用
+  - 空路径、遍历路径、绝对路径、URL-like path 和重复路径会被拒绝
+  - 输出保留稳定算法前缀 `fnv1a:<hex>`
+- `src/skin/remoteSourceAdapter.ts` 在 descriptor 未提供显式 `packageHash` 时，改用
+  canonical helper，不再使用 ad hoc `JSON.stringify` fallback。
+- 远程 adapter 仍保持 data-only：只处理 manifest 和静态 asset，不执行远程
+  React 组件、JavaScript 或插件代码。
+- 新增/更新测试：
+  - `tests/skin/package-hash.test.ts`
+  - `tests/skin/remote-source-adapter.test.ts`
+- 主规格已合并：
+  - `openspec/specs/skin-downloader-runtime/spec.md`
+
+### 9. 真实运行截图链路
 
 已修复并提交：
 
@@ -192,6 +225,8 @@ npm.cmd exec -- openspec list
 npm.cmd exec -- openspec validate --all --strict
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin/package-hash.test.ts --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/skin/remote-source-adapter.test.ts --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/i18n --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/my/my-screen.test.tsx --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/my/my-screen.i18n.test.tsx --runInBand
@@ -205,7 +240,9 @@ git diff --check
 验证结果：
 
 - OpenSpec：9 个 specs 全部通过，0 failed。
-- `tests/skin`：11 个 test suites，52 个 tests，通过。
+- `tests/skin`：12 个 test suites，64 个 tests，通过。
+- `tests/skin/package-hash.test.ts`：1 个 test suite，11 个 tests，通过。
+- `tests/skin/remote-source-adapter.test.ts`：1 个 test suite，9 个 tests，通过。
 - `tests/i18n`：2 个 test suites，6 个 tests，通过。
 - My 页测试：7 个 tests，通过。
 - source structure 测试：5 个 tests，通过。
@@ -228,6 +265,12 @@ npm.cmd exec --package=pnpm@11.5.0 -- pnpm exec playwright install chromium
 ## 换电脑后恢复步骤
 
 1. 克隆仓库并切到 `refactor/all` 或包含上述提交的分支。
+   如果本机分支尚未 push 到 GitHub，先在旧电脑执行：
+
+```bash
+git push
+```
+
 2. 安装依赖：
 
 ```bash
@@ -259,38 +302,36 @@ pnpm thumbs
 
 ## 后续建议
 
-### P0：提交本 TODO 更新
+### P0：提交并 push 本次 close / TODO 更新
 
-本文档更新后，工作区会只包含 `TODO.md` 的文档变更。建议提交后再开下一个
-OpenFlow change。
-
-### P1：固化 skin package hash canonicalization
-
-建议下一个 OpenFlow change：
-
-```bash
-/openflow proposal add-skin-package-hash-canonicalization
-```
-
-目标：
-
-- 明确 package hash 的 canonical 输入格式。
-- 固定文件排序规则。
-- 固定路径分隔符规则，保证跨平台一致。
-- 区分 manifest hash、asset hash、package hash / archive hash。
-- 增加跨平台稳定性测试。
-
-这个优先级高，因为它直接影响远程 skin 包可信校验。
+本文档更新会与 `add-skin-package-hash-canonicalization` close 归档一起提交。提交后建议
+push 到 GitHub，再开下一个 OpenFlow change。
 
 ### P1：增加 remote skin 下载 QA 入口
 
-在 package hash 规则稳定后，再做一个内部 QA/dev 入口，把链路串起来：
+package hash 规则已经稳定并归档。下一步建议做一个内部 QA/dev 入口，把链路串起来：
 
 ```text
 remote manifest URL -> source adapter -> downloader -> validation -> ready package -> My 状态 UI
 ```
 
 建议先做受控测试入口，不急着做正式用户皮肤商店。
+
+### P1：补齐 remote skin package 发布/校验工具链
+
+当前 App 端已经能 canonicalize package hash，但还没有给未来皮肤发布侧使用的打包工具。
+建议后续开 change：
+
+```bash
+/openflow proposal add-skin-package-publishing-tooling
+```
+
+目标：
+
+- 从本地 skin package 目录生成 canonical package hash。
+- 写回或校验 manifest `packageHash`。
+- 校验 manifest asset hashes 与 package hash 一致。
+- 为 QA remote manifest 提供可复现的测试 fixture。
 
 ### P1：建立固定手动验收清单
 
