@@ -1,5 +1,6 @@
 import * as FileSystem from 'expo-file-system/legacy';
 
+import { calculateSkinContentHash } from './contentHash';
 import type {
   SkinPackageSourceAdapter,
   SkinPackageSourcePayload
@@ -99,14 +100,7 @@ const ensureNotCancelled = (signal?: IRemoteSkinAbortSignal): void => {
 };
 
 export const calculateRemoteSkinContentHash = (content: string): string => {
-  let hash = 0x811c9dc5;
-
-  for (let index = 0; index < content.length; index += 1) {
-    hash ^= content.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193);
-  }
-
-  return `fnv1a:${(hash >>> 0).toString(16).padStart(8, '0')}`;
+  return calculateSkinContentHash(content);
 };
 
 const calculateDefaultPackageHash = ({

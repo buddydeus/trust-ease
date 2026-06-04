@@ -1,3 +1,4 @@
+import { calculateSkinContentHash } from './contentHash';
 import type { SkinPackageIdentity } from './types';
 
 export interface ISkinPackageHashFile {
@@ -20,17 +21,6 @@ const HASH_FORMAT = 'trust-ease.skin-package-hash.v1';
 
 const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
-};
-
-const calculateFnv1aHash = (content: string): string => {
-  let hash = 0x811c9dc5;
-
-  for (let index = 0; index < content.length; index += 1) {
-    hash ^= content.charCodeAt(index);
-    hash = Math.imul(hash, 0x01000193);
-  }
-
-  return `fnv1a:${(hash >>> 0).toString(16).padStart(8, '0')}`;
 };
 
 export const normalizeSkinPackageHashPath = (path: string): string => {
@@ -111,7 +101,7 @@ export const calculateSkinPackageHash = ({
   manifestSource,
   files
 }: ISkinPackageHashInput): string => {
-  return calculateFnv1aHash(
+  return calculateSkinContentHash(
     stableStringify({
       format: HASH_FORMAT,
       identity: {

@@ -50,6 +50,8 @@ pnpm check:type
 pnpm check:local
 pnpm design
 pnpm thumbs
+pnpm skin:package -- check <skin-dir>
+pnpm skin:package -- update <skin-dir>
 pnpm fix:all
 ```
 
@@ -59,6 +61,11 @@ pnpm fix:all
   导出，再用 Playwright 渲染真实 App bundle 并截图到 `thumbs/`。
 - `pnpm thumbs` 不应回退到设计预览图；如果真实浏览器渲染不可用，应让命令
   失败。
+- `pnpm skin:package -- check <skin-dir>` 校验本地皮肤包的 manifest 资源 hash
+  和 canonical `packageHash`，不写文件。
+- `pnpm skin:package -- update <skin-dir>` 将当前资源 hash 和 canonical
+  `packageHash` 写回该目录下的 `manifest.json`。它用于构建期 bundled skin 源
+  或未来远程 skin QA fixture，不写入移动端运行时目录。
 - 新电脑或 CI 风格验证优先使用 `corepack pnpm install --frozen-lockfile`。
   仓库默认 registry 是官方 npm registry；如本地网络需要镜像，用
   `pnpm --config.registry=https://registry.npmmirror.com install` 临时覆盖，
@@ -178,6 +185,8 @@ pnpm fix:all
 - `src/skin/runtime.ts`
 - `src/skin/storage.ts`
 - `src/skin/packageValidation.ts`
+- `src/skin/packageHash.ts`
+- `src/skin/publishingTool.ts`
 - `src/skin/downloader.ts`
 - `src/skin/initStateMachine.ts`
 - `skins/skin-001/manifest.json`

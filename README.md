@@ -37,6 +37,8 @@ pnpm test
 pnpm check:type
 pnpm design
 pnpm thumbs
+pnpm skin:package -- check <skin-dir>
+pnpm skin:package -- update <skin-dir>
 ```
 
 ### `pnpm design`
@@ -56,6 +58,15 @@ pnpm thumbs
 - 当前阶段：开始导出、清理目录、切换到哪个语言
 - 当前文件：例如 `thumbs/zh-CN/home.png` 或 `designs/zh-CN/home.png`
 - 最终汇总：总导出数量和耗时
+
+### `pnpm skin:package`
+
+运行 `pnpm skin:package -- check <skin-dir>` 会校验本地皮肤包的 manifest 资源
+hash 和 canonical `packageHash`，不会写入文件。
+
+运行 `pnpm skin:package -- update <skin-dir>` 会把当前资源 hash 和 canonical
+`packageHash` 写回该目录下的 `manifest.json`。这个命令用于构建期 bundled skin
+源或未来远程 skin QA fixture，不会写入 Expo `documentDirectory/skins/` 运行时目录。
 
 ## 目录说明
 
@@ -103,6 +114,8 @@ pnpm thumbs
 - [skins/skin-001/manifest.json](./skins/skin-001/manifest.json)
 - [src/skin/paths.ts](./src/skin/paths.ts)
 - [src/skin/packageValidation.ts](./src/skin/packageValidation.ts)
+- [src/skin/packageHash.ts](./src/skin/packageHash.ts)
+- [src/skin/publishingTool.ts](./src/skin/publishingTool.ts)
 - [src/skin/downloader.ts](./src/skin/downloader.ts)
 - [src/skin/initStateMachine.ts](./src/skin/initStateMachine.ts)
 - [src/skin/runtime.ts](./src/skin/runtime.ts)
@@ -119,6 +132,10 @@ pnpm thumbs
 JavaScript 或插件代码。远程包仍必须经过现有 staging、manifest 解析、资源 hash、
 package hash、featureVersion 兼容性和 promotion 流程后才能 ready。
 
+本地发布或 QA 皮肤包可先用 `pnpm skin:package -- check <skin-dir>` 校验；需要更新
+manifest 中资源 hash 与 canonical package hash 时，使用
+`pnpm skin:package -- update <skin-dir>`。
+
 `SkinRuntime` 当前对外暴露只读快照，避免 UI 层误改运行时对象后污染全局状态。
 
 ## 测试
@@ -131,6 +148,8 @@ package hash、featureVersion 兼容性和 promotion 流程后才能 ready。
 - [tests/skin/storage.test.ts](./tests/skin/storage.test.ts)
 - [tests/skin/init-state-machine.test.ts](./tests/skin/init-state-machine.test.ts)
 - [tests/skin/package-validation.test.ts](./tests/skin/package-validation.test.ts)
+- [tests/skin/package-hash.test.ts](./tests/skin/package-hash.test.ts)
+- [tests/skin/publishing-tool.test.ts](./tests/skin/publishing-tool.test.ts)
 - [tests/skin/downloader.test.ts](./tests/skin/downloader.test.ts)
 
 如果继续推进皮肤初始化、下载和页面接入，建议优先沿用现有的 `tests/skin/*` 分层方式补测试。
