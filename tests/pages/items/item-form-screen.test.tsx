@@ -48,15 +48,33 @@ test('renders the guided creation flow instead of a long raw form', () => {
   ).toBeTruthy();
 });
 
-test('new item route renders the guided creation screen shell', () => {
+test('new item route renders the guided creation screen shell', async () => {
   render(<NewItemRoute />);
 
-  expect(screen.getByText(zhCN['itemForm.title'])).toBeTruthy();
+  await waitFor(() => {
+    expect(screen.getByText(zhCN['itemForm.title'])).toBeTruthy();
+  });
   expect(screen.getByText(zhCN['itemForm.titleLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['itemForm.summaryLabel'])).toBeTruthy();
 });
 
 test('new item route saves a local item and returns to items tab', async () => {
+  await saveTrustDataSnapshot({
+    ...createDefaultTrustDataSnapshot(),
+    helpers: [
+      {
+        id: 'helper-1',
+        displayName: '林杉',
+        relationship: '朋友',
+        contactMethod: 'phone:13800000000',
+        notes: '优先联系',
+        status: 'active',
+        createdAt: '2026-06-05T08:00:00.000Z',
+        updatedAt: '2026-06-05T08:00:00.000Z'
+      }
+    ]
+  });
+
   render(<NewItemRoute />);
 
   fireEvent.changeText(
@@ -67,6 +85,7 @@ test('new item route saves a local item and returns to items tab', async () => {
     screen.getByPlaceholderText(zhCN['itemForm.summaryPlaceholder']),
     '把猫交给林杉照看'
   );
+  fireEvent.press(await screen.findByText('林杉'));
   fireEvent.press(
     screen.getByRole('button', { name: zhCN['itemForm.saveAction'] })
   );
@@ -82,6 +101,7 @@ test('new item route saves a local item and returns to items tab', async () => {
     title: '宠物照料',
     kind: 'offline',
     summary: '把猫交给林杉照看',
+    helperIds: ['helper-1'],
     status: 'active'
   });
   expect(router.replace).toHaveBeenCalledWith('/items');
@@ -121,7 +141,41 @@ test('submits a validated item payload', () => {
   expect(onSubmit).toHaveBeenCalledWith({
     title: '宠物照料',
     kind: 'online',
-    summary: '把猫交给林杉照看'
+    summary: '把猫交给林杉照看',
+    helperIds: []
+  });
+});
+
+test('submits selected helper ids from helper choices', () => {
+  const onSubmit = jest.fn();
+
+  render(
+    <ItemFormScreen
+      helperChoices={[
+        {
+          id: 'helper-1',
+          displayName: '林杉',
+          relationship: '朋友'
+        }
+      ]}
+      onSubmit={onSubmit}
+    />
+  );
+
+  fireEvent.changeText(
+    screen.getByPlaceholderText(zhCN['itemForm.titlePlaceholder']),
+    '宠物照料'
+  );
+  fireEvent.press(screen.getByText('林杉'));
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['itemForm.saveAction'] })
+  );
+
+  expect(onSubmit).toHaveBeenCalledWith({
+    title: '宠物照料',
+    kind: 'offline',
+    summary: '',
+    helperIds: ['helper-1']
   });
 });
 
@@ -133,8 +187,16 @@ test('prefills edit values and submits updated payload', () => {
       initialValues={{
         title: '旧标题',
         kind: 'offline',
-        summary: '旧摘要'
+        summary: '旧摘要',
+        helperIds: ['helper-1']
       }}
+      helperChoices={[
+        {
+          id: 'helper-1',
+          displayName: '林杉',
+          relationship: '朋友'
+        }
+      ]}
       onSubmit={onSubmit}
     />
   );
@@ -150,7 +212,8 @@ test('prefills edit values and submits updated payload', () => {
   expect(onSubmit).toHaveBeenCalledWith({
     title: '更新事项',
     kind: 'offline',
-    summary: '旧摘要'
+    summary: '旧摘要',
+    helperIds: ['helper-1']
   });
 });
 
@@ -165,6 +228,18 @@ test('edit item route preloads and updates an existing local item', async () => 
         kind: 'offline',
         summary: '旧摘要',
         helperIds: [],
+        status: 'active',
+        createdAt: '2026-06-05T08:00:00.000Z',
+        updatedAt: '2026-06-05T08:00:00.000Z'
+      }
+    ],
+    helpers: [
+      {
+        id: 'helper-1',
+        displayName: '林杉',
+        relationship: '朋友',
+        contactMethod: 'phone:13800000000',
+        notes: '优先联系',
         status: 'active',
         createdAt: '2026-06-05T08:00:00.000Z',
         updatedAt: '2026-06-05T08:00:00.000Z'
@@ -184,6 +259,7 @@ test('edit item route preloads and updates an existing local item', async () => 
     id: 'item-1',
     title: '更新事项',
     summary: '旧摘要',
+    helperIds: [],
     createdAt: '2026-06-05T08:00:00.000Z'
   });
   expect(router.replace).toHaveBeenCalledWith('/items');

@@ -9,9 +9,12 @@ import {
 } from '../../pages/items/ItemFormScreen';
 import {
   createTrustItem,
+  getActiveTrustedHelpers,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot
 } from '../../store/trust';
+
+import type { ITrustDataSnapshot } from '../../store/trust';
 
 /** 预留给向导多步后由路由传入的步骤参数。 */
 export interface INewItemRouteProps {}
@@ -23,6 +26,8 @@ export interface INewItemRouteProps {}
  */
 const NewItemRoute = React.memo<INewItemRouteProps>(() => {
   const { getMessage } = useI18n();
+  const [snapshot, setSnapshot] =
+    React.useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('itemForm.title'),
@@ -41,6 +46,32 @@ const NewItemRoute = React.memo<INewItemRouteProps>(() => {
     titleRequired: getMessage('itemForm.titleRequired')
   };
 
+  React.useEffect(() => {
+    let mounted = true;
+
+    loadTrustDataSnapshot().then(loadedSnapshot => {
+      if (mounted) {
+        setSnapshot(loadedSnapshot);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const helperChoices = React.useMemo(
+    () =>
+      snapshot
+        ? getActiveTrustedHelpers(snapshot).map(helper => ({
+            id: helper.id,
+            displayName: helper.displayName,
+            relationship: helper.relationship
+          }))
+        : [],
+    [snapshot]
+  );
+
   const handleSubmit = async (values: IItemFormValues) => {
     const now = new Date().toISOString();
     const snapshot = await loadTrustDataSnapshot();
@@ -58,7 +89,13 @@ const NewItemRoute = React.memo<INewItemRouteProps>(() => {
     router.replace('/items');
   };
 
-  return <ItemFormScreen copy={copy} onSubmit={handleSubmit} />;
+  return (
+    <ItemFormScreen
+      copy={copy}
+      helperChoices={helperChoices}
+      onSubmit={handleSubmit}
+    />
+  );
 });
 
 NewItemRoute.displayName = 'NewItemRoute';

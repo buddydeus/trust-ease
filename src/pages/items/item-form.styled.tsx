@@ -69,3 +69,20 @@ export const SaveButton = styled(Pressable)`
   border-radius: ${p => p.theme.radius.pill}px;
   background-color: ${p => p.theme.color.accent};
 `;
+
+export const HelperChoiceList = styled(View)`
+  margin-top: 10px;
+  gap: 8px;
+`;
+
+export const HelperChoiceButton = styled(Pressable)<{ selected: boolean }>`
+  min-height: 38px;
+  border-width: 1px;
+  border-color: ${({ selected, theme }) =>
+    selected ? theme.color.accent : theme.color.border};
+  border-radius: 14px;
+  padding-horizontal: 12px;
+  justify-content: center;
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.color.accentSoft : theme.color.card};
+`;

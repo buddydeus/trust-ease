@@ -13,6 +13,7 @@ export interface ITrustItemInput {
   title: string;
   kind: string;
   summary: string;
+  helperIds?: string[];
 }
 
 export interface ICreateTrustItemInput extends ITrustItemInput {
@@ -82,7 +83,7 @@ export const createTrustItem = (
     title: normalized.title,
     kind: normalized.kind,
     summary: normalized.summary,
-    helperIds: [],
+    helperIds: input.helperIds ?? [],
     status: 'active',
     createdAt: input.now,
     updatedAt: input.now
@@ -129,6 +130,7 @@ export const updateTrustItem = (
     title: normalized.title,
     kind: normalized.kind,
     summary: normalized.summary,
+    helperIds: input.helperIds ?? snapshot.items[itemIndex].helperIds,
     updatedAt: input.now
   };
   const items = [...snapshot.items];

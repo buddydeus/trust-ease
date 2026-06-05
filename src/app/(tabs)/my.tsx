@@ -32,6 +32,8 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
     statusValue: getMessage('my.statusValue'),
     triggerStateTitle: getMessage('my.triggerStateTitle'),
     triggerStateSummary: getMessage('my.triggerStateSummary'),
+    helpersTitle: getMessage('my.helpersTitle'),
+    helpersSummary: getMessage('my.helpersSummary'),
     identityTitle: getMessage('my.identityTitle'),
     identitySummary: getMessage('my.identitySummary'),
     languageTitle: getMessage('my.languageTitle'),
@@ -62,6 +64,7 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
     skinPackageStateFailed: getMessage('my.skinPackageStateFailed'),
     skinPackageStateIncompatible: getMessage('my.skinPackageStateIncompatible'),
     openTriggerState: getMessage('my.openTriggerState'),
+    openHelpers: getMessage('my.openHelpers'),
     followSystem: getMessage('my.followSystem'),
     simplifiedChinese: getMessage('my.simplifiedChinese'),
     traditionalChinese: getMessage('my.traditionalChinese'),
@@ -84,9 +87,14 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
     router.push('/my/trigger-state');
   };
 
+  const handleOpenHelpers = () => {
+    router.push('/helpers' as never);
+  };
+
   return (
     <MyScreen
       copy={copy}
+      onOpenHelpers={handleOpenHelpers}
       onOpenTriggerState={handleOpenTriggerState}
       onSetManualLocale={setManualLocale}
       onUseSystemLocale={useSystemLocale}

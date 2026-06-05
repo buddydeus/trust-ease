@@ -17,6 +17,7 @@ test('renders the calm my page with trigger-state and identity sections', () => 
 
   expect(screen.getByText(zhCN['my.title'])).toBeTruthy();
   expect(screen.getByText(zhCN['my.triggerStateTitle'])).toBeTruthy();
+  expect(screen.getByText(zhCN['my.helpersTitle'])).toBeTruthy();
   expect(screen.getByText(zhCN['my.identityTitle'])).toBeTruthy();
 });
 
@@ -214,4 +215,17 @@ test('my route opens the trigger-state settings page', () => {
   );
 
   expect(pushMock).toHaveBeenCalledWith('/my/trigger-state');
+});
+
+test('my route opens local helper management', () => {
+  const pushMock = router.push as jest.Mock;
+  pushMock.mockClear();
+
+  render(<MyRoute />);
+
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['my.openHelpers'] })
+  );
+
+  expect(pushMock).toHaveBeenCalledWith('/helpers');
 });

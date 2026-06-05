@@ -38,6 +38,10 @@ export interface IMyScreenCopy {
   triggerStateTitle: string;
   /** 触发状态卡片摘要。 */
   triggerStateSummary: string;
+  /** 协助人卡片标题。 */
+  helpersTitle: string;
+  /** 协助人卡片摘要。 */
+  helpersSummary: string;
   /** 身份与安全卡片标题。 */
   identityTitle: string;
   /** 身份与安全卡片摘要。 */
@@ -78,6 +82,8 @@ export interface IMyScreenCopy {
   skinPackageStateIncompatible: string;
   /** 打开触发状态页的 CTA 文案。 */
   openTriggerState: string;
+  /** 打开协助人管理页的 CTA 文案。 */
+  openHelpers: string;
   /** 「跟随系统」语言选项。 */
   followSystem: string;
   /** 简体中文选项。 */
@@ -94,6 +100,8 @@ export interface IMyScreenCopy {
 export interface IMyScreenProps {
   /** 若提供则打开触发状态路由。 */
   onOpenTriggerState?: () => void;
+  /** 若提供则打开本地协助人管理路由。 */
+  onOpenHelpers?: () => void;
   /** 可选本地化文案；省略时使用内置默认。 */
   copy?: IMyScreenCopy;
   /** 将语言模式切为跟随系统。 */

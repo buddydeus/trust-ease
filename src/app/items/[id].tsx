@@ -8,6 +8,7 @@ import {
   type IItemFormValues
 } from '../../pages/items/ItemFormScreen';
 import {
+  getActiveTrustedHelpers,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot,
   updateTrustItem
@@ -79,9 +80,17 @@ const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
     ? {
         title: currentItem.title,
         kind: currentItem.kind,
-        summary: currentItem.summary
+        summary: currentItem.summary,
+        helperIds: currentItem.helperIds
       }
     : undefined;
+  const helperChoices = snapshot
+    ? getActiveTrustedHelpers(snapshot).map(helper => ({
+        id: helper.id,
+        displayName: helper.displayName,
+        relationship: helper.relationship
+      }))
+    : [];
 
   const handleSubmit = async (values: IItemFormValues) => {
     if (!itemId) {
@@ -105,6 +114,7 @@ const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
   return (
     <ItemFormScreen
       copy={copy}
+      helperChoices={helperChoices}
       initialValues={initialValues}
       onSubmit={handleSubmit}
     />

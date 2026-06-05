@@ -15,6 +15,8 @@ import {
 import {
   FormFieldCard,
   FormTextInput,
+  HelperChoiceButton,
+  HelperChoiceList,
   OfflineKindCard,
   OnlineKindCard,
   SaveButton,
@@ -30,6 +32,13 @@ export interface IItemFormValues {
   title: string;
   kind: 'offline' | 'online';
   summary: string;
+  helperIds: string[];
+}
+
+export interface IItemFormHelperChoice {
+  id: string;
+  displayName: string;
+  relationship: string;
 }
 
 /**
@@ -72,6 +81,8 @@ export interface IItemFormScreenCopy {
 export interface IItemFormScreenProps {
   /** 表单初始值；传入时可用于编辑模式。 */
   initialValues?: IItemFormValues;
+  /** 可供关联到事项的 active 协助人。 */
+  helperChoices?: IItemFormHelperChoice[];
   /** 提交已验证的表单值。 */
   onSubmit?: (values: IItemFormValues) => void;
   /** 可选本地化文案；省略时使用内置默认。 */
@@ -85,7 +96,7 @@ export interface IItemFormScreenProps {
  * @returns 已 memo 的表单页元素。
  */
 export const ItemFormScreen = React.memo<IItemFormScreenProps>(
-  ({ initialValues, onSubmit, copy } = {}) => {
+  ({ initialValues, helperChoices = [], onSubmit, copy } = {}) => {
     const { getMessage } = useI18n();
     const [title, setTitle] = React.useState(initialValues?.title ?? '');
     const [kind, setKind] = React.useState<IItemFormValues['kind']>(
@@ -94,14 +105,31 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
     const [summary, setSummary] = React.useState(
       initialValues?.summary ?? ''
     );
+    const [helperIds, setHelperIds] = React.useState(
+      initialValues?.helperIds ?? []
+    );
     const [titleErrorVisible, setTitleErrorVisible] = React.useState(false);
 
     React.useEffect(() => {
       setTitle(initialValues?.title ?? '');
       setKind(initialValues?.kind ?? 'offline');
       setSummary(initialValues?.summary ?? '');
+      setHelperIds(initialValues?.helperIds ?? []);
       setTitleErrorVisible(false);
-    }, [initialValues?.kind, initialValues?.summary, initialValues?.title]);
+    }, [
+      initialValues?.helperIds,
+      initialValues?.kind,
+      initialValues?.summary,
+      initialValues?.title
+    ]);
+
+    const toggleHelper = (helperId: string) => {
+      setHelperIds(currentIds =>
+        currentIds.includes(helperId)
+          ? currentIds.filter(currentId => currentId !== helperId)
+          : [...currentIds, helperId]
+      );
+    };
 
     const handleSubmit = () => {
       const normalizedTitle = title.trim();
@@ -115,7 +143,8 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
       onSubmit?.({
         title: normalizedTitle,
         kind,
-        summary: summary.trim()
+        summary: summary.trim(),
+        helperIds
       });
     };
 
@@ -192,6 +221,23 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
           <StepCurrentValue>
             {copy?.stepValue || getMessage('itemForm.stepValue')}
           </StepCurrentValue>
+          {helperChoices.length > 0 ? (
+            <HelperChoiceList>
+              {helperChoices.map(helper => (
+                <HelperChoiceButton
+                  accessibilityRole="button"
+                  key={helper.id}
+                  selected={helperIds.includes(helper.id)}
+                  onPress={() => toggleHelper(helper.id)}
+                >
+                  <CardTitleText>{helper.displayName}</CardTitleText>
+                  <MetaMutedText marginTop={4}>
+                    {helper.relationship}
+                  </MetaMutedText>
+                </HelperChoiceButton>
+              ))}
+            </HelperChoiceList>
+          ) : null}
         </WizardStepCard>
         <SaveButton
           accessibilityRole="button"

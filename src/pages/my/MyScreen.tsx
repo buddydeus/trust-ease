@@ -29,6 +29,7 @@ export type { IMyScreenCopy, IMyScreenProps, ISkinOption } from './types';
 export const MyScreen = React.memo<IMyScreenProps>(
   ({
     onOpenTriggerState,
+    onOpenHelpers,
     copy,
     onUseSystemLocale,
     onSetManualLocale,
@@ -75,6 +76,14 @@ export const MyScreen = React.memo<IMyScreenProps>(
               copy?.triggerStateSummary || getMessage('my.triggerStateSummary')
             }
             onPress={onOpenTriggerState}
+          />
+          <SettingsCard
+            accessibilityLabel={
+              copy?.openHelpers || getMessage('my.openHelpers')
+            }
+            title={copy?.helpersTitle || getMessage('my.helpersTitle')}
+            summary={copy?.helpersSummary || getMessage('my.helpersSummary')}
+            onPress={onOpenHelpers}
           />
           <SettingsCard
             title={copy?.identityTitle || getMessage('my.identityTitle')}
