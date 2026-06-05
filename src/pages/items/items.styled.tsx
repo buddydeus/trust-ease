@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -26,4 +26,14 @@ export const ItemCardInnerRow = styled(View)`
 
 export const ItemCardTextCol = styled(View)`
   flex: 1;
+`;
+
+export const ItemActionRow = styled(View)`
+  flex-direction: row;
+  gap: 14px;
+  margin-top: 14px;
+`;
+
+export const ItemActionButton = styled(Pressable)`
+  padding: 4px 0;
 `;

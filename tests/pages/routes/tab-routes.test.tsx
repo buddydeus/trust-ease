@@ -54,12 +54,13 @@ import MyRoute from '../../../src/app/(tabs)/my';
 import TabsLayout from '../../../src/app/(tabs)/_layout';
 import zhCN from '../../../src/locals/zh-CN.json';
 
-test('tab routes render their redesigned feature screens', () => {
+test('tab routes render their redesigned feature screens', async () => {
   render(<HomeRoute />);
   expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
 
   render(<ItemsRoute />);
   expect(screen.getByText(zhCN['items.title'])).toBeTruthy();
+  expect(await screen.findByText(zhCN['items.emptyTitle'])).toBeTruthy();
 
   render(<MyRoute />);
   expect(screen.getByText(zhCN['my.title'])).toBeTruthy();

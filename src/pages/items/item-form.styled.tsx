@@ -1,8 +1,8 @@
-import { View } from 'react-native';
+import { Pressable, TextInput, View } from 'react-native';
 
 import styled from 'styled-components/native';
 
-import { AppCard } from '../../components';
+import { AppCard, AppText } from '../../components';
 import { CardTitleText } from '../../theme';
 
 export const TypeSectionCard = styled(AppCard)`
@@ -15,13 +15,20 @@ export const TypeChoiceRow = styled(View)`
   margin-top: 14px;
 `;
 
-export const OfflineKindCard = styled(AppCard)`
+export const OfflineKindCard = styled(Pressable)`
   flex: 1;
+  border-radius: ${p => p.theme.radius.card}px;
+  border: 1px solid ${p => p.theme.color.border};
   background-color: ${p => p.theme.color.accentSoft};
+  padding: 18px;
 `;
 
-export const OnlineKindCard = styled(AppCard)`
+export const OnlineKindCard = styled(Pressable)`
   flex: 1;
+  border-radius: ${p => p.theme.radius.card}px;
+  border: 1px solid ${p => p.theme.color.border};
+  background-color: ${p => p.theme.color.card};
+  padding: 18px;
 `;
 
 export const WizardStepCard = styled(AppCard)`
@@ -30,4 +37,35 @@ export const WizardStepCard = styled(AppCard)`
 
 export const StepCurrentValue = styled(CardTitleText)`
   margin-top: 8px;
+`;
+
+export const FormFieldCard = styled(AppCard)`
+  margin-top: 14px;
+`;
+
+export const FormTextInput = styled(TextInput)`
+  min-height: 44px;
+  margin-top: 10px;
+  border-radius: ${p => p.theme.radius.card}px;
+  border: 1px solid ${p => p.theme.color.border};
+  color: ${p => p.theme.color.foreground};
+  padding: 10px 12px;
+`;
+
+export const SummaryTextInput = styled(FormTextInput)`
+  min-height: 76px;
+`;
+
+export const ValidationText = styled(AppText)`
+  margin-top: 8px;
+  color: ${p => p.theme.color.accent};
+`;
+
+export const SaveButton = styled(Pressable)`
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  border-radius: ${p => p.theme.radius.pill}px;
+  background-color: ${p => p.theme.color.accent};
 `;

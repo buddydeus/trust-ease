@@ -16,11 +16,20 @@ import { CardTitleText, ItemRibbon, ScreenTitleText } from '../../theme';
 
 import {
   ItemCardInnerRow,
+  ItemActionButton,
+  ItemActionRow,
   ItemCardTextCol,
   ItemsFilterRow,
   ItemsListStack,
   ItemsTitleRow
 } from './items.styled';
+
+export interface IItemsScreenItem {
+  id: string;
+  title: string;
+  kind: 'offline' | 'online';
+  summary: string;
+}
 
 /**
  * `ItemsScreen` 使用的本地化文案。
@@ -44,6 +53,16 @@ export interface IItemsScreenCopy {
   itemTwoMeta: string;
   /** 底部提示文案。 */
   hint: string;
+  /** 空列表标题。 */
+  emptyTitle: string;
+  /** 空列表说明。 */
+  emptyBody: string;
+  /** 线上事项类型标签。 */
+  kindOnline: string;
+  /** 编辑操作文案。 */
+  editAction: string;
+  /** 归档操作文案。 */
+  archiveAction: string;
 }
 
 /**
@@ -52,6 +71,12 @@ export interface IItemsScreenCopy {
 export interface IItemsScreenProps {
   /** 用户点击创建时调用；静态预览可省略。 */
   onCreateItem?: () => void;
+  /** 用户点击编辑某事项时调用。 */
+  onEditItem?: (itemId: string) => void;
+  /** 用户点击归档某事项时调用。 */
+  onArchiveItem?: (itemId: string) => void;
+  /** 当前 active 本地事项。 */
+  items?: IItemsScreenItem[];
   /** 可选本地化文案；省略时使用内置默认。 */
   copy?: IItemsScreenCopy;
 }
@@ -63,8 +88,12 @@ export interface IItemsScreenProps {
  * @returns 已 memo 的事项页元素。
  */
 export const ItemsScreen = React.memo<IItemsScreenProps>(
-  ({ onCreateItem, copy } = {}) => {
+  ({ onCreateItem, onEditItem, onArchiveItem, items = [], copy } = {}) => {
     const { getMessage } = useI18n();
+    const resolveKindLabel = (kind: IItemsScreenItem['kind']) =>
+      kind === 'offline'
+        ? copy?.filterOffline || getMessage('items.filterOffline')
+        : copy?.kindOnline || getMessage('items.kindOnline');
 
     return (
       <AppScreen>
@@ -87,32 +116,52 @@ export const ItemsScreen = React.memo<IItemsScreenProps>(
           />
         </ItemsFilterRow>
         <ItemsListStack>
-          <AppCard>
-            <ItemCardInnerRow>
-              <ItemCardTextCol>
-                <CardTitleText>
-                  {copy?.itemOneTitle || getMessage('items.itemOneTitle')}
-                </CardTitleText>
-                <AppText className="mt-[9px] text-caption text-muted">
-                  {copy?.itemOneMeta || getMessage('items.itemOneMeta')}
-                </AppText>
-              </ItemCardTextCol>
-              <ItemRibbon variant="offline" />
-            </ItemCardInnerRow>
-          </AppCard>
-          <AppCard>
-            <ItemCardInnerRow>
-              <ItemCardTextCol>
-                <CardTitleText>
-                  {copy?.itemTwoTitle || getMessage('items.itemTwoTitle')}
-                </CardTitleText>
-                <AppText className="mt-[9px] text-caption text-muted">
-                  {copy?.itemTwoMeta || getMessage('items.itemTwoMeta')}
-                </AppText>
-              </ItemCardTextCol>
-              <ItemRibbon variant="online" />
-            </ItemCardInnerRow>
-          </AppCard>
+          {items.length === 0 ? (
+            <AppCard>
+              <CardTitleText>
+                {copy?.emptyTitle || getMessage('items.emptyTitle')}
+              </CardTitleText>
+              <AppText className="mt-[9px] text-caption text-muted">
+                {copy?.emptyBody || getMessage('items.emptyBody')}
+              </AppText>
+            </AppCard>
+          ) : (
+            items.map(item => (
+              <AppCard key={item.id}>
+                <ItemCardInnerRow>
+                  <ItemCardTextCol>
+                    <CardTitleText>{item.title}</CardTitleText>
+                    <AppText className="mt-[9px] text-caption text-muted">
+                      {resolveKindLabel(item.kind)}
+                    </AppText>
+                    <AppText className="mt-[7px] text-caption text-muted">
+                      {item.summary}
+                    </AppText>
+                    <ItemActionRow>
+                      <ItemActionButton
+                        accessibilityRole="button"
+                        onPress={() => onEditItem?.(item.id)}
+                      >
+                        <AppText className="text-caption text-accent">
+                          {copy?.editAction || getMessage('items.editAction')}
+                        </AppText>
+                      </ItemActionButton>
+                      <ItemActionButton
+                        accessibilityRole="button"
+                        onPress={() => onArchiveItem?.(item.id)}
+                      >
+                        <AppText className="text-caption text-muted">
+                          {copy?.archiveAction ||
+                            getMessage('items.archiveAction')}
+                        </AppText>
+                      </ItemActionButton>
+                    </ItemActionRow>
+                  </ItemCardTextCol>
+                  <ItemRibbon variant={item.kind} />
+                </ItemCardInnerRow>
+              </AppCard>
+            ))
+          )}
         </ItemsListStack>
         <SectionHint text={copy?.hint || getMessage('items.hint')} />
       </AppScreen>

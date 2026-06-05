@@ -1,9 +1,20 @@
-import { router } from 'expo-router';
+import { router, type Href } from 'expo-router';
 
 import React from 'react';
 
 import { useI18n } from '../../i18n';
-import { ItemsScreen } from '../../pages/items/ItemsScreen';
+import {
+  ItemsScreen,
+  type IItemsScreenItem
+} from '../../pages/items/ItemsScreen';
+import {
+  archiveTrustItem,
+  getActiveTrustItems,
+  loadTrustDataSnapshot,
+  saveTrustDataSnapshot
+} from '../../store/trust';
+
+import type { ITrustDataSnapshot } from '../../store/trust';
 
 /** 预留给将来由路由参数驱动的列表筛选。 */
 export interface IItemsRouteProps {}
@@ -15,6 +26,8 @@ export interface IItemsRouteProps {}
  */
 const ItemsRoute = React.memo<IItemsRouteProps>(() => {
   const { getMessage } = useI18n();
+  const [snapshot, setSnapshot] =
+    React.useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('items.title'),
@@ -25,8 +38,40 @@ const ItemsRoute = React.memo<IItemsRouteProps>(() => {
     itemOneMeta: getMessage('items.itemOneMeta'),
     itemTwoTitle: getMessage('items.itemTwoTitle'),
     itemTwoMeta: getMessage('items.itemTwoMeta'),
-    hint: getMessage('items.hint')
+    hint: getMessage('items.hint'),
+    emptyTitle: getMessage('items.emptyTitle'),
+    emptyBody: getMessage('items.emptyBody'),
+    kindOnline: getMessage('items.kindOnline'),
+    editAction: getMessage('items.editAction'),
+    archiveAction: getMessage('items.archiveAction')
   };
+
+  React.useEffect(() => {
+    let mounted = true;
+
+    loadTrustDataSnapshot().then(loadedSnapshot => {
+      if (mounted) {
+        setSnapshot(loadedSnapshot);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const items = React.useMemo<IItemsScreenItem[]>(
+    () =>
+      snapshot
+        ? getActiveTrustItems(snapshot).map(item => ({
+            id: item.id,
+            title: item.title,
+            kind: item.kind,
+            summary: item.summary
+          }))
+        : [],
+    [snapshot]
+  );
 
   /**
    * 进入堆叠的新建事项页。
@@ -37,7 +82,38 @@ const ItemsRoute = React.memo<IItemsRouteProps>(() => {
     router.push('/items/new');
   };
 
-  return <ItemsScreen copy={copy} onCreateItem={handleCreateItem} />;
+  const handleEditItem = (itemId: string) => {
+    router.push({
+      pathname: '/items/[id]',
+      params: { id: itemId }
+    } as unknown as Href);
+  };
+
+  const handleArchiveItem = async (itemId: string) => {
+    const currentSnapshot = snapshot || (await loadTrustDataSnapshot());
+    const result = archiveTrustItem(
+      currentSnapshot,
+      itemId,
+      new Date().toISOString()
+    );
+
+    if (!result.ok) {
+      return;
+    }
+
+    await saveTrustDataSnapshot(result.snapshot);
+    setSnapshot(result.snapshot);
+  };
+
+  return (
+    <ItemsScreen
+      copy={copy}
+      items={items}
+      onArchiveItem={handleArchiveItem}
+      onCreateItem={handleCreateItem}
+      onEditItem={handleEditItem}
+    />
+  );
 });
 
 ItemsRoute.displayName = 'ItemsRoute';
