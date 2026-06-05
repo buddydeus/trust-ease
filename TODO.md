@@ -1,23 +1,28 @@
 # Trust Ease Handoff TODO
 
-更新时间：2026-06-05
+更新时间：2026-06-06
 仓库：`D:\github\buddydeus\trust-ease`
 当前分支：`refactor/all`
 
 ## 当前状态
 
-- 当前已验证提交：`2473580 docs: archive local readiness summary`
-- 本地分支相对 `origin/refactor/all`：ahead 11 commits（本 TODO 提交后会继续增加）
+- 当前已验证提交：`f78d835 docs: archive local backup export import`
+- 本地分支相对 `origin/refactor/all`：ahead 16 commits（本 TODO 更新尚未提交）
 - OpenSpec active changes：无
-- OpenSpec 全量 strict 校验：15 passed / 0 failed
+- OpenSpec 全量 strict 校验：16 passed / 0 failed
 - 工作区在本 TODO 更新前为干净状态
-- `.ai/` 本轮不应修改，最近 build / close 均保持 `.ai/` diff 为空
+- `.ai/` 本轮不应修改；最近 build / close 均保持 `.ai/` diff 为空
 - 项目仍是单 Expo app 物理结构；monorepo 物理拆分尚未开始
-- 当前优先级：先完成单机 App MVP 的本地数据闭环，再考虑联网能力和 monorepo 物理拆分
+- 当前优先级：单机 App MVP 核心功能闭环已基本完成，下一步进入单机 MVP QA gate
 
 ## 最近关键提交
 
 ```text
+f78d835 docs: archive local backup export import
+5366298 feat: add local backup export import
+ba24c45 docs: specify local backup export import
+3bcddf8 docs: propose local backup export import
+9e30609 docs: refresh handoff TODO
 2473580 docs: archive local readiness summary
 8e7be9a feat: add local readiness summary
 b1656d2 docs: specify local readiness summary
@@ -33,7 +38,6 @@ b281cdf docs: specify local trigger policy simulation
 f34acc4 feat: add local item CRUD workflow
 d13c495 docs: specify local item CRUD workflow
 b6f488f docs: propose local item CRUD workflow
-412df05 docs: archive local trust data model spec
 ```
 
 ## 已完成内容
@@ -186,7 +190,7 @@ b6f488f docs: propose local item CRUD workflow
 
 能力：
 
-- 新增 `src/store/trust/readiness.ts`，从本地 snapshot 纯派生 readiness view model，不写入持久数据
+- `src/store/trust/readiness.ts` 从本地 snapshot 纯派生 readiness view model，不写入持久数据
 - 汇总 active items、active helpers、事项协助覆盖、trigger policy / rehearsal 状态
 - archived helpers 不计入 active coverage；只关联 archived helper 的 item 视为 uncovered
 - Home 页面展示本地准备度卡片：状态、分区、计数、local-only 说明和下一步动作
@@ -198,11 +202,34 @@ b6f488f docs: propose local item CRUD workflow
 
 - `openspec/specs/local-readiness-summary/spec.md`
 
-最近验证：
+### Phase 6：本地 backup export/import
+
+已完成 build / close / commit / archive：
+
+- `add-local-backup-export-import`
+
+能力：
+
+- `src/store/trust/backup.ts` 提供版本化本地备份 envelope、序列化、解析、预览和确认导入 helper
+- 导出内容包含 Trust Ease product marker、backup schema version、导出时间、trust data schema version 和当前本地 snapshot
+- 导入先校验 JSON、envelope、backup schema version、trust data schema version 和 snapshot 结构
+- 导入前只生成 preview，不写入当前本地数据
+- 用户明确确认后才通过现有 local trust storage contract 覆盖 snapshot
+- My 页面提供本地备份导出、导入、预览、确认、取消和错误状态
+- 文案明确文件由用户自己保管，不上传云端、不通知协助人、不承诺加密或远程恢复
+- 不导出 skin 运行时目录、远程缓存或项目根 `skins/`
+- 三语文案已同步
+
+主规格：
+
+- `openspec/specs/local-backup-export-import/spec.md`
+
+最近 close 阶段验证记录：
 
 ```bash
+npm.cmd exec -- openspec validate add-local-backup-export-import --strict
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/store/trust --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/home --runInBand
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/my --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:local
 npm.cmd exec -- openspec validate --all --strict
@@ -211,9 +238,11 @@ git diff -- .ai
 
 结果：
 
-- Trust store tests：5 suites / 31 tests passed
-- Home tests：2 suites / 5 tests passed
-- OpenSpec：15 passed / 0 failed
+- Trust store tests：6 suites / 47 tests passed
+- My page tests：2 suites / 14 tests passed
+- TypeScript check：passed
+- Locale check：passed
+- OpenSpec：16 passed / 0 failed
 - `.ai/` diff：空
 
 ## 下一步
@@ -221,30 +250,32 @@ git diff -- .ai
 当前建议优先继续：
 
 ```text
-/openflow proposal add-local-backup-export-import
+/openflow proposal add-single-device-mvp-qa-gate
 ```
 
-目标：补齐单机 App MVP 的本地数据可迁移能力，解决“数据只存在本机、无法备份/恢复/换机”的最大缺口。
+目标：把单机 App MVP 从“功能已拼齐”推进到“可重复、本地、无后端依赖地进入测试流程”。建议将当前零散验证收束成一个稳定 QA gate，例如 `pnpm check:qa`。
 
 建议规格覆盖：
 
-- 从本地 `ITrustDataSnapshot` 导出备份文件
-- 导入备份文件并做 schema/version 校验
-- 导入前展示会发生什么，避免误覆盖
-- 支持 dry-run / preview imported snapshot
-- 支持安全失败：格式错误、版本不支持、结构不合法时不覆盖现有数据
-- 不接入云同步、账号、真实网络或远程恢复
-- 不导出皮肤运行时目录或远程缓存
-- 三语文案同步
-- route / page / store 边界继续遵守现有结构
+- 定义单机 MVP QA gate 命令入口，例如 `pnpm check:qa`
+- 覆盖 `pnpm check:type`
+- 覆盖 `pnpm check:local`
+- 覆盖核心 Jest 测试，至少包含 trust store、welcome/onboarding、items、helpers、trigger-state、home、my、backup
+- 覆盖 `pnpm skin:qa:remote`
+- 覆盖 OpenSpec 全量严格校验
+- 明确 `pnpm thumbs` 必须使用真实 Expo Web bundle，不允许回退到设计预览图
+- 明确 QA gate 不引入后端、账号、同步、推送或真实网络依赖
+- 在 README / AGENTS.md 中记录新 QA 命令与适用范围
+- 如发现前端 QA 问题，记录到 `.bugs/*.md`，包含问题描述、问题定位、建议修复方式
 
 后续阶段顺序：
 
-1. `add-local-backup-export-import`
-2. `add-single-device-mvp-qa-gate`
-3. 单机 MVP 稳定后，评估是否 push 当前 `refactor/all`
-4. 单机 MVP 稳定后，再考虑 monorepo 物理拆分
-5. 联网 App 能力继续后置，包括账号、同步、加密备份、通知、远程协助人流程等
+1. `add-single-device-mvp-qa-gate`
+2. 自动化方式跑单机 MVP 前端 QA，发现问题写入 `.bugs/*.md`
+3. 逐项修复 `.bugs` 中的问题，并循环验证直到无阻塞问题
+4. 单机 MVP 稳定后，评估是否 push 当前 `refactor/all`
+5. 单机 MVP 稳定后，再考虑 monorepo 物理拆分
+6. 联网 App 能力继续后置，包括账号、同步、加密备份、通知、远程协助人流程等
 
 每个阶段建议独立执行：
 
