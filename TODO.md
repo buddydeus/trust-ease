@@ -6,16 +6,19 @@
 
 ## 当前状态
 
-- Git 当前 `HEAD`：`7de24cd docs: archive local item CRUD workflow`。
-- 当前本地 `refactor/all` 与 `origin/refactor/all` 的差异计数为 `0 0`，本地引用显示已同步。
-- OpenSpec 当前没有 active changes。
-- OpenSpec 全量严格校验通过：12 个 items，0 failed。
-- `.ai/` 不应被修改；最近单机 MVP 阶段执行也没有要求改动 `.ai/`。
-- 项目仍是单 Expo app 物理结构，monorepo 拆分尚未开始；当前优先级仍是完成单机 App MVP 数据闭环。
+- 当前 `HEAD`：`8e3ebc0 docs: archive local helper contact workflow`
+- 本地分支相对 `origin/refactor/all`：ahead 2 commits
+- OpenSpec active changes：无
+- OpenSpec 全量 strict 校验：13 passed / 0 failed
+- `.ai/` 本轮不应修改，最近 build/close 均保持 `.ai/` diff 为空
+- 项目仍是单 Expo app 物理结构；monorepo 物理拆分尚未开始
+- 当前优先级：先完成单机 App MVP 的本地数据闭环，再考虑联网能力和 monorepo 物理拆分
 
 最近关键提交：
 
 ```text
+8e3ebc0 docs: archive local helper contact workflow
+190d323 feat: add local helper contact workflow
 7de24cd docs: archive local item CRUD workflow
 f34acc4 feat: add local item CRUD workflow
 d13c495 docs: specify local item CRUD workflow
@@ -25,58 +28,47 @@ b6f488f docs: propose local item CRUD workflow
 5dbf213 docs: specify local trust data model
 8e2e490 docs: propose local trust data model
 a72ebce docs: plan standalone MVP phases
-757ee82 docs: record frontend QA outcome
-f45f912 fix: detect current locale key usage
-dc3e9f3 docs: refresh handoff TODO
-6b2445e docs: archive remote skin QA spec
-14c5783 test: add remote skin download QA entry
-d8233b2 docs: specify remote skin QA flow
-74d4634 docs: propose remote skin QA flow
-092d05d docs: archive skin package publishing spec
-f3c2bb8 feat: add skin package publishing tooling
-4559365 docs: archive skin package hash spec
-6c634de feat: canonicalize skin package hashes
 ```
 
 ## 已完成内容
 
-### 1. 仓库协作入口
+### 协作入口与项目规则
 
-- 根目录 `AGENTS.md` 已作为本仓库 AI 代理协作入口，作用类似 Claude Code 的 `CLAUDE.md`。
+- 根目录 `AGENTS.md` 已作为仓库 AI 代理协作入口，作用类似 Claude Code 的 `CLAUDE.md`。
 - 已明确项目定位、技术栈、目录边界、i18n 规则、皮肤运行时规则、测试命令和禁止事项。
+- `.ai/archive/` 仅作为历史背景，不作为当前实现事实。
 
-### 2. 产品规划到技术方案
+### 产品规划到技术方案
 
-已通过 OpenFlow / OpenSpec 完成并归档：
+已完成并归档：
 
 - `define-monorepo-product-technical-plan`
 
-主规格已经包含：
+主规格已包含：
 
 - `openspec/specs/monorepo-architecture/spec.md`
 - `openspec/specs/operations-delivery-plan/spec.md`
 - `openspec/specs/product-technical-plan/spec.md`
 - `openspec/specs/security-compliance-plan/spec.md`
 
-### 3. 项目结构契约重构
+### 项目结构契约重构
 
-已通过 OpenFlow / OpenSpec 完成并归档：
+已完成并归档：
 
 - `normalize-project-structure-contracts`
 
 完成内容：
 
-- 强化 `tests/support/source-structure.test.ts`，把目录结构、根文档、截图脚本和 route boundary 写成可执行契约。
-- 拆分 `src/app/_layout.tsx` 的启动副作用。
-- 拆分 `src/pages/my/MyScreen.tsx` 的本地组件和类型。
-- 拆分 `src/skin/manifest.ts` 内部 helper。
+- 强化 `tests/support/source-structure.test.ts`
+- 约束目录结构、根文档、截图脚本和 route boundary
+- 拆分启动副作用、My 页面局部组件、skin manifest helper
 - 主规格已合并：
   - `openspec/specs/documentation-contracts/spec.md`
   - `openspec/specs/project-structure-contracts/spec.md`
 
-### 4. Skin 运行时与远程皮肤基础设施
+### Skin 运行时与远程皮肤基础设施
 
-已完成并归档的 change：
+已完成并归档：
 
 - `add-skin-downloader-init-state-machine`
 - `add-remote-skin-source-adapter`
@@ -87,156 +79,136 @@ f3c2bb8 feat: add skin package publishing tooling
 
 当前能力：
 
-- 皮肤下载使用 staging -> validation -> ready promotion。
-- 运行时启动通过 `resolveSkinInitState` 恢复 active / last ready / fallback。
+- 皮肤下载遵循 staging -> validation -> ready promotion。
+- 启动恢复 active / last ready / fallback。
 - 远程 source adapter 只下载 manifest 和静态资源，不执行远程 React、JavaScript 或插件代码。
-- package hash 已 canonicalize，覆盖 manifest key 排序、路径规范化、自引用规避和不安全路径拒绝。
-- `pnpm skin:package -- check <skin-dir>` 只校验，不写文件。
+- package hash 已 canonicalize。
+- `pnpm skin:package -- check <skin-dir>` 只校验。
 - `pnpm skin:package -- update <skin-dir>` 写回 asset hashes 和 canonical `packageHash`。
 - `pnpm skin:qa:remote` 使用本地临时 fixture 与依赖注入，不引入真实网络或用户可见入口。
 
-### 5. 依赖锁定策略
+### 依赖锁定与真实截图链路
 
-已通过 OpenFlow / OpenSpec 完成并归档：
-
-- `define-dependency-lock-strategy`
-
-完成内容：
+已完成：
 
 - `package.json` 固定 `packageManager: pnpm@11.5.0`
 - `pnpm-lock.yaml` 已提交
 - `.npmrc` 默认 registry 使用官方 npm registry
 - `openspec/specs/dependency-reproducibility/spec.md` 已进入主规格
+- `pnpm thumbs` 可完成 Expo Web 真实导出，并用 Playwright/系统 Chrome 截图
+- 缺少 Playwright 托管 Chromium 时，截图脚本可 fallback 到本机 Chrome / Edge
 
-### 6. 真实运行截图链路
+## 单机 App MVP 进度
 
-已修复并提交：
-
-- `pnpm thumbs` 可完成 Expo Web 真实导出，并用 Playwright/系统 Chrome 截图。
-- Windows 中 `pnpm.cmd` / cmd script spawn 已兼容。
-- `react-native-css-interop@0.2.4` 已声明为直接依赖。
-- Playwright 托管 Chromium 缺失时，截图脚本可 fallback 到本机 Chrome / Edge。
-- `thumbs/` 可生成三语 21 张真实运行截图，尺寸为 `780x1688`。
-
-## 单机 App MVP 当前进度
-
-单机 MVP 当前优先级高于 monorepo 物理拆分。目标是先完成无后端、无账号、无同步、无推送依赖的本地产品闭环。
+单机 MVP 目标：无后端、无账号、无同步、无推送依赖，先完成本地产品闭环。
 
 ### Phase 1：本地 trust 数据模型
 
-已完成 build、close、commit，并归档：
+已完成 build / close / commit / archive：
 
 - `add-local-trust-item-data-model`
 
-完成内容：
+能力：
 
-- 新增 `src/store/trust/types.ts`
-- 新增 `src/store/trust/defaults.ts`
-- 新增 `src/store/trust/storage.ts`
-- 新增 `src/store/trust/selectors.ts`
-- 新增 `tests/store/trust/storage.test.ts`
-- 主规格已合并：`openspec/specs/local-trust-data-model/spec.md`
+- 本地 AsyncStorage-backed versioned snapshot
+- 支持 `items`、`helpers`、`triggerPolicy`
+- corrupted / missing / unsupported future schema version 安全回退默认 snapshot
+- archived records 保留在本地，active selectors 排除归档记录
 
-能力边界：
+主规格：
 
-- 本地 AsyncStorage-backed versioned snapshot。
-- 支持 items、helpers、triggerPolicy。
-- corrupted / missing / unsupported future schema version 会安全回退默认 snapshot。
-- archived records 保留在本地，但 active selector 会排除。
+- `openspec/specs/local-trust-data-model/spec.md`
 
 ### Phase 2：本地事项 CRUD workflow
 
-已完成 build、close、commit，并归档：
+已完成 build / close / commit / archive：
 
 - `add-local-item-crud-workflow`
 
+能力：
+
+- 本地事项 create / edit / archive
+- `ItemsScreen` 渲染 active items、空状态、编辑和归档动作
+- `ItemFormScreen` 支持 title、kind、summary、必填校验、保存、initialValues
+- routes 保持轻薄，由 `src/app` 绑定 storage / i18n / navigation
+- 三语文案已同步
+
+主规格：
+
+- `openspec/specs/local-item-crud-workflow/spec.md`
+
+### Phase 3：本地 helper/contact workflow
+
+已完成 build / close / commit / archive：
+
+- `add-local-helper-contact-workflow`
+
 关键提交：
 
-- `b6f488f docs: propose local item CRUD workflow`
-- `d13c495 docs: specify local item CRUD workflow`
-- `f34acc4 feat: add local item CRUD workflow`
-- `7de24cd docs: archive local item CRUD workflow`
+- `190d323 feat: add local helper contact workflow`
+- `8e3ebc0 docs: archive local helper contact workflow`
 
-完成内容：
+能力：
 
-- 新增 `src/store/trust/items.ts`
-- 新增 `tests/store/trust/items.test.ts`
-- `ItemsScreen` 改为渲染本地 active items、空状态、编辑动作、归档动作。
-- `ItemFormScreen` 支持 title、kind、summary、必填校验、保存动作、initialValues。
-- `src/app/(tabs)/items.tsx` 从本地 trust snapshot 加载 active items。
-- `src/app/items/new.tsx` 创建并持久化本地事项。
-- 新增 `src/app/items/[id].tsx` 编辑已有事项。
-- 新用户可见文案已同步 `zh-CN`、`zh-TW`、`en-US`。
-- 主规格已合并：`openspec/specs/local-item-crud-workflow/spec.md`
+- 本地 trusted helper/contact create / edit / archive
+- helper 列表、新建、编辑 routes 与页面
+- My 页面增加 helper 管理入口
+- 事项新建/编辑流程可选择 active helpers，并持久化 `helperIds`
+- 不接入通讯录、后端、推送、真实网络或自动消息发送
+- 文案明确 local-only，不暗示法律授权、公证或自动执行
+- 三语文案已同步
 
-最近通过的 Phase 2 验证：
+主规格：
+
+- `openspec/specs/local-helper-contact-workflow/spec.md`
+
+最近验证：
 
 ```bash
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/pages/items --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/store/trust --runInBand
-npm.cmd exec --package=pnpm@11.5.0 -- pnpm test --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:local
-npm.cmd exec -- openspec validate add-local-item-crud-workflow --strict
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test --runInBand
 npm.cmd exec -- openspec validate --all --strict
 git diff -- .ai
 ```
 
-验证结果：
+结果：
 
-- 全量 Jest：37 suites / 157 tests passed。
-- `check:type`：通过。
-- `check:local`：通过。
-- OpenSpec 全量：12 items passed。
-- `.ai/` diff：空。
-
-## 当前主规格清单
-
-`npm.cmd exec -- openspec validate --all --strict` 最近通过的主规格：
-
-- `app-init-state-machine`
-- `dependency-reproducibility`
-- `documentation-contracts`
-- `local-item-crud-workflow`
-- `local-trust-data-model`
-- `monorepo-architecture`
-- `operations-delivery-plan`
-- `product-technical-plan`
-- `project-structure-contracts`
-- `security-compliance-plan`
-- `skin-downloader-runtime`
-- `skin-package-publishing-tooling`
+- Jest：39 suites / 175 tests passed
+- OpenSpec：13 passed / 0 failed
+- `.ai/` diff：空
 
 ## 下一步
 
-下一阶段应从这里开始：
+当前应继续：
 
 ```text
-/openflow proposal add-local-helper-contact-workflow
+/openflow proposal add-local-trigger-policy-simulation
 ```
 
-目标：新增本地托付联系人/协助人维护，并把协助人关联到事项。
+目标：新增本地触发策略与演练/模拟状态，让用户能理解预警、确认、暂停和演练状态，但不触发真实消息、推送、联网执行或不可逆动作。
 
 建议规格覆盖：
 
-- helper/contact 的创建、编辑、归档。
-- 字段：姓名、关系、联系方式、说明/备注。
-- 事项关联：至少能把 helper id 关联到本地 item 的 `helperIds`。
-- 文案必须明确：App 不会自动发送消息、不提供法律执行、不替代公证/律师意见。
-- 不接入通讯录权限、后端、推送或真实网络。
-- 三语文案同步。
-- 页面和 route 仍保持现有边界：`src/app` 做路由和存储绑定，`src/pages` 做 UI，`src/store/trust` 做本地数据逻辑。
+- 本地 `triggerPolicy` 的可读配置与状态解释
+- 演练/模拟入口，不产生真实通知
+- 失联预警、等待确认、暂停、恢复等状态的本地状态机
+- 首页或 trigger-state 页面展示当前状态与下一步动作
+- 高风险动作必须可撤回、可解释，不把单次失联表现为自动执行
+- 不接入后端、推送、短信、邮件、通讯录或真实联系人通知
+- 三语文案同步
+- route / page / store 边界继续遵守现有结构
 
 后续阶段顺序：
 
-1. `add-local-helper-contact-workflow`
-2. `add-local-trigger-policy-simulation`
-3. `add-local-readiness-summary`
-4. `add-local-backup-export-import`
-5. `add-single-device-mvp-qa-gate`
-6. 单机 MVP 稳定后再考虑 monorepo 物理拆分
+1. `add-local-trigger-policy-simulation`
+2. `add-local-readiness-summary`
+3. `add-local-backup-export-import`
+4. `add-single-device-mvp-qa-gate`
+5. 单机 MVP 稳定后，再考虑 monorepo 物理拆分
+6. 联网 App 能力放到单机闭环后，包括账户、同步、加密备份、通知、远程协助人流程等
 
-每个阶段必须独立执行：
+每个阶段建议独立执行：
 
 ```text
 /openflow proposal <change-id>
@@ -246,14 +218,14 @@ git diff -- .ai
 /commit-helper
 ```
 
-阶段末验证固定要求：
+阶段末固定验证：
 
 ```bash
 npm.cmd exec -- openspec validate --all --strict
 git diff -- .ai
 ```
 
-并按阶段范围追加：
+按范围追加：
 
 ```bash
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
@@ -270,7 +242,7 @@ npm.cmd exec --package=pnpm@11.5.0 -- pnpm test <focused-test> --runInBand
 corepack pnpm install --frozen-lockfile
 ```
 
-如果本地网络需要镜像，使用临时覆盖，不要写回仓库配置：
+如本地网络需要镜像，使用临时覆盖，不要写回仓库配置：
 
 ```bash
 pnpm --config.registry=https://registry.npmmirror.com install
@@ -286,7 +258,7 @@ npm.cmd exec -- openspec validate --all --strict
 预期：
 
 - `openspec list` 显示 `No active changes found.`
-- `openspec validate --all --strict` 全部通过。
+- `openspec validate --all --strict` 全部通过
 
 4. 跑核心验证：
 
@@ -301,11 +273,11 @@ npm.cmd exec --package=pnpm@11.5.0 -- pnpm thumbs
 ## 已知非阻塞情况
 
 - Git 可能提示 unreachable loose objects 较多，这是仓库维护提示；不要在未明确要求时自动执行 `git prune`。
-- 在当前沙箱环境中，直接调用 `openspec.cmd` 可能不可用；优先使用 `npm.cmd exec -- openspec ...`。
-- 当前沙箱读取用户级 git ignore 可能提示 `C:\Users\buddy\.config\git\ignore` permission denied；这不代表仓库文件不可用。
-- 如果本地缺少 Playwright 托管 Chromium，`pnpm thumbs` 会使用系统 Chrome / Edge fallback。
+- 直接调用 `openspec.cmd` 可能不可用；优先使用 `npm.cmd exec -- openspec ...`。
+- Windows 行尾可能提示 `LF will be replaced by CRLF`，当前不作为阻塞问题处理。
+- 如本地缺少 Playwright 托管 Chromium，`pnpm thumbs` 会尝试使用系统 Chrome / Edge fallback。
 
-## 继续工作边界
+## 工作边界
 
 - 不要修改 `.ai/`，除非用户明确要求。
 - 新实现优先跟随：
