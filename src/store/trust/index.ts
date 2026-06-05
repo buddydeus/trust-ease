@@ -1,3 +1,4 @@
+export * from './backup';
 export * from './defaults';
 export * from './helpers';
 export * from './items';

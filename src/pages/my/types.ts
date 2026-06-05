@@ -1,9 +1,10 @@
-import { LocaleType } from '../../i18n';
+import { type LocaleType } from '../../i18n';
 import {
   type SkinCompatibility,
   type SkinInitStatus,
   type SkinPackageState
 } from '../../skin';
+import type { ILocalTrustBackupPreview } from '../../store/trust';
 
 /**
  * 选择器中一行可选的内置皮肤数据。
@@ -92,6 +93,23 @@ export interface IMyScreenCopy {
   traditionalChinese: string;
   /** 英语选项。 */
   english: string;
+  backupTitle?: string;
+  backupSummary?: string;
+  backupLocalOnlyNotice?: string;
+  backupSensitiveNotice?: string;
+  backupExportAction?: string;
+  backupImportAction?: string;
+  backupPreviewTitle?: string;
+  backupPreviewExportedAt?: string;
+  backupPreviewItems?: string;
+  backupPreviewHelpers?: string;
+  backupPreviewTriggerOn?: string;
+  backupPreviewTriggerOff?: string;
+  backupPreviewSimulationOn?: string;
+  backupPreviewSimulationOff?: string;
+  backupReplaceWarning?: string;
+  backupConfirmImport?: string;
+  backupCancelImport?: string;
 }
 
 /**
@@ -117,6 +135,13 @@ export interface IMyScreenProps {
   /** 当前激活的皮肤 id。 */
   activeSkinId?: string;
   skinRuntimeStatus?: ISkinRuntimeStatus;
+  backupPreview?: ILocalTrustBackupPreview | null;
+  backupStatusMessage?: string | null;
+  backupErrorMessage?: string | null;
+  onExportBackup?: () => void;
+  onImportBackup?: () => void;
+  onConfirmBackupImport?: () => void;
+  onCancelBackupImport?: () => void;
   /**
    * 按 id 激活皮肤。
    *

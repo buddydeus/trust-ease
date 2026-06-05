@@ -6,25 +6,53 @@ import { useI18n } from '../../i18n';
 import { MyScreen } from '../../pages/my/MyScreen';
 import { loadConfiguredBundledSkinPackages } from '../../skin';
 import { useAppStore } from '../../store';
+import {
+  type ILocalTrustBackupFileAdapter,
+  type ILocalTrustBackupPreview,
+  type ITrustDataSnapshot,
+  type LocalTrustBackupImportError,
+  confirmLocalTrustBackupImport,
+  exportLocalTrustBackup,
+  loadTrustDataSnapshot,
+  previewLocalTrustBackupImport,
+  saveTrustDataSnapshot
+} from '../../store/trust';
 
-/** 预留给个人页深链扩展，无需改动 `MyScreen` props 形状。 */
-export interface IMyRouteProps {}
+import { createExpoBackupFileAdapter } from './backupFileAdapter';
 
-/**
- * 「我的」Tab 路由：语言操作、皮肤选择数据与跳转。
- *
- * @returns 已 memo 的我的页路由元素。
- */
-const MyRoute = React.memo<IMyRouteProps>(() => {
+export interface IMyRouteProps {
+  backupFileAdapter?: ILocalTrustBackupFileAdapter;
+}
+
+type BackupStatus = 'exported' | 'import-ready' | 'imported' | 'cancelled';
+type BackupError =
+  | LocalTrustBackupImportError
+  | 'read-failed'
+  | 'write-failed'
+  | 'save-failed';
+
+const MyRoute = React.memo<IMyRouteProps>(({ backupFileAdapter }) => {
   const { getMessage, setManualLocale, useSystemLocale } = useI18n();
-
   const activeSkinId = useAppStore(state => state.activeSkinId);
   const skinInitStatus = useAppStore(state => state.skinInitStatus);
-  const skinInitUsedFallback = useAppStore(
-    state => state.skinInitUsedFallback
-  );
+  const skinInitUsedFallback = useAppStore(state => state.skinInitUsedFallback);
   const skinPackageStates = useAppStore(state => state.skinPackageStates);
   const setActiveSkinId = useAppStore(state => state.setActiveSkinId);
+
+  const fileAdapter = React.useMemo(
+    () => backupFileAdapter || createExpoBackupFileAdapter(),
+    [backupFileAdapter]
+  );
+  const [backupPreview, setBackupPreview] =
+    React.useState<ILocalTrustBackupPreview | null>(null);
+  const [pendingImportSnapshot, setPendingImportSnapshot] =
+    React.useState<ITrustDataSnapshot | null>(null);
+  const [backupStatus, setBackupStatus] = React.useState<BackupStatus | null>(
+    null
+  );
+  const [backupError, setBackupError] = React.useState<BackupError | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('my.title'),
@@ -65,30 +93,133 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
     skinPackageStateIncompatible: getMessage('my.skinPackageStateIncompatible'),
     openTriggerState: getMessage('my.openTriggerState'),
     openHelpers: getMessage('my.openHelpers'),
+    backupTitle: getMessage('my.backupTitle'),
+    backupSummary: getMessage('my.backupSummary'),
+    backupLocalOnlyNotice: getMessage('my.backupLocalOnlyNotice'),
+    backupSensitiveNotice: getMessage('my.backupSensitiveNotice'),
+    backupExportAction: getMessage('my.backupExportAction'),
+    backupImportAction: getMessage('my.backupImportAction'),
+    backupPreviewTitle: getMessage('my.backupPreviewTitle'),
+    backupPreviewExportedAt: getMessage('my.backupPreviewExportedAt'),
+    backupPreviewItems: getMessage('my.backupPreviewItems'),
+    backupPreviewHelpers: getMessage('my.backupPreviewHelpers'),
+    backupPreviewTriggerOn: getMessage('my.backupPreviewTriggerOn'),
+    backupPreviewTriggerOff: getMessage('my.backupPreviewTriggerOff'),
+    backupPreviewSimulationOn: getMessage('my.backupPreviewSimulationOn'),
+    backupPreviewSimulationOff: getMessage('my.backupPreviewSimulationOff'),
+    backupReplaceWarning: getMessage('my.backupReplaceWarning'),
+    backupConfirmImport: getMessage('my.backupConfirmImport'),
+    backupCancelImport: getMessage('my.backupCancelImport'),
     followSystem: getMessage('my.followSystem'),
     simplifiedChinese: getMessage('my.simplifiedChinese'),
     traditionalChinese: getMessage('my.traditionalChinese'),
     english: getMessage('my.english')
   };
 
-  /** 将内置皮肤包映射为「我的」页选择器选项。 */
   const skinOptions = loadConfiguredBundledSkinPackages().map(skinPackage => ({
     skinId: skinPackage.manifest.skinId,
     displayName: skinPackage.manifest.displayName,
     compatibility: skinPackage.compatibility
   }));
 
-  /**
-   * 打开堆叠的触发状态设置页。
-   *
-   * @returns void
-   */
+  const statusMessage = backupStatus
+    ? {
+        exported: getMessage('my.backupStatusExported'),
+        'import-ready': getMessage('my.backupStatusImportReady'),
+        imported: getMessage('my.backupStatusImported'),
+        cancelled: getMessage('my.backupStatusCancelled')
+      }[backupStatus]
+    : null;
+
+  const errorMessage = backupError
+    ? {
+        'malformed-json': getMessage('my.backupErrorMalformed'),
+        'invalid-envelope': getMessage('my.backupErrorInvalid'),
+        'invalid-snapshot': getMessage('my.backupErrorInvalid'),
+        'unsupported-backup-version': getMessage('my.backupErrorUnsupported'),
+        'unsupported-trust-version': getMessage('my.backupErrorUnsupported'),
+        'read-failed': getMessage('my.backupErrorReadFailed'),
+        'write-failed': getMessage('my.backupErrorWriteFailed'),
+        'save-failed': getMessage('my.backupErrorSaveFailed')
+      }[backupError]
+    : null;
+
+  const clearBackupFeedback = () => {
+    setBackupStatus(null);
+    setBackupError(null);
+  };
+
   const handleOpenTriggerState = () => {
     router.push('/my/trigger-state');
   };
 
   const handleOpenHelpers = () => {
     router.push('/helpers' as never);
+  };
+
+  const handleExportBackup = async () => {
+    clearBackupFeedback();
+    const result = await exportLocalTrustBackup({
+      loadSnapshot: loadTrustDataSnapshot,
+      writeBackup: fileAdapter.writeBackup
+    });
+
+    if (result.ok) {
+      setBackupStatus('exported');
+
+      return;
+    }
+
+    setBackupError(result.reason);
+  };
+
+  const handleImportBackup = async () => {
+    clearBackupFeedback();
+    const result = await previewLocalTrustBackupImport({
+      readBackup: fileAdapter.readBackup
+    });
+
+    if (!result.ok) {
+      setBackupPreview(null);
+      setPendingImportSnapshot(null);
+      setBackupStatus(result.reason === 'cancelled' ? 'cancelled' : null);
+      setBackupError(result.reason === 'cancelled' ? null : result.reason);
+
+      return;
+    }
+
+    setPendingImportSnapshot(result.snapshot);
+    setBackupPreview(result.preview);
+    setBackupStatus('import-ready');
+  };
+
+  const handleConfirmBackupImport = async () => {
+    if (!pendingImportSnapshot) {
+      return;
+    }
+
+    clearBackupFeedback();
+    const result = await confirmLocalTrustBackupImport({
+      snapshot: pendingImportSnapshot,
+      saveSnapshot: saveTrustDataSnapshot
+    });
+
+    if (result.ok) {
+      setBackupPreview(null);
+      setPendingImportSnapshot(null);
+      setBackupStatus('imported');
+
+      return;
+    }
+
+    setBackupError(result.reason);
+  };
+
+  const handleCancelBackupImport = () => {
+    setBackupPreview(null);
+    setPendingImportSnapshot(null);
+    setBackupError(null);
+    setBackupStatus('cancelled');
   };
 
   return (
@@ -98,6 +229,13 @@ const MyRoute = React.memo<IMyRouteProps>(() => {
       onOpenTriggerState={handleOpenTriggerState}
       onSetManualLocale={setManualLocale}
       onUseSystemLocale={useSystemLocale}
+      backupPreview={backupPreview}
+      backupStatusMessage={statusMessage}
+      backupErrorMessage={errorMessage}
+      onExportBackup={handleExportBackup}
+      onImportBackup={handleImportBackup}
+      onConfirmBackupImport={handleConfirmBackupImport}
+      onCancelBackupImport={handleCancelBackupImport}
       activeSkinId={activeSkinId}
       skinRuntimeStatus={{
         activeSkinId,
