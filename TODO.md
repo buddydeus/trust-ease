@@ -7,7 +7,7 @@
 ## 当前状态
 
 - Git 工作区在本次 TODO 更新前是干净的。
-- 当前分支 `refactor/all` 领先 `origin/refactor/all` 4 个提交，尚未 push。
+- 当前分支 `refactor/all` 领先 `origin/refactor/all` 7 个提交，尚未 push。
 - OpenSpec 当前没有 active changes。
 - OpenSpec 主规格全量严格校验已通过：10 个 specs，0 failed。
 - `.ai/` 最近几轮实现、归档和交接更新均未改动。
@@ -16,6 +16,9 @@
 最近关键提交：
 
 ```text
+757ee82 docs: record frontend QA outcome
+f45f912 fix: detect current locale key usage
+dc3e9f3 docs: refresh handoff TODO
 6b2445e docs: archive remote skin QA spec
 14c5783 test: add remote skin download QA entry
 d8233b2 docs: specify remote skin QA flow
@@ -281,6 +284,65 @@ git diff -- .ai
 - 优先修复真实代码问题，不把失败测试简单改成放行。
 - 修复后重新运行对应失败命令和完整 QA 命令。
 - 每轮修复完成后按 commit-helper 提交。
+
+## 单机 App MVP 阶段规划
+
+详细路线图已记录在：
+
+- `docs/superpowers/plans/2026-06-05-single-device-mvp-roadmap.md`
+
+单机 MVP 当前优先级高于 monorepo 物理拆分。原因是现有项目已经具备 Expo 原型、皮肤运行时、远程 skin QA 和截图 QA 底座，但核心产品闭环仍需要从静态页面推进到本地可用数据流。
+
+单机 MVP 完成标准：
+
+- 用户能完成 welcome/onboarding，并在后续启动进入正常主流程。
+- 用户能创建、编辑、归档和查看本地重要事项。
+- 用户能维护本地托付联系人/协助人，并把协助人关联到事项。
+- 用户能配置并演练本地失联/申报触发策略，且不会触发不可逆执行。
+- 首页或 My 页面能展示本地预案是否完整、下一步该做什么。
+- 用户能本地导出/导入备份，且文案明确说明文件由用户自行保管。
+- 全部能力不依赖后端、账户、同步、推送或远程任意代码执行。
+
+阶段顺序：
+
+1. `add-local-trust-item-data-model`：建立本地事项、协助人、触发策略、版本化存储契约。
+2. `add-local-item-crud-workflow`：把事项页和新建事项页接入真实本地数据。
+3. `add-local-helper-contact-workflow`：新增本地协助人/联系人维护和事项关联。
+4. `add-local-trigger-policy-simulation`：把触发状态页推进为可撤回的本地策略与模拟演练。
+5. `add-local-readiness-summary`：在 Home/My 展示预案完整度和下一步行动。
+6. `add-local-backup-export-import`：提供本地备份导出/导入能力。
+7. `add-single-device-mvp-qa-gate`：沉淀 `pnpm check:qa` 或等价 MVP QA 命令。
+
+每个阶段必须独立执行：
+
+```text
+/openflow proposal <change-id>
+/openflow spec <change-id>
+/openflow build <change-id>
+/openflow close <change-id>
+/commit-helper
+```
+
+阶段末验证固定要求：
+
+```bash
+npm.cmd exec -- openspec validate --all --strict
+git diff -- .ai
+```
+
+并按阶段范围追加：
+
+```bash
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:local
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm test <focused-test> --runInBand
+```
+
+下一步应从这里开始：
+
+```text
+/openflow proposal add-local-trust-item-data-model
+```
 
 ## 换电脑后恢复步骤
 
