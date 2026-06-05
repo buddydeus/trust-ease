@@ -2,50 +2,50 @@
 
 ## 1. Define local trust contracts
 
-- [ ] Create `src/store/trust/types.ts` with schema version, snapshot, item,
+- [x] Create `src/store/trust/types.ts` with schema version, snapshot, item,
       helper, trigger policy, status, and item-kind contracts.
-- [ ] Ensure durable fields cover ids, titles/names, helper assignments,
+- [x] Ensure durable fields cover ids, titles/names, helper assignments,
       archived status, created timestamps, and updated timestamps.
-- [ ] Export only stable type and constant names needed by later phases.
-- [ ] Keep contracts local-only and free of backend, sync, or remote execution
+- [x] Export only stable type and constant names needed by later phases.
+- [x] Keep contracts local-only and free of backend, sync, or remote execution
       concepts.
 
 ## 2. Add default snapshot and pure helpers
 
-- [ ] Create `src/store/trust/defaults.ts` with a complete default snapshot
+- [x] Create `src/store/trust/defaults.ts` with a complete default snapshot
       factory.
-- [ ] Add pure helpers for active trust items, archived trust items, and active
+- [x] Add pure helpers for active trust items, archived trust items, and active
       trusted helpers.
-- [ ] Ensure helper functions do not mutate the input snapshot.
-- [ ] Add a trust store barrel export if the project has a matching local
+- [x] Ensure helper functions do not mutate the input snapshot.
+- [x] Add a trust store barrel export if the project has a matching local
       pattern.
 
 ## 3. Add AsyncStorage persistence
 
-- [ ] Create `src/store/trust/storage.ts` with load, save, and clear helpers.
-- [ ] Use a namespaced AsyncStorage key for the local trust snapshot.
-- [ ] Safely parse stored JSON and return defaults for missing, malformed, or
+- [x] Create `src/store/trust/storage.ts` with load, save, and clear helpers.
+- [x] Use a namespaced AsyncStorage key for the local trust snapshot.
+- [x] Safely parse stored JSON and return defaults for missing, malformed, or
       structurally invalid data.
-- [ ] Return defaults for missing schema versions and unsupported future schema
+- [x] Return defaults for missing schema versions and unsupported future schema
       versions.
-- [ ] Save valid snapshots as deterministic JSON.
+- [x] Save valid snapshots as deterministic JSON.
 
 ## 4. Cover storage and selector behavior with tests
 
-- [ ] Create `tests/store/trust/storage.test.ts`.
-- [ ] Test empty storage returns the default snapshot.
-- [ ] Test malformed JSON returns the default snapshot without throwing.
-- [ ] Test structurally invalid storage returns the default snapshot.
-- [ ] Test valid snapshots save and reload.
-- [ ] Test unsupported future versions fall back to the default snapshot.
-- [ ] Test active and archived helpers preserve archived data while filtering
+- [x] Create `tests/store/trust/storage.test.ts`.
+- [x] Test empty storage returns the default snapshot.
+- [x] Test malformed JSON returns the default snapshot without throwing.
+- [x] Test structurally invalid storage returns the default snapshot.
+- [x] Test valid snapshots save and reload.
+- [x] Test unsupported future versions fall back to the default snapshot.
+- [x] Test active and archived helpers preserve archived data while filtering
       active views.
-- [ ] Test clearing local trust storage removes the AsyncStorage entry.
+- [x] Test clearing local trust storage removes the AsyncStorage entry.
 
 ## 5. Final verification
 
-- [ ] Run `npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/store/trust/storage.test.ts --runInBand`.
-- [ ] Run `npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type`.
-- [ ] Run `npm.cmd exec -- openspec validate add-local-trust-item-data-model --strict`.
-- [ ] Run `npm.cmd exec -- openspec validate --all --strict`.
-- [ ] Run `git diff -- .ai`.
+- [x] Run `npm.cmd exec --package=pnpm@11.5.0 -- pnpm test tests/store/trust/storage.test.ts --runInBand`.
+- [x] Run `npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type`.
+- [x] Run `npm.cmd exec -- openspec validate add-local-trust-item-data-model --strict`.
+- [x] Run `npm.cmd exec -- openspec validate --all --strict`.
+- [x] Run `git diff -- .ai`.

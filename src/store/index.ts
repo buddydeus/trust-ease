@@ -6,5 +6,6 @@
 export * from './onboarding/storage';
 export * from './preview/config';
 export * from './reporting/actions';
+export * from './trust';
 export * from './useAppStore';
 export * from './usePreviewConfig';
