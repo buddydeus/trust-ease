@@ -1,58 +1,125 @@
-/**
- * 安全策略界面原型：仅用本地 state 保持开关响应；在产品定义持久化契约前不落盘半成品策略。
- */
-import React, { useState } from 'react';
+import React from 'react';
 
-import { useTheme } from 'styled-components/native';
-
-import { AppScreen, AppSwitch } from '../../components';
+import { AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
-import { CaptionMutedText, ScreenTitleText } from '../../theme';
+import {
+  CaptionMutedText,
+  CardTitleText,
+  ScreenTitleText
+} from '../../theme';
 
 import {
-  MissingSectionCard,
-  PolicyCurrentValue,
+  ActionButton,
+  ActionGrid,
+  ActionLabel,
+  LocalOnlyNotice,
+  MetricRow,
+  MetricValue,
   PolicySummaryCard,
-  ToggleRowLabel,
-  ToggleSettingRow
+  StatusCard
 } from './trigger-state.styled';
 
-/**
- * `TriggerStateScreen` 使用的本地化文案。
- */
-export interface ITriggerStateScreenCopy {
-  /** 屏幕标题。 */
-  title: string;
-  /** 当前策略摘要上方的标签。 */
-  currentLabel: string;
-  /** 当前策略摘要正文。 */
-  currentValue: string;
-  /** 「失联」分区标签。 */
-  missingLabel: string;
-  /** 启用失联开关的标签。 */
-  missingToggle: string;
+export type TriggerStateScreenStatus =
+  | 'normal'
+  | 'paused'
+  | 'warning'
+  | 'waiting-confirmation'
+  | 'simulated-review';
+
+export type TriggerStateScreenNextAction =
+  | 'resume'
+  | 'run-rehearsal'
+  | 'confirm-or-pause'
+  | 'review-before-any-escalation'
+  | 'reset-rehearsal';
+
+export interface ITriggerStateScreenViewModel {
+  checkInIntervalDays: number;
+  missedCheckInThreshold: number;
+  missingStateEnabled: boolean;
+  simulationEnabled: boolean;
+  status: TriggerStateScreenStatus;
+  nextAction: TriggerStateScreenNextAction;
+  isLocalOnly: boolean;
 }
 
-/**
- * `TriggerStateScreen` 的 props。
- */
+export interface ITriggerStateScreenCopy {
+  title: string;
+  policySummary: string;
+  checkInIntervalLabel: string;
+  missedThresholdLabel: string;
+  statusLabel: string;
+  nextActionLabel: string;
+  localOnlyNotice: string;
+  actionRehearse: string;
+  actionPause: string;
+  actionResume: string;
+  actionReset: string;
+  statusNormal: string;
+  statusPaused: string;
+  statusWarning: string;
+  statusWaitingConfirmation: string;
+  statusSimulatedReview: string;
+  nextActionResume: string;
+  nextActionRunRehearsal: string;
+  nextActionConfirmOrPause: string;
+  nextActionReviewBeforeAnyEscalation: string;
+  nextActionResetRehearsal: string;
+}
+
 export interface ITriggerStateScreenProps {
-  /** 可选本地化文案；省略时使用内置默认。 */
+  viewModel?: ITriggerStateScreenViewModel;
+  onStartSimulation?: () => void;
+  onPause?: () => void;
+  onResume?: () => void;
+  onResetSimulation?: () => void;
   copy?: ITriggerStateScreenCopy;
 }
 
-/**
- * 触发 / 安全策略设置页。
- *
- * @param props - `ITriggerStateScreenProps`
- * @returns 已 memo 的触发设置页元素。
- */
-export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
-  ({ copy } = {}) => {
-    const theme = useTheme();
-    const { getMessage } = useI18n();
+const defaultViewModel: ITriggerStateScreenViewModel = {
+  checkInIntervalDays: 1,
+  missedCheckInThreshold: 3,
+  missingStateEnabled: false,
+  simulationEnabled: false,
+  status: 'paused',
+  nextAction: 'resume',
+  isLocalOnly: true
+};
 
-    const [missingEnabled, setMissingEnabled] = useState(false);
+const statusCopyMap: Record<
+  TriggerStateScreenStatus,
+  keyof ITriggerStateScreenCopy
+> = {
+  normal: 'statusNormal',
+  paused: 'statusPaused',
+  warning: 'statusWarning',
+  'waiting-confirmation': 'statusWaitingConfirmation',
+  'simulated-review': 'statusSimulatedReview'
+};
+
+const nextActionCopyMap: Record<
+  TriggerStateScreenNextAction,
+  keyof ITriggerStateScreenCopy
+> = {
+  resume: 'nextActionResume',
+  'run-rehearsal': 'nextActionRunRehearsal',
+  'confirm-or-pause': 'nextActionConfirmOrPause',
+  'review-before-any-escalation': 'nextActionReviewBeforeAnyEscalation',
+  'reset-rehearsal': 'nextActionResetRehearsal'
+};
+
+export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
+  ({
+    viewModel = defaultViewModel,
+    onStartSimulation,
+    onPause,
+    onResume,
+    onResetSimulation,
+    copy
+  } = {}) => {
+    const { getMessage } = useI18n();
+    const statusKey = `triggerState.status.${viewModel.status}`;
+    const nextActionKey = `triggerState.nextAction.${viewModel.nextAction}`;
 
     return (
       <AppScreen>
@@ -61,33 +128,73 @@ export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
         </ScreenTitleText>
         <PolicySummaryCard>
           <CaptionMutedText>
-            {copy?.currentLabel || getMessage('triggerState.currentLabel')}
+            {copy?.policySummary || getMessage('triggerState.policySummary')}
           </CaptionMutedText>
-          <PolicyCurrentValue>
-            {copy?.currentValue || getMessage('triggerState.currentValue')}
-          </PolicyCurrentValue>
+          <MetricRow>
+            <CaptionMutedText>
+              {copy?.checkInIntervalLabel ||
+                getMessage('triggerState.checkInIntervalLabel')}
+            </CaptionMutedText>
+            <MetricValue>{viewModel.checkInIntervalDays}</MetricValue>
+          </MetricRow>
+          <MetricRow>
+            <CaptionMutedText>
+              {copy?.missedThresholdLabel ||
+                getMessage('triggerState.missedThresholdLabel')}
+            </CaptionMutedText>
+            <MetricValue>{viewModel.missedCheckInThreshold}</MetricValue>
+          </MetricRow>
         </PolicySummaryCard>
-        <MissingSectionCard>
+        <StatusCard>
           <CaptionMutedText>
-            {copy?.missingLabel || getMessage('triggerState.missingLabel')}
+            {copy?.statusLabel || getMessage('triggerState.statusLabel')}
           </CaptionMutedText>
-          <ToggleSettingRow>
-            <ToggleRowLabel>
-              {copy?.missingToggle || getMessage('triggerState.missingToggle')}
-            </ToggleRowLabel>
-            <AppSwitch
-              accessibilityRole="switch"
-              accessibilityState={{ checked: missingEnabled }}
-              value={missingEnabled}
-              onValueChange={setMissingEnabled}
-              trackColor={{
-                false: theme.color.border,
-                true: theme.color.accent
-              }}
-              thumbColor="#FFFFFF"
-            />
-          </ToggleSettingRow>
-        </MissingSectionCard>
+          <CardTitleText>
+            {copy?.[statusCopyMap[viewModel.status]] ||
+              getMessage(statusKey)}
+          </CardTitleText>
+          <CaptionMutedText>
+            {copy?.nextActionLabel ||
+              getMessage('triggerState.nextActionLabel')}
+          </CaptionMutedText>
+          <CardTitleText>
+            {copy?.[nextActionCopyMap[viewModel.nextAction]] ||
+              getMessage(nextActionKey)}
+          </CardTitleText>
+          <LocalOnlyNotice>
+            {copy?.localOnlyNotice ||
+              getMessage('triggerState.localOnlyNotice')}
+          </LocalOnlyNotice>
+        </StatusCard>
+        <ActionGrid>
+          <ActionButton
+            accessibilityRole="button"
+            onPress={onStartSimulation}
+          >
+            <ActionLabel>
+              {copy?.actionRehearse ||
+                getMessage('triggerState.action.rehearse')}
+            </ActionLabel>
+          </ActionButton>
+          <ActionButton accessibilityRole="button" onPress={onPause}>
+            <ActionLabel>
+              {copy?.actionPause || getMessage('triggerState.action.pause')}
+            </ActionLabel>
+          </ActionButton>
+          <ActionButton accessibilityRole="button" onPress={onResume}>
+            <ActionLabel>
+              {copy?.actionResume || getMessage('triggerState.action.resume')}
+            </ActionLabel>
+          </ActionButton>
+          <ActionButton
+            accessibilityRole="button"
+            onPress={onResetSimulation}
+          >
+            <ActionLabel>
+              {copy?.actionReset || getMessage('triggerState.action.reset')}
+            </ActionLabel>
+          </ActionButton>
+        </ActionGrid>
       </AppScreen>
     );
   }
