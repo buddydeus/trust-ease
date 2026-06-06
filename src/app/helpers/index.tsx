@@ -8,20 +8,20 @@ import {
   type IHelpersScreenHelper
 } from '../../pages/helpers/HelpersScreen';
 import {
+  type ITrustDataSnapshot,
   archiveTrustedHelper,
   getActiveTrustedHelpers,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot
 } from '../../store/trust';
 
-import type { ITrustDataSnapshot } from '../../store/trust';
-
 export interface IHelpersRouteProps {}
 
 const HelpersRoute = React.memo<IHelpersRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('helpers.title'),

@@ -153,7 +153,10 @@ const getFetch = (): ((
   init?: Record<string, unknown>
 ) => Promise<IRemoteFetchResponse>) => {
   const remoteFetch = globalThis.fetch as
-    | ((url: string, init?: Record<string, unknown>) => Promise<IRemoteFetchResponse>)
+    | ((
+        url: string,
+        init?: Record<string, unknown>
+      ) => Promise<IRemoteFetchResponse>)
     | undefined;
 
   if (!remoteFetch) {

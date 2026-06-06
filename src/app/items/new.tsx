@@ -8,13 +8,12 @@ import {
   type IItemFormValues
 } from '../../pages/items/ItemFormScreen';
 import {
+  type ITrustDataSnapshot,
   createTrustItem,
   getActiveTrustedHelpers,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot
 } from '../../store/trust';
-
-import type { ITrustDataSnapshot } from '../../store/trust';
 
 /** 预留给向导多步后由路由传入的步骤参数。 */
 export interface INewItemRouteProps {}
@@ -26,8 +25,9 @@ export interface INewItemRouteProps {}
  */
 const NewItemRoute = React.memo<INewItemRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('itemForm.title'),

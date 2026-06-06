@@ -1,15 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { createDefaultTrustDataSnapshot } from './defaults';
-import { TRUST_DATA_SCHEMA_VERSION } from './types';
-
-import type {
-  ILocalTriggerPolicy,
-  ITrustedHelper,
-  ITrustDataSnapshot,
-  ITrustItem,
-  TrustItemKind,
-  TrustRecordStatus
+import {
+  type ILocalTriggerPolicy,
+  type ITrustDataSnapshot,
+  type ITrustedHelper,
+  type ITrustItem,
+  type TrustItemKind,
+  type TrustRecordStatus,
+  TRUST_DATA_SCHEMA_VERSION
 } from './types';
 
 const STORAGE_KEY = 'trust-ease:trust-data:v1';
@@ -19,8 +18,7 @@ const itemKinds = new Set<TrustItemKind>(['offline', 'online']);
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const isString = (value: unknown): value is string =>
-  typeof value === 'string';
+const isString = (value: unknown): value is string => typeof value === 'string';
 
 const isNullableString = (value: unknown): value is string | null =>
   value === null || isString(value);
@@ -131,9 +129,7 @@ const parseTriggerPolicy = (value: unknown): ILocalTriggerPolicy | null => {
   };
 };
 
-export const parseTrustDataSnapshot = (
-  value: unknown
-): ITrustDataSnapshot => {
+export const parseTrustDataSnapshot = (value: unknown): ITrustDataSnapshot => {
   const defaultSnapshot = createDefaultTrustDataSnapshot();
 
   if (!isRecord(value) || value.schemaVersion !== TRUST_DATA_SCHEMA_VERSION) {
@@ -169,20 +165,19 @@ export const parseTrustDataSnapshot = (
   };
 };
 
-export const loadTrustDataSnapshot =
-  async (): Promise<ITrustDataSnapshot> => {
-    const raw = await AsyncStorage.getItem(STORAGE_KEY);
+export const loadTrustDataSnapshot = async (): Promise<ITrustDataSnapshot> => {
+  const raw = await AsyncStorage.getItem(STORAGE_KEY);
 
-    if (!raw) {
-      return createDefaultTrustDataSnapshot();
-    }
+  if (!raw) {
+    return createDefaultTrustDataSnapshot();
+  }
 
-    try {
-      return parseTrustDataSnapshot(JSON.parse(raw));
-    } catch {
-      return createDefaultTrustDataSnapshot();
-    }
-  };
+  try {
+    return parseTrustDataSnapshot(JSON.parse(raw));
+  } catch {
+    return createDefaultTrustDataSnapshot();
+  }
+};
 
 export const saveTrustDataSnapshot = async (
   snapshot: ITrustDataSnapshot

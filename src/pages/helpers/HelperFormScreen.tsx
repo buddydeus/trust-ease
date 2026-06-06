@@ -114,8 +114,7 @@ export const HelperFormScreen = React.memo<IHelperFormScreenProps>(
         </HelperNoticeBlock>
         <HelperFormFieldCard>
           <MetaMutedText>
-            {copy?.displayNameLabel ||
-              getMessage('helpers.displayNameLabel')}
+            {copy?.displayNameLabel || getMessage('helpers.displayNameLabel')}
           </MetaMutedText>
           <HelperFormInput
             placeholder={
@@ -134,8 +133,7 @@ export const HelperFormScreen = React.memo<IHelperFormScreenProps>(
         </HelperFormFieldCard>
         <HelperFormFieldCard>
           <MetaMutedText>
-            {copy?.relationshipLabel ||
-              getMessage('helpers.relationshipLabel')}
+            {copy?.relationshipLabel || getMessage('helpers.relationshipLabel')}
           </MetaMutedText>
           <HelperFormInput
             placeholder={

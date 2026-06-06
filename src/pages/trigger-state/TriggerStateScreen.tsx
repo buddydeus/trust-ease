@@ -2,11 +2,7 @@ import React from 'react';
 
 import { AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
-import {
-  CaptionMutedText,
-  CardTitleText,
-  ScreenTitleText
-} from '../../theme';
+import { CaptionMutedText, CardTitleText, ScreenTitleText } from '../../theme';
 
 import {
   ActionButton,
@@ -150,8 +146,7 @@ export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
             {copy?.statusLabel || getMessage('triggerState.statusLabel')}
           </CaptionMutedText>
           <CardTitleText>
-            {copy?.[statusCopyMap[viewModel.status]] ||
-              getMessage(statusKey)}
+            {copy?.[statusCopyMap[viewModel.status]] || getMessage(statusKey)}
           </CardTitleText>
           <CaptionMutedText>
             {copy?.nextActionLabel ||
@@ -167,10 +162,7 @@ export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
           </LocalOnlyNotice>
         </StatusCard>
         <ActionGrid>
-          <ActionButton
-            accessibilityRole="button"
-            onPress={onStartSimulation}
-          >
+          <ActionButton accessibilityRole="button" onPress={onStartSimulation}>
             <ActionLabel>
               {copy?.actionRehearse ||
                 getMessage('triggerState.action.rehearse')}
@@ -186,10 +178,7 @@ export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
               {copy?.actionResume || getMessage('triggerState.action.resume')}
             </ActionLabel>
           </ActionButton>
-          <ActionButton
-            accessibilityRole="button"
-            onPress={onResetSimulation}
-          >
+          <ActionButton accessibilityRole="button" onPress={onResetSimulation}>
             <ActionLabel>
               {copy?.actionReset || getMessage('triggerState.action.reset')}
             </ActionLabel>

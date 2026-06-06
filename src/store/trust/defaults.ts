@@ -1,6 +1,4 @@
-import { TRUST_DATA_SCHEMA_VERSION } from './types';
-
-import type { ITrustDataSnapshot } from './types';
+import { type ITrustDataSnapshot, TRUST_DATA_SCHEMA_VERSION } from './types';
 
 export const createDefaultTrustDataSnapshot = (): ITrustDataSnapshot => ({
   schemaVersion: TRUST_DATA_SCHEMA_VERSION,

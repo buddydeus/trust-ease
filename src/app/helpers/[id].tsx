@@ -8,12 +8,11 @@ import {
   type IHelperFormValues
 } from '../../pages/helpers/HelperFormScreen';
 import {
+  type ITrustDataSnapshot,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot,
   updateTrustedHelper
 } from '../../store/trust';
-
-import type { ITrustDataSnapshot } from '../../store/trust';
 
 export interface IEditHelperRouteParams {
   id?: string | string[];
@@ -35,8 +34,9 @@ const EditHelperRoute = React.memo<IEditHelperRouteProps>(() => {
   const { getMessage } = useI18n();
   const params = useLocalSearchParams();
   const helperId = resolveRouteHelperId({ id: params.id });
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('helpers.formTitle'),

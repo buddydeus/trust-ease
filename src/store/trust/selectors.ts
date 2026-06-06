@@ -1,8 +1,4 @@
-import type {
-  ITrustedHelper,
-  ITrustDataSnapshot,
-  ITrustItem
-} from './types';
+import type { ITrustedHelper, ITrustDataSnapshot, ITrustItem } from './types';
 
 export const getActiveTrustItems = (
   snapshot: ITrustDataSnapshot

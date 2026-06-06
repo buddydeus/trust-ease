@@ -78,8 +78,7 @@ export const HelpersScreen = React.memo<IHelpersScreenProps>(
                 {copy?.emptyBody || getMessage('helpers.emptyBody')}
               </AppText>
               <HelperNoticeText>
-                {copy?.localOnlyNotice ||
-                  getMessage('helpers.localOnlyNotice')}
+                {copy?.localOnlyNotice || getMessage('helpers.localOnlyNotice')}
               </HelperNoticeText>
             </AppCard>
           ) : (

@@ -102,9 +102,7 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
     const [kind, setKind] = React.useState<IItemFormValues['kind']>(
       initialValues?.kind ?? 'offline'
     );
-    const [summary, setSummary] = React.useState(
-      initialValues?.summary ?? ''
-    );
+    const [summary, setSummary] = React.useState(initialValues?.summary ?? '');
     const [helperIds, setHelperIds] = React.useState(
       initialValues?.helperIds ?? []
     );
@@ -159,8 +157,7 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
           </MetaMutedText>
           <FormTextInput
             placeholder={
-              copy?.titlePlaceholder ||
-              getMessage('itemForm.titlePlaceholder')
+              copy?.titlePlaceholder || getMessage('itemForm.titlePlaceholder')
             }
             value={title}
             onChangeText={setTitle}
@@ -241,7 +238,9 @@ export const ItemFormScreen = React.memo<IItemFormScreenProps>(
         </WizardStepCard>
         <SaveButton
           accessibilityRole="button"
-          accessibilityLabel={copy?.saveAction || getMessage('itemForm.saveAction')}
+          accessibilityLabel={
+            copy?.saveAction || getMessage('itemForm.saveAction')
+          }
           onPress={handleSubmit}
         >
           <PrimaryOnAccentLabel>

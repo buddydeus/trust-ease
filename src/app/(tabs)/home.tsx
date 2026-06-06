@@ -1,20 +1,17 @@
-import React from 'react';
-
 import { router } from 'expo-router';
+
+import React from 'react';
 
 import { useI18n } from '../../i18n';
 import { HomeScreen } from '../../pages/home/HomeScreen';
 import {
+  type ITrustDataSnapshot,
+  type LocalReadinessNextAction,
   deriveLocalReadinessSummary,
   getPreviewHomeSummary,
   loadTrustDataSnapshot,
   useAppStore,
   usePreviewConfig
-} from '../../store';
-
-import type {
-  ITrustDataSnapshot,
-  LocalReadinessNextAction
 } from '../../store';
 
 /** 预留给将来影响首页组件的深链参数。 */

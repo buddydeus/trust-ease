@@ -1,8 +1,13 @@
 import React from 'react';
 
 import { useI18n } from '../../i18n';
-import { TriggerStateScreen } from '../../pages/trigger-state/TriggerStateScreen';
 import {
+  type ITriggerStateScreenCopy,
+  type ITriggerStateScreenViewModel,
+  TriggerStateScreen
+} from '../../pages/trigger-state/TriggerStateScreen';
+import {
+  type ITrustDataSnapshot,
   deriveTriggerSimulationStatus,
   loadTrustDataSnapshot,
   pauseTriggerPolicy,
@@ -11,12 +16,6 @@ import {
   saveTrustDataSnapshot,
   startTriggerSimulation
 } from '../../store/trust';
-
-import type {
-  ITriggerStateScreenCopy,
-  ITriggerStateScreenViewModel
-} from '../../pages/trigger-state/TriggerStateScreen';
-import type { ITrustDataSnapshot } from '../../store/trust';
 
 export interface ITriggerStateRouteProps {}
 
@@ -43,8 +42,9 @@ const createViewModel = (
 
 const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy: ITriggerStateScreenCopy = {
     title: getMessage('triggerState.title'),
@@ -64,13 +64,9 @@ const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
     statusWaitingConfirmation: getMessage(
       'triggerState.status.waiting-confirmation'
     ),
-    statusSimulatedReview: getMessage(
-      'triggerState.status.simulated-review'
-    ),
+    statusSimulatedReview: getMessage('triggerState.status.simulated-review'),
     nextActionResume: getMessage('triggerState.nextAction.resume'),
-    nextActionRunRehearsal: getMessage(
-      'triggerState.nextAction.run-rehearsal'
-    ),
+    nextActionRunRehearsal: getMessage('triggerState.nextAction.run-rehearsal'),
     nextActionConfirmOrPause: getMessage(
       'triggerState.nextAction.confirm-or-pause'
     ),
@@ -118,13 +114,9 @@ const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
       copy={copy}
       viewModel={snapshot ? createViewModel(snapshot) : undefined}
       onPause={() => applySnapshotMutation(pauseTriggerPolicy)}
-      onResetSimulation={() =>
-        applySnapshotMutation(resetTriggerSimulation)
-      }
+      onResetSimulation={() => applySnapshotMutation(resetTriggerSimulation)}
       onResume={() => applySnapshotMutation(resumeTriggerPolicy)}
-      onStartSimulation={() =>
-        applySnapshotMutation(startTriggerSimulation)
-      }
+      onStartSimulation={() => applySnapshotMutation(startTriggerSimulation)}
     />
   );
 });

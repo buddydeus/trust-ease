@@ -1,5 +1,4 @@
 import { getActiveTrustedHelpers, getActiveTrustItems } from './selectors';
-
 import type { ITrustDataSnapshot } from './types';
 
 export type LocalReadinessStatus =
@@ -51,9 +50,7 @@ export interface ILocalReadinessSummary {
   isLocalOnly: true;
 }
 
-const createSection = (
-  complete: boolean
-): ILocalReadinessSection => ({
+const createSection = (complete: boolean): ILocalReadinessSection => ({
   status: complete ? 'complete' : 'needs-action'
 });
 

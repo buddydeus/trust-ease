@@ -98,22 +98,19 @@ export const SkinRuntimeStatus = React.memo<ISkinRuntimeStatusProps>(
       skinRuntimeActive:
         copy?.skinRuntimeActive || getMessage('my.skinRuntimeActive'),
       skinRuntimeInitStatus:
-        copy?.skinRuntimeInitStatus ||
-        getMessage('my.skinRuntimeInitStatus'),
+        copy?.skinRuntimeInitStatus || getMessage('my.skinRuntimeInitStatus'),
       skinRuntimeFallback:
         copy?.skinRuntimeFallback || getMessage('my.skinRuntimeFallback'),
       skinRuntimePackageStates:
         copy?.skinRuntimePackageStates ||
         getMessage('my.skinRuntimePackageStates'),
       skinRuntimeStatusIdle:
-        copy?.skinRuntimeStatusIdle ||
-        getMessage('my.skinRuntimeStatusIdle'),
+        copy?.skinRuntimeStatusIdle || getMessage('my.skinRuntimeStatusIdle'),
       skinRuntimeStatusInitializing:
         copy?.skinRuntimeStatusInitializing ||
         getMessage('my.skinRuntimeStatusInitializing'),
       skinRuntimeStatusReady:
-        copy?.skinRuntimeStatusReady ||
-        getMessage('my.skinRuntimeStatusReady'),
+        copy?.skinRuntimeStatusReady || getMessage('my.skinRuntimeStatusReady'),
       skinRuntimeStatusFallback:
         copy?.skinRuntimeStatusFallback ||
         getMessage('my.skinRuntimeStatusFallback'),

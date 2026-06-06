@@ -8,13 +8,12 @@ import {
   type IItemsScreenItem
 } from '../../pages/items/ItemsScreen';
 import {
+  type ITrustDataSnapshot,
   archiveTrustItem,
   getActiveTrustItems,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot
 } from '../../store/trust';
-
-import type { ITrustDataSnapshot } from '../../store/trust';
 
 /** 预留给将来由路由参数驱动的列表筛选。 */
 export interface IItemsRouteProps {}
@@ -26,8 +25,9 @@ export interface IItemsRouteProps {}
  */
 const ItemsRoute = React.memo<IItemsRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('items.title'),

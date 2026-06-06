@@ -8,13 +8,12 @@ import {
   type IItemFormValues
 } from '../../pages/items/ItemFormScreen';
 import {
+  type ITrustDataSnapshot,
   getActiveTrustedHelpers,
   loadTrustDataSnapshot,
   saveTrustDataSnapshot,
   updateTrustItem
 } from '../../store/trust';
-
-import type { ITrustDataSnapshot } from '../../store/trust';
 
 /** 由 Expo Router 注入的编辑事项路由参数。 */
 export interface IEditItemRouteParams {
@@ -41,8 +40,9 @@ const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
   const { getMessage } = useI18n();
   const params = useLocalSearchParams();
   const itemId = resolveRouteItemId({ id: params.id });
-  const [snapshot, setSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const copy = {
     title: getMessage('itemForm.title'),

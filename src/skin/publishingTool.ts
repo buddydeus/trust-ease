@@ -55,7 +55,9 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 };
 
-const cloneJsonRecord = (value: Record<string, unknown>): Record<string, unknown> => {
+const cloneJsonRecord = (
+  value: Record<string, unknown>
+): Record<string, unknown> => {
   return JSON.parse(JSON.stringify(value)) as Record<string, unknown>;
 };
 

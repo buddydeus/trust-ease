@@ -1,8 +1,4 @@
-import type {
-  ITrustedHelper,
-  ITrustDataSnapshot,
-  ITrustItem
-} from './types';
+import type { ITrustedHelper, ITrustDataSnapshot, ITrustItem } from './types';
 
 export type TrustedHelperMutationFailureReason =
   | 'display-name-required'
@@ -245,7 +241,9 @@ export const assignTrustItemHelpers = (
   const helperIds = dedupeIds(input.helperIds);
 
   for (const helperId of helperIds) {
-    const helper = snapshot.helpers.find(candidate => candidate.id === helperId);
+    const helper = snapshot.helpers.find(
+      candidate => candidate.id === helperId
+    );
 
     if (!helper) {
       return {

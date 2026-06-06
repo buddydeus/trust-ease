@@ -1,8 +1,4 @@
-import type {
-  ITrustDataSnapshot,
-  ITrustItem,
-  TrustItemKind
-} from './types';
+import type { ITrustDataSnapshot, ITrustItem, TrustItemKind } from './types';
 
 export type TrustItemMutationFailureReason =
   | 'title-required'

@@ -7,6 +7,12 @@ import React from 'react';
 import { AppCard, AppScreen } from '../../components';
 import { type HomeSummary } from '../../constants';
 import { useI18n } from '../../i18n';
+import type {
+  ILocalReadinessSummary,
+  LocalReadinessNextAction,
+  LocalReadinessSectionStatus,
+  LocalReadinessStatus
+} from '../../store/trust';
 import {
   CaptionMutedText,
   SectionHeading,
@@ -31,13 +37,6 @@ import {
   ReadinessStatusText,
   StreakDayNumber
 } from './home.styled';
-
-import type {
-  ILocalReadinessSummary,
-  LocalReadinessNextAction,
-  LocalReadinessSectionStatus,
-  LocalReadinessStatus
-} from '../../store/trust';
 
 /**
  * `HomeScreen` 使用的本地化文案。
