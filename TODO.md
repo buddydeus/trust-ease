@@ -6,18 +6,19 @@
 
 ## 当前状态
 
-- 当前已验证提交：`f78d835 docs: archive local backup export import`
-- 本地分支相对 `origin/refactor/all`：ahead 16 commits（本 TODO 更新尚未提交）
-- OpenSpec active changes：无
-- OpenSpec 全量 strict 校验：16 passed / 0 failed
-- 工作区在本 TODO 更新前为干净状态
+- 当前已验证提交：`70ceaa5 docs: refresh handoff TODO`
+- 本地分支相对 `origin/refactor/all`：ahead 17 commits（本 QA gate build 尚未提交）
+- OpenSpec active changes：`add-single-device-mvp-qa-gate`
+- OpenSpec 全量 strict 校验：17 passed / 0 failed
+- 工作区存在用户已有实现文件改动；本阶段仅处理 QA gate 相关文件
 - `.ai/` 本轮不应修改；最近 build / close 均保持 `.ai/` diff 为空
 - 项目仍是单 Expo app 物理结构；monorepo 物理拆分尚未开始
-- 当前优先级：单机 App MVP 核心功能闭环已基本完成，下一步进入单机 MVP QA gate
+- 当前优先级：`add-single-device-mvp-qa-gate` build 已完成，下一步执行 close 归档
 
 ## 最近关键提交
 
 ```text
+70ceaa5 docs: refresh handoff TODO
 f78d835 docs: archive local backup export import
 5366298 feat: add local backup export import
 ba24c45 docs: specify local backup export import
@@ -250,10 +251,10 @@ git diff -- .ai
 当前建议优先继续：
 
 ```text
-/openflow proposal add-single-device-mvp-qa-gate
+/openflow close add-single-device-mvp-qa-gate
 ```
 
-目标：把单机 App MVP 从“功能已拼齐”推进到“可重复、本地、无后端依赖地进入测试流程”。建议将当前零散验证收束成一个稳定 QA gate，例如 `pnpm check:qa`。
+目标：验证 `add-single-device-mvp-qa-gate` 的规格、实现和文档一致性，并归档该变更。
 
 建议规格覆盖：
 
@@ -270,7 +271,7 @@ git diff -- .ai
 
 后续阶段顺序：
 
-1. `add-single-device-mvp-qa-gate`
+1. 完成 `add-single-device-mvp-qa-gate` build / close / commit
 2. 自动化方式跑单机 MVP 前端 QA，发现问题写入 `.bugs/*.md`
 3. 逐项修复 `.bugs` 中的问题，并循环验证直到无阻塞问题
 4. 单机 MVP 稳定后，评估是否 push 当前 `refactor/all`
@@ -290,6 +291,8 @@ git diff -- .ai
 阶段末固定验证：
 
 ```bash
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:qa
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:qa:runtime
 npm.cmd exec -- openspec validate --all --strict
 git diff -- .ai
 ```
@@ -335,6 +338,8 @@ npm.cmd exec -- openspec validate --all --strict
 ```bash
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:type
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:local
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:qa
+npm.cmd exec --package=pnpm@11.5.0 -- pnpm check:qa:runtime
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm test --runInBand
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm skin:qa:remote
 npm.cmd exec --package=pnpm@11.5.0 -- pnpm thumbs

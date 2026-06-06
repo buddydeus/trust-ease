@@ -48,6 +48,9 @@ pnpm start
 pnpm test
 pnpm check:type
 pnpm check:local
+pnpm check:qa
+pnpm check:qa:runtime
+pnpm check:qa:all
 pnpm design
 pnpm thumbs
 pnpm skin:package -- check <skin-dir>
@@ -69,6 +72,13 @@ pnpm fix:all
   或未来远程 skin QA fixture，不写入移动端运行时目录。
 - `pnpm skin:qa:remote` 运行内部远程皮肤下载 QA harness，使用本地临时
   fixture、依赖注入的 remote fetch 和现有 downloader；它不是用户可见皮肤商店。
+- `pnpm check:qa` 是单机 App MVP 的确定性 QA gate，覆盖类型检查、三语文案、
+  核心 Jest、远程皮肤本地 fixture QA 和 OpenSpec 全量严格校验。
+- `pnpm check:qa:runtime` 运行真实 App bundle 截图链路，即 `pnpm thumbs`；它不应
+  回退到设计预览图。
+- `pnpm check:qa:all` 先运行确定性 QA gate，再运行 runtime 截图 QA。
+- 前端 QA 发现的问题记录到 `.bugs/*.md`，报告应包含问题描述、复现路径、问题定位、
+  建议修复方式和验证方式。
 - 新电脑或 CI 风格验证优先使用 `corepack pnpm install --frozen-lockfile`。
   仓库默认 registry 是官方 npm registry；如本地网络需要镜像，用
   `pnpm --config.registry=https://registry.npmmirror.com install` 临时覆盖，
@@ -220,6 +230,7 @@ pnpm fix:all
 - 页面或状态行为变更：对应 `pnpm test <test-file> --runInBand`
 - 皮肤变更：`pnpm test tests/skin --runInBand`
 - 截图链路变更：`pnpm thumbs` 或相关 `tests/support/*`
+- 单机 MVP QA gate：`pnpm check:qa`，前端视觉 QA 前追加 `pnpm check:qa:runtime`
 - 全量回归：`pnpm test` + `pnpm check:type`
 
 如果验证命令因本地环境缺失失败，要在交付说明中写清楚失败命令和原因。

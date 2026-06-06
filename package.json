@@ -16,6 +16,9 @@
     "skin:qa:remote": "jest tests/skin/remote-download-qa.test.ts --runInBand",
     "check:type": "tsc --noEmit",
     "check:local": "node scripts/check-locals.js",
+    "check:qa": "node scripts/check_qa.js",
+    "check:qa:runtime": "pnpm thumbs",
+    "check:qa:all": "node scripts/check_qa.js --include-runtime",
     "fix:all": "pnpm fix:eslint && pnpm fix:prettier",
     "fix:prettier": "prettier --config ./.prettierrc --write .",
     "fix:eslint": "eslint --config ./eslint.config.js --fix --quiet --no-warn-ignored ."

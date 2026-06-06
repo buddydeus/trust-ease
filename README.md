@@ -35,12 +35,31 @@ pnpm install
 pnpm start
 pnpm test
 pnpm check:type
+pnpm check:local
+pnpm check:qa
+pnpm check:qa:runtime
+pnpm check:qa:all
 pnpm design
 pnpm thumbs
 pnpm skin:package -- check <skin-dir>
 pnpm skin:package -- update <skin-dir>
 pnpm skin:qa:remote
 ```
+
+### `pnpm check:qa`
+
+`pnpm check:qa` 是 single-device MVP 的确定性 QA gate，用于进入前端 QA 或换电脑继续
+开发前的基线验证。它会按顺序运行类型检查、三语文案检查、核心 Jest 套件、远程皮肤
+本地 fixture QA，以及 OpenSpec 全量严格校验。任一子检查失败时，命令会以非零状态退出。
+
+`pnpm check:qa:runtime` 单独运行真实运行时截图链路，也就是现有的 `pnpm thumbs`。该命令
+必须继续使用 Expo Web 导出的真实 App bundle，不应退回到设计预览图。运行前端视觉 QA 前
+应执行它；如果本地浏览器或 Expo Web 导出不可用，需要把失败作为环境问题记录，而不是绕过。
+
+`pnpm check:qa:all` 会先运行确定性 QA gate，再运行 runtime 截图 QA。
+
+前端 QA 发现的问题记录到 `.bugs/*.md`，每个报告应包含问题描述、复现路径、问题定位、
+建议修复方式和验证方式。
 
 ### `pnpm design`
 
