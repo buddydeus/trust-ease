@@ -4,7 +4,7 @@ import '../global.css';
 
 import { Stack, usePathname } from 'expo-router';
 
-import React from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 
@@ -25,7 +25,7 @@ export interface IRootLayoutProps {}
  *
  * @returns 已 memo 的根布局元素。
  */
-const RootLayout = React.memo<IRootLayoutProps>(() => {
+const RootLayout = memo<IRootLayoutProps>(() => {
   const pathname = usePathname();
   const preview = usePreviewConfig();
 

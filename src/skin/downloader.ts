@@ -139,11 +139,12 @@ export const downloadSkinPackage = async ({
   currentFeatureVersion,
   fileSystem = defaultFileSystem
 }: SkinDownloadInput): Promise<SkinDownloadResult> => {
+  let newState = state;
   const packageKey = createSkinPackageKey(source.identity);
   const transitions: SkinPackageState[] = [];
   const pushState = (packageState: SkinPackageState): void => {
     transitions.push(packageState);
-    state = applyPackageState(state, packageKey, packageState);
+    newState = applyPackageState(newState, packageKey, packageState);
   };
 
   pushState('checking');
@@ -162,7 +163,7 @@ export const downloadSkinPackage = async ({
     await fileSystem.makeDirectory(stagingUri);
   } catch {
     return applyFailure(
-      state,
+      newState,
       source.identity,
       packageKey,
       'failed',
@@ -177,7 +178,7 @@ export const downloadSkinPackage = async ({
     payload = await source.stage(stagingUri);
   } catch {
     return applyFailure(
-      state,
+      newState,
       source.identity,
       packageKey,
       'failed',
@@ -197,7 +198,7 @@ export const downloadSkinPackage = async ({
 
   if (!validation.ok) {
     return applyFailure(
-      state,
+      newState,
       source.identity,
       packageKey,
       validation.state,
@@ -211,7 +212,7 @@ export const downloadSkinPackage = async ({
     await fileSystem.move(stagingUri, readyUri);
   } catch {
     return applyFailure(
-      state,
+      newState,
       source.identity,
       packageKey,
       'failed',
@@ -224,7 +225,7 @@ export const downloadSkinPackage = async ({
 
   return {
     state: {
-      ...state,
+      ...newState,
       selectedSkinId: source.identity.skinId,
       activeSkinId: source.identity.skinId,
       lastReadySkinId: source.identity.skinId

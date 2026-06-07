@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Pressable } from 'react-native';
 
 import { useI18n } from '../i18n';
@@ -21,7 +21,7 @@ export interface IFloatingAddButtonProps {
  * @param props - `IFloatingAddButtonProps`
  * @returns 已 memo 的可按下按钮。
  */
-export const FloatingAddButton = React.memo<IFloatingAddButtonProps>(
+export const FloatingAddButton = memo<IFloatingAddButtonProps>(
   ({ onPress, label }) => {
     const { getMessage } = useI18n();
 

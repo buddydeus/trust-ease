@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -43,7 +43,7 @@ export interface ISkinPickerProps {
  * @param props - `ISkinPickerProps`
  * @returns 已 memo 的皮肤选择器元素。
  */
-export const SkinPicker = React.memo<ISkinPickerProps>(
+export const SkinPicker = memo<ISkinPickerProps>(
   ({
     copy,
     skinOptions,

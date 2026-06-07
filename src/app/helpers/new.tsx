@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React from 'react';
+import { memo } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -15,7 +15,7 @@ import {
 
 export interface INewHelperRouteProps {}
 
-const NewHelperRoute = React.memo<INewHelperRouteProps>(() => {
+const NewHelperRoute = memo<INewHelperRouteProps>(() => {
   const { getMessage } = useI18n();
 
   const copy = {

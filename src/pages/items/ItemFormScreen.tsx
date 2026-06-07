@@ -1,7 +1,7 @@
 /**
  * 新建事项向导外壳：由文案驱动且不依赖路由，可在弹层、堆栈或 Storybook 中独立渲染。
  */
-import React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
@@ -95,20 +95,18 @@ export interface IItemFormScreenProps {
  * @param props - `IItemFormScreenProps`
  * @returns 已 memo 的表单页元素。
  */
-export const ItemFormScreen = React.memo<IItemFormScreenProps>(
+export const ItemFormScreen = memo<IItemFormScreenProps>(
   ({ initialValues, helperChoices = [], onSubmit, copy } = {}) => {
     const { getMessage } = useI18n();
-    const [title, setTitle] = React.useState(initialValues?.title ?? '');
-    const [kind, setKind] = React.useState<IItemFormValues['kind']>(
+    const [title, setTitle] = useState(initialValues?.title ?? '');
+    const [kind, setKind] = useState<IItemFormValues['kind']>(
       initialValues?.kind ?? 'offline'
     );
-    const [summary, setSummary] = React.useState(initialValues?.summary ?? '');
-    const [helperIds, setHelperIds] = React.useState(
-      initialValues?.helperIds ?? []
-    );
-    const [titleErrorVisible, setTitleErrorVisible] = React.useState(false);
+    const [summary, setSummary] = useState(initialValues?.summary ?? '');
+    const [helperIds, setHelperIds] = useState(initialValues?.helperIds ?? []);
+    const [titleErrorVisible, setTitleErrorVisible] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
       setTitle(initialValues?.title ?? '');
       setKind(initialValues?.kind ?? 'offline');
       setSummary(initialValues?.summary ?? '');

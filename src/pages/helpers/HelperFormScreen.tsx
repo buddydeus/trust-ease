@@ -1,7 +1,7 @@
 /**
  * 本地协助人表单：负责输入、校验和提交 payload，不直接持久化数据。
  */
-import React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
@@ -49,24 +49,24 @@ export interface IHelperFormScreenProps {
   copy?: IHelperFormScreenCopy;
 }
 
-export const HelperFormScreen = React.memo<IHelperFormScreenProps>(
+export const HelperFormScreen = memo<IHelperFormScreenProps>(
   ({ initialValues, onSubmit, copy } = {}) => {
     const { getMessage } = useI18n();
-    const [displayName, setDisplayName] = React.useState(
+    const [displayName, setDisplayName] = useState(
       initialValues?.displayName ?? ''
     );
-    const [relationship, setRelationship] = React.useState(
+    const [relationship, setRelationship] = useState(
       initialValues?.relationship ?? ''
     );
-    const [contactMethod, setContactMethod] = React.useState(
+    const [contactMethod, setContactMethod] = useState(
       initialValues?.contactMethod ?? ''
     );
-    const [notes, setNotes] = React.useState(initialValues?.notes ?? '');
-    const [error, setError] = React.useState<
-      'displayName' | 'contactMethod' | null
-    >(null);
+    const [notes, setNotes] = useState(initialValues?.notes ?? '');
+    const [error, setError] = useState<'displayName' | 'contactMethod' | null>(
+      null
+    );
 
-    React.useEffect(() => {
+    useEffect(() => {
       setDisplayName(initialValues?.displayName ?? '');
       setRelationship(initialValues?.relationship ?? '');
       setContactMethod(initialValues?.contactMethod ?? '');

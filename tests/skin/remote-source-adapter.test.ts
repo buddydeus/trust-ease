@@ -95,11 +95,12 @@ const createState = (): SkinStorageState => ({
   }
 });
 
-const createDownloaderFileSystem = (): jest.Mocked<SkinDownloaderFileSystem> => ({
-  makeDirectory: jest.fn().mockResolvedValue(undefined),
-  delete: jest.fn().mockResolvedValue(undefined),
-  move: jest.fn().mockResolvedValue(undefined)
-});
+const createDownloaderFileSystem =
+  (): jest.Mocked<SkinDownloaderFileSystem> => ({
+    makeDirectory: jest.fn().mockResolvedValue(undefined),
+    delete: jest.fn().mockResolvedValue(undefined),
+    move: jest.fn().mockResolvedValue(undefined)
+  });
 
 const createDependencies = (
   manifestSource = createManifestSource(),

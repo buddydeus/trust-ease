@@ -92,8 +92,12 @@ test('renders every local simulation status with a next action', () => {
       />
     );
 
-    expect(screen.getByText(zhCN[`triggerState.status.${status}`])).toBeTruthy();
-    expect(screen.getAllByText(zhCN['triggerState.nextActionLabel']).length).toBeGreaterThan(0);
+    expect(
+      screen.getByText(zhCN[`triggerState.status.${status}`])
+    ).toBeTruthy();
+    expect(
+      screen.getAllByText(zhCN['triggerState.nextActionLabel']).length
+    ).toBeGreaterThan(0);
   });
 });
 
@@ -122,24 +126,32 @@ test('trigger-state route loads local policy and persists pause/resume/rehearsal
   fireEvent.press(screen.getByText(zhCN['triggerState.action.pause']));
 
   await waitFor(async () => {
-    expect((await loadTrustDataSnapshot()).triggerPolicy.missingStateEnabled).toBe(false);
+    expect(
+      (await loadTrustDataSnapshot()).triggerPolicy.missingStateEnabled
+    ).toBe(false);
   });
 
   fireEvent.press(screen.getByText(zhCN['triggerState.action.resume']));
 
   await waitFor(async () => {
-    expect((await loadTrustDataSnapshot()).triggerPolicy.missingStateEnabled).toBe(true);
+    expect(
+      (await loadTrustDataSnapshot()).triggerPolicy.missingStateEnabled
+    ).toBe(true);
   });
 
   fireEvent.press(screen.getByText(zhCN['triggerState.action.rehearse']));
 
   await waitFor(async () => {
-    expect((await loadTrustDataSnapshot()).triggerPolicy.simulationEnabled).toBe(true);
+    expect(
+      (await loadTrustDataSnapshot()).triggerPolicy.simulationEnabled
+    ).toBe(true);
   });
 
   fireEvent.press(screen.getByText(zhCN['triggerState.action.reset']));
 
   await waitFor(async () => {
-    expect((await loadTrustDataSnapshot()).triggerPolicy.simulationEnabled).toBe(false);
+    expect(
+      (await loadTrustDataSnapshot()).triggerPolicy.simulationEnabled
+    ).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 
-import React from 'react';
+import { memo, useState, useEffect } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -30,13 +30,11 @@ const resolveRouteHelperId = (
   return params.id ?? null;
 };
 
-const EditHelperRoute = React.memo<IEditHelperRouteProps>(() => {
+const EditHelperRoute = memo<IEditHelperRouteProps>(() => {
   const { getMessage } = useI18n();
   const params = useLocalSearchParams();
   const helperId = resolveRouteHelperId({ id: params.id });
-  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
-    null
-  );
+  const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('helpers.formTitle'),
@@ -54,7 +52,7 @@ const EditHelperRoute = React.memo<IEditHelperRouteProps>(() => {
     contactMethodRequired: getMessage('helpers.contactMethodRequired')
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     loadTrustDataSnapshot().then(loadedSnapshot => {
@@ -78,7 +76,7 @@ const EditHelperRoute = React.memo<IEditHelperRouteProps>(() => {
         contactMethod: currentHelper.contactMethod,
         notes: currentHelper.notes
       }
-    : undefined;
+    : void 0;
 
   const handleSubmit = async (values: IHelperFormValues) => {
     if (!helperId) {

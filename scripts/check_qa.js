@@ -5,7 +5,8 @@ const isWindows = process.platform === 'win32';
 const includeRuntime = process.argv.includes('--include-runtime');
 const npmCachePath = path.join(process.cwd(), '.npm-cache');
 
-const executable = name => (isWindows && name !== 'openspec' ? `${name}.cmd` : name);
+const executable = name =>
+  isWindows && name !== 'openspec' ? `${name}.cmd` : name;
 const systemNpm = isWindows ? 'C:\\Program Files\\nodejs\\npm.cmd' : 'npm';
 const quoteWindowsCommandArg = value =>
   `"${String(value).replace(/"/g, '""')}"`;
@@ -87,9 +88,7 @@ const quote = value => (value.includes(' ') ? `"${value}"` : value);
 
 for (const check of checks) {
   console.log(`\n[check:qa] ${check.label}`);
-  console.log(
-    `[check:qa] ${check.command} ${check.args.map(quote).join(' ')}`
-  );
+  console.log(`[check:qa] ${check.command} ${check.args.map(quote).join(' ')}`);
 
   const resolved = resolveSpawnCommand(check.command, check.args);
   const result = spawnSync(resolved.command, resolved.args, {

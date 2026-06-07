@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -40,11 +40,9 @@ const createViewModel = (
   };
 };
 
-const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
+const TriggerStateRoute = memo<ITriggerStateRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
-    null
-  );
+  const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy: ITriggerStateScreenCopy = {
     title: getMessage('triggerState.title'),
@@ -78,7 +76,7 @@ const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
     )
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     loadTrustDataSnapshot().then(loadedSnapshot => {
@@ -112,7 +110,7 @@ const TriggerStateRoute = React.memo<ITriggerStateRouteProps>(() => {
   return (
     <TriggerStateScreen
       copy={copy}
-      viewModel={snapshot ? createViewModel(snapshot) : undefined}
+      viewModel={snapshot ? createViewModel(snapshot) : void 0}
       onPause={() => applySnapshotMutation(pauseTriggerPolicy)}
       onResetSimulation={() => applySnapshotMutation(resetTriggerSimulation)}
       onResume={() => applySnapshotMutation(resumeTriggerPolicy)}

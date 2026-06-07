@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 
 import { AppText } from './AppText';
@@ -19,24 +19,22 @@ export interface IAppPillProps {
  * @param props - `IAppPillProps`
  * @returns 已 memo 的胶囊元素。
  */
-export const AppPill = React.memo<IAppPillProps>(
-  ({ label, active = false }) => (
-    <View
+export const AppPill = memo<IAppPillProps>(({ label, active = false }) => (
+  <View
+    className={[
+      'rounded-pill px-[14px] py-[10px]',
+      active ? 'border-0 bg-accent' : 'border border-border bg-card'
+    ].join(' ')}
+  >
+    <AppText
       className={[
-        'rounded-pill px-[14px] py-[10px]',
-        active ? 'border-0 bg-accent' : 'border border-border bg-card'
+        'text-caption',
+        active ? 'text-white' : 'text-pill-label'
       ].join(' ')}
     >
-      <AppText
-        className={[
-          'text-caption',
-          active ? 'text-white' : 'text-pill-label'
-        ].join(' ')}
-      >
-        {label}
-      </AppText>
-    </View>
-  )
-);
+      {label}
+    </AppText>
+  </View>
+));
 
 AppPill.displayName = 'AppPill';

@@ -11,9 +11,7 @@ import type {
 
 const NOW = '2026-06-05T08:00:00.000Z';
 
-const createItem = (
-  overrides: Partial<ITrustItem> = {}
-): ITrustItem => ({
+const createItem = (overrides: Partial<ITrustItem> = {}): ITrustItem => ({
   id: 'item-1',
   title: 'Important file',
   kind: 'offline',

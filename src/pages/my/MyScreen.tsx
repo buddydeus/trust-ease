@@ -1,7 +1,7 @@
 /**
  * 设置向中枢：语言、皮肤兼容提示与进阶流程入口；props 全部由外部注入，便于视觉回归测试。
  */
-import React, { useState } from 'react';
+import { memo, useState } from 'react';
 
 import { AppCard, AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
@@ -40,7 +40,7 @@ export type { IMyScreenCopy, IMyScreenProps, ISkinOption } from './types';
  * @param props - `IMyScreenProps`
  * @returns 已 memo 的我的页元素。
  */
-export const MyScreen = React.memo<IMyScreenProps>(
+export const MyScreen = memo<IMyScreenProps>(
   ({
     onOpenTriggerState,
     onOpenHelpers,

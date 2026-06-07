@@ -1,6 +1,6 @@
 import { Redirect } from 'expo-router';
 
-import React, { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { loadHasSeenWelcome } from '../store';
 
@@ -12,7 +12,7 @@ export interface IIndexRouteProps {}
  *
  * @returns 已 memo 的重定向门（加载中为 `null`）。
  */
-const IndexRoute = React.memo<IIndexRouteProps>(() => {
+const IndexRoute = memo<IIndexRouteProps>(() => {
   const [target, setTarget] = useState<'/report' | '/welcome' | null>(null);
 
   useEffect(() => {

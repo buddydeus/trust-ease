@@ -177,11 +177,7 @@ describe('trusted helper mutation helpers', () => {
     });
 
     expect(
-      archiveTrustedHelper(
-        snapshot,
-        'missing',
-        '2026-06-05T11:00:00.000Z'
-      )
+      archiveTrustedHelper(snapshot, 'missing', '2026-06-05T11:00:00.000Z')
     ).toEqual({
       ok: false,
       reason: 'not-found',

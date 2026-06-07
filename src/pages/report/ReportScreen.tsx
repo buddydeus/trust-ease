@@ -1,7 +1,7 @@
 /**
  * 每日报平安界面刻意保持「哑组件」：副作用由路由承担，本组件专注情绪文案与点击区域。
  */
-import React from 'react';
+import { memo } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -48,33 +48,31 @@ export interface IReportScreenProps {
  * @param props - `IReportScreenProps`
  * @returns 已 memo 的申报页元素。
  */
-export const ReportScreen = React.memo<IReportScreenProps>(
-  ({ onSubmit, copy }) => {
-    const { getMessage } = useI18n();
+export const ReportScreen = memo<IReportScreenProps>(({ onSubmit, copy }) => {
+  const { getMessage } = useI18n();
 
-    return (
-      <ReportAppScreen>
-        <ReportCard>
-          <ReportBlobA pointerEvents="none" />
-          <ReportBlobB pointerEvents="none" />
-          <ReportBlobC pointerEvents="none" />
-          <ReportBlobD pointerEvents="none" />
+  return (
+    <ReportAppScreen>
+      <ReportCard>
+        <ReportBlobA pointerEvents="none" />
+        <ReportBlobB pointerEvents="none" />
+        <ReportBlobC pointerEvents="none" />
+        <ReportBlobD pointerEvents="none" />
 
-          <MutedCenterLead>
-            {copy?.streakTitle || getMessage('report.streakTitle')}
-          </MutedCenterLead>
-          <ReportBodyText>
-            {copy?.body || getMessage('report.body')}
-          </ReportBodyText>
-          <PrimaryRoundButton accessibilityRole="button" onPress={onSubmit}>
-            <PrimaryOnAccentLabel>
-              {copy?.primaryButton || getMessage('report.primaryButton')}
-            </PrimaryOnAccentLabel>
-          </PrimaryRoundButton>
-        </ReportCard>
-      </ReportAppScreen>
-    );
-  }
-);
+        <MutedCenterLead>
+          {copy?.streakTitle || getMessage('report.streakTitle')}
+        </MutedCenterLead>
+        <ReportBodyText>
+          {copy?.body || getMessage('report.body')}
+        </ReportBodyText>
+        <PrimaryRoundButton accessibilityRole="button" onPress={onSubmit}>
+          <PrimaryOnAccentLabel>
+            {copy?.primaryButton || getMessage('report.primaryButton')}
+          </PrimaryOnAccentLabel>
+        </PrimaryRoundButton>
+      </ReportCard>
+    </ReportAppScreen>
+  );
+});
 
 ReportScreen.displayName = 'ReportScreen';

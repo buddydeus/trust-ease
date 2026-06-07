@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 
-import React from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -36,13 +36,11 @@ const resolveRouteItemId = (params: IEditItemRouteParams): string | null => {
  *
  * @returns 已 memo 的编辑事项路由元素。
  */
-const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
+const EditItemRoute = memo<IEditItemRouteProps>(() => {
   const { getMessage } = useI18n();
   const params = useLocalSearchParams();
   const itemId = resolveRouteItemId({ id: params.id });
-  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
-    null
-  );
+  const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('itemForm.title'),
@@ -61,7 +59,7 @@ const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
     titleRequired: getMessage('itemForm.titleRequired')
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     loadTrustDataSnapshot().then(loadedSnapshot => {
@@ -83,7 +81,7 @@ const EditItemRoute = React.memo<IEditItemRouteProps>(() => {
         summary: currentItem.summary,
         helperIds: currentItem.helperIds
       }
-    : undefined;
+    : void 0;
   const helperChoices = snapshot
     ? getActiveTrustedHelpers(snapshot).map(helper => ({
         id: helper.id,

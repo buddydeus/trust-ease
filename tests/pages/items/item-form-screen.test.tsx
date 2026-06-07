@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor
-} from '../../support/render-app';
+import { fireEvent, render, screen, waitFor } from '../../support/render-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let mockSearchParams: Record<string, string> = {};
@@ -201,10 +196,7 @@ test('prefills edit values and submits updated payload', () => {
     />
   );
 
-  fireEvent.changeText(
-    screen.getByDisplayValue('旧标题'),
-    '更新事项'
-  );
+  fireEvent.changeText(screen.getByDisplayValue('旧标题'), '更新事项');
   fireEvent.press(
     screen.getByRole('button', { name: zhCN['itemForm.saveAction'] })
   );

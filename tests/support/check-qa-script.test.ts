@@ -13,9 +13,7 @@ describe('single-device MVP QA gate contract', () => {
   test('package scripts expose deterministic and runtime QA gates', () => {
     const packageJson = readJson(path.join(root, 'package.json'));
 
-    expect(packageJson.scripts['check:qa']).toBe(
-      'node scripts/check_qa.js'
-    );
+    expect(packageJson.scripts['check:qa']).toBe('node scripts/check_qa.js');
     expect(packageJson.scripts['check:qa:runtime']).toBe('pnpm thumbs');
     expect(packageJson.scripts['check:qa:all']).toBe(
       'node scripts/check_qa.js --include-runtime'

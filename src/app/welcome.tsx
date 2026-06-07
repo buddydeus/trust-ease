@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React, { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import { useI18n } from '../i18n';
 import { WelcomeScreen } from '../pages/welcome/WelcomeScreen';
@@ -14,7 +14,7 @@ export interface IWelcomeRouteProps {}
  *
  * @returns 已 memo 的欢迎路由元素。
  */
-const WelcomeRoute = React.memo<IWelcomeRouteProps>(() => {
+const WelcomeRoute = memo<IWelcomeRouteProps>(() => {
   const { getMessage } = useI18n();
 
   const copy = {

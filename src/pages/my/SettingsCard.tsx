@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Pressable } from 'react-native';
 
 import { AppCard } from '../../components';
@@ -24,7 +24,7 @@ export interface ISettingsCardProps {
  * @param props - `ISettingsCardProps`
  * @returns 已 memo 的设置卡元素。
  */
-export const SettingsCard = React.memo<ISettingsCardProps>(
+export const SettingsCard = memo<ISettingsCardProps>(
   ({ title, summary, onPress, accessibilityLabel }) => {
     const card = (
       <AppCard>

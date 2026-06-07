@@ -18,9 +18,7 @@ import type {
 
 const NOW = '2026-06-05T12:00:00.000Z';
 
-const createItem = (
-  overrides: Partial<ITrustItem> = {}
-): ITrustItem => ({
+const createItem = (overrides: Partial<ITrustItem> = {}): ITrustItem => ({
   id: 'item-1',
   title: 'Vault card',
   kind: 'offline',
@@ -254,19 +252,19 @@ describe('local trust backup controller helpers', () => {
   test.each([
     ['cancelled', { ok: false as const, reason: 'cancelled' as const }],
     ['read-failed', { ok: false as const, reason: 'read-failed' as const }]
-  ])('returns %s when backup selection does not provide content', async (
-    reason,
-    readResult
-  ) => {
-    await expect(
-      previewLocalTrustBackupImport({
-        readBackup: async () => readResult
-      })
-    ).resolves.toEqual({
-      ok: false,
-      reason
-    });
-  });
+  ])(
+    'returns %s when backup selection does not provide content',
+    async (reason, readResult) => {
+      await expect(
+        previewLocalTrustBackupImport({
+          readBackup: async () => readResult
+        })
+      ).resolves.toEqual({
+        ok: false,
+        reason
+      });
+    }
+  );
 
   test('returns validation failure from import preview', async () => {
     await expect(

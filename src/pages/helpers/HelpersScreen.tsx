@@ -1,7 +1,7 @@
 /**
  * 本地协助人列表：由 route 注入本地数据和动作回调，页面不直接读取存储。
  */
-import React from 'react';
+import { memo } from 'react';
 
 import {
   AppCard,
@@ -47,7 +47,7 @@ export interface IHelpersScreenProps {
   copy?: IHelpersScreenCopy;
 }
 
-export const HelpersScreen = React.memo<IHelpersScreenProps>(
+export const HelpersScreen = memo<IHelpersScreenProps>(
   ({
     helpers = [],
     onCreateHelper,

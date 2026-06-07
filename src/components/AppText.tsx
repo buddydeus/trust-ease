@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Text, type TextProps } from 'react-native';
 
 /**
@@ -12,16 +12,14 @@ export interface IAppTextProps extends TextProps {}
  * @param props - `IAppTextProps`
  * @returns 已 memo 的 `Text` 元素。
  */
-export const AppText = React.memo<IAppTextProps>(
-  ({ className, style, ...props }) => (
-    <Text
-      className={['text-body text-foreground', className]
-        .filter(Boolean)
-        .join(' ')}
-      style={style}
-      {...props}
-    />
-  )
-);
+export const AppText = memo<IAppTextProps>(({ className, style, ...props }) => (
+  <Text
+    className={['text-body text-foreground', className]
+      .filter(Boolean)
+      .join(' ')}
+    style={style}
+    {...props}
+  />
+));
 
 AppText.displayName = 'AppText';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { LocaleType, useI18n } from '../../i18n';
 import {
@@ -40,7 +40,7 @@ export interface ILanguagePickerProps {
  * @param props - `ILanguagePickerProps`
  * @returns 已 memo 的语言选择器元素。
  */
-export const LanguagePicker = React.memo<ILanguagePickerProps>(
+export const LanguagePicker = memo<ILanguagePickerProps>(
   ({
     copy,
     isOpen,

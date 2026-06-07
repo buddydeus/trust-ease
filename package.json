@@ -4,6 +4,10 @@
   "version": "0.0.1",
   "packageManager": "pnpm@11.5.0",
   "main": "expo-router/entry",
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=11"
+  },
   "scripts": {
     "prepare": "husky",
     "start": "expo start",
@@ -73,5 +77,14 @@
     "tailwindcss": "3.4.17",
     "typescript": "^5.7.0",
     "typescript-eslint": "^8"
+  },
+  "lint-staged": {
+    "*.{md,json}": [
+      "prettier --config ./.prettierrc --write"
+    ],
+    "*.{ts,js,tsx,jsx,vue}": [
+      "prettier --config ./.prettierrc --write",
+      "eslint --config ./eslint.config.js --fix --quiet --no-warn-ignored"
+    ]
   }
 }

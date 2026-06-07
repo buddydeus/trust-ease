@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import { Platform, Switch, View } from 'react-native';
 
 /**
@@ -30,7 +30,7 @@ export interface IAppSwitchProps {
  * @param props - `IAppSwitchProps`
  * @returns 已 memo 的开关或测试替身。
  */
-export const AppSwitch = React.memo<IAppSwitchProps>(
+export const AppSwitch = memo<IAppSwitchProps>(
   ({
     value,
     onValueChange,

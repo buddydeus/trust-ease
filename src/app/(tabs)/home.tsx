@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 
 import { useI18n } from '../../i18n';
 import { HomeScreen } from '../../pages/home/HomeScreen';
@@ -22,10 +22,11 @@ export interface IHomeRouteProps {}
  *
  * @returns 已 memo 的首页路由元素。
  */
-const HomeRoute = React.memo<IHomeRouteProps>(() => {
+const HomeRoute = memo<IHomeRouteProps>(() => {
   const homeSummary = useAppStore(state => state.homeSummary);
-  const [trustSnapshot, setTrustSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
+  const [trustSnapshot, setTrustSnapshot] = useState<ITrustDataSnapshot | null>(
+    null
+  );
 
   const { getMessage } = useI18n();
 
@@ -95,7 +96,7 @@ const HomeRoute = React.memo<IHomeRouteProps>(() => {
     ? getPreviewHomeSummary(preview.homeState)
     : homeSummary;
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     void loadTrustDataSnapshot().then(snapshot => {
@@ -109,7 +110,7 @@ const HomeRoute = React.memo<IHomeRouteProps>(() => {
     };
   }, []);
 
-  const handleReadinessAction = React.useCallback(
+  const handleReadinessAction = useCallback(
     (action: LocalReadinessNextAction) => {
       if (action === 'create-item') {
         router.push('/items/new');
@@ -135,7 +136,7 @@ const HomeRoute = React.memo<IHomeRouteProps>(() => {
     <HomeScreen
       copy={copy}
       onReadinessAction={handleReadinessAction}
-      readiness={readiness ?? undefined}
+      readiness={readiness || void 0}
       readinessCopy={readinessCopy}
       summary={summary}
     />

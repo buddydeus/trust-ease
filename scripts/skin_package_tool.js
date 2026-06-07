@@ -20,10 +20,9 @@ require.extensions['.ts'] = (module, filename) => {
   module._compile(output, filename);
 };
 
-const { runSkinPackagePublishing } = require(path.join(
-  projectRoot,
-  'src/skin/publishingTool.ts'
-));
+const { runSkinPackagePublishing } = require(
+  path.join(projectRoot, 'src/skin/publishingTool.ts')
+);
 
 const usage = `Usage:
   pnpm skin:package -- check <package-dir>
@@ -84,7 +83,9 @@ const main = async () => {
   }
 
   if (mode === 'update') {
-    console.log(result.updated ? 'manifest.json updated' : 'manifest.json unchanged');
+    console.log(
+      result.updated ? 'manifest.json updated' : 'manifest.json unchanged'
+    );
   }
 };
 

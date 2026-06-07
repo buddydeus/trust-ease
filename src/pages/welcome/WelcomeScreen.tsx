@@ -1,7 +1,7 @@
 /**
  * 首次启动营销面：与路由分离，便于单独调整动效与版式而不卷入 AsyncStorage 副作用。
  */
-import React from 'react';
+import { memo } from 'react';
 import { View } from 'react-native';
 
 import { CardTitleText } from '../../theme';
@@ -63,43 +63,41 @@ export interface IWelcomeScreenProps {
  * @param props - `IWelcomeScreenProps`
  * @returns 已 memo 的欢迎页元素。
  */
-export const WelcomeScreen = React.memo<IWelcomeScreenProps>(
-  ({ copy, onStart }) => (
-    <WelcomeAppScreen>
-      <View>
-        <BrandHero>{copy.brand}</BrandHero>
-        <EyebrowMuted>{copy.eyebrow}</EyebrowMuted>
-      </View>
+export const WelcomeScreen = memo<IWelcomeScreenProps>(({ copy, onStart }) => (
+  <WelcomeAppScreen>
+    <View>
+      <BrandHero>{copy.brand}</BrandHero>
+      <EyebrowMuted>{copy.eyebrow}</EyebrowMuted>
+    </View>
 
-      <BookletStack>
-        {/* 用代码复现层叠「安心手册」视觉母题，页面仍可感知皮肤配置。 */}
-        <BookletBack />
-        <BookletMid />
-        <BookletFront>
-          <RibbonChip>
-            <RibbonChipTitle>{copy.bookletRibbon}</RibbonChipTitle>
-          </RibbonChip>
-          {[copy.bookletLine1, copy.bookletLine2, copy.bookletLine3].map(
-            (label, index) => (
-              <BookletRow key={label} $first={index === 0}>
-                <CardTitleText>{label}</CardTitleText>
-                <ListUnderline $width={index === 1 ? 90 : 118} />
-              </BookletRow>
-            )
-          )}
-        </BookletFront>
-      </BookletStack>
+    <BookletStack>
+      {/* 用代码复现层叠「安心手册」视觉母题，页面仍可感知皮肤配置。 */}
+      <BookletBack />
+      <BookletMid />
+      <BookletFront>
+        <RibbonChip>
+          <RibbonChipTitle>{copy.bookletRibbon}</RibbonChipTitle>
+        </RibbonChip>
+        {[copy.bookletLine1, copy.bookletLine2, copy.bookletLine3].map(
+          (label, index) => (
+            <BookletRow key={label} $first={index === 0}>
+              <CardTitleText>{label}</CardTitleText>
+              <ListUnderline $width={index === 1 ? 90 : 118} />
+            </BookletRow>
+          )
+        )}
+      </BookletFront>
+    </BookletStack>
 
-      <WelcomeFooterBlock>
-        <WelcomeTitle>{copy.title}</WelcomeTitle>
-        <WelcomeBody>{copy.body}</WelcomeBody>
-      </WelcomeFooterBlock>
+    <WelcomeFooterBlock>
+      <WelcomeTitle>{copy.title}</WelcomeTitle>
+      <WelcomeBody>{copy.body}</WelcomeBody>
+    </WelcomeFooterBlock>
 
-      <WelcomePrimaryCta accessibilityRole="button" onPress={onStart}>
-        <WelcomeCtaLabel>{copy.primaryButton}</WelcomeCtaLabel>
-      </WelcomePrimaryCta>
-    </WelcomeAppScreen>
-  )
-);
+    <WelcomePrimaryCta accessibilityRole="button" onPress={onStart}>
+      <WelcomeCtaLabel>{copy.primaryButton}</WelcomeCtaLabel>
+    </WelcomePrimaryCta>
+  </WelcomeAppScreen>
+));
 
 WelcomeScreen.displayName = 'WelcomeScreen';

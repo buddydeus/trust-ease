@@ -101,10 +101,7 @@ describe('trigger policy mutation helpers', () => {
   test('pauses and resumes missing-state semantics without touching items or helpers', () => {
     const snapshot = baseSnapshot();
 
-    const paused = pauseTriggerPolicy(
-      snapshot,
-      '2026-06-05T10:00:00.000Z'
-    );
+    const paused = pauseTriggerPolicy(snapshot, '2026-06-05T10:00:00.000Z');
 
     expect(paused.ok).toBe(true);
     expect(paused.snapshot.triggerPolicy).toEqual({

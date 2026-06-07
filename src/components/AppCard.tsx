@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo, type ReactNode } from 'react';
 import { View, type ViewProps } from 'react-native';
 
 /**
@@ -6,7 +6,7 @@ import { View, type ViewProps } from 'react-native';
  */
 export interface IAppCardProps extends ViewProps {
   /** 卡片内容子节点。 */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /**
@@ -15,7 +15,7 @@ export interface IAppCardProps extends ViewProps {
  * @param props - `IAppCardProps`
  * @returns 已 memo 的卡片容器。
  */
-export const AppCard = React.memo<IAppCardProps>(
+export const AppCard = memo<IAppCardProps>(
   ({ children, className, style, ...props }) => (
     <View
       className={[

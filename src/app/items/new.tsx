@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -23,11 +23,9 @@ export interface INewItemRouteProps {}
  *
  * @returns 已 memo 的新建事项路由元素。
  */
-const NewItemRoute = React.memo<INewItemRouteProps>(() => {
+const NewItemRoute = memo<INewItemRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
-    null
-  );
+  const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('itemForm.title'),
@@ -46,7 +44,7 @@ const NewItemRoute = React.memo<INewItemRouteProps>(() => {
     titleRequired: getMessage('itemForm.titleRequired')
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     loadTrustDataSnapshot().then(loadedSnapshot => {
@@ -60,7 +58,7 @@ const NewItemRoute = React.memo<INewItemRouteProps>(() => {
     };
   }, []);
 
-  const helperChoices = React.useMemo(
+  const helperChoices = useMemo(
     () =>
       snapshot
         ? getActiveTrustedHelpers(snapshot).map(helper => ({

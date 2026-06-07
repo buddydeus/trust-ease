@@ -1,6 +1,6 @@
 import { router, type Href } from 'expo-router';
 
-import React from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -23,11 +23,9 @@ export interface IItemsRouteProps {}
  *
  * @returns 已 memo 的事项路由元素。
  */
-const ItemsRoute = React.memo<IItemsRouteProps>(() => {
+const ItemsRoute = memo<IItemsRouteProps>(() => {
   const { getMessage } = useI18n();
-  const [snapshot, setSnapshot] = React.useState<ITrustDataSnapshot | null>(
-    null
-  );
+  const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
     title: getMessage('items.title'),
@@ -46,7 +44,7 @@ const ItemsRoute = React.memo<IItemsRouteProps>(() => {
     archiveAction: getMessage('items.archiveAction')
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     let mounted = true;
 
     loadTrustDataSnapshot().then(loadedSnapshot => {
@@ -60,7 +58,7 @@ const ItemsRoute = React.memo<IItemsRouteProps>(() => {
     };
   }, []);
 
-  const items = React.useMemo<IItemsScreenItem[]>(
+  const items = useMemo<IItemsScreenItem[]>(
     () =>
       snapshot
         ? getActiveTrustItems(snapshot).map(item => ({

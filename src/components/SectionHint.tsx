@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { AppText } from './AppText';
 
@@ -16,7 +16,7 @@ export interface ISectionHintProps {
  * @param props - `ISectionHintProps`
  * @returns 已 memo 的提示文本。
  */
-export const SectionHint = React.memo<ISectionHintProps>(({ text }) => (
+export const SectionHint = memo<ISectionHintProps>(({ text }) => (
   <AppText className="mt-[18px] text-center text-caption text-hint">
     {text}
   </AppText>

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 
-import React, { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { type TextStyle } from 'react-native';
 
 import { useTheme } from 'styled-components/native';
@@ -38,7 +38,7 @@ interface ITabIconProps {
  * @param props - `ITabIconProps`
  * @returns 已 memo 的图标元素。
  */
-const TabIcon = React.memo<ITabIconProps>(({ name, focused }) => {
+const TabIcon = memo<ITabIconProps>(({ name, focused }) => {
   const theme = useTheme();
   const stroke = focused ? theme.color.foreground : theme.color.muted;
   const fill = focused ? theme.color.accentSoft : theme.color.card;
@@ -80,7 +80,7 @@ export interface ITabsLayoutProps {}
  *
  * @returns 已 memo 的 Tabs 布局元素。
  */
-const TabsLayout = React.memo<ITabsLayoutProps>(() => {
+const TabsLayout = memo<ITabsLayoutProps>(() => {
   const { getMessage } = useI18n();
   const theme = useTheme();
 

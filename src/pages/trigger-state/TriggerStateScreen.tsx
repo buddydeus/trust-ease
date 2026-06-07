@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { AppScreen } from '../../components';
 import { useI18n } from '../../i18n';
@@ -104,7 +104,7 @@ const nextActionCopyMap: Record<
   'reset-rehearsal': 'nextActionResetRehearsal'
 };
 
-export const TriggerStateScreen = React.memo<ITriggerStateScreenProps>(
+export const TriggerStateScreen = memo<ITriggerStateScreenProps>(
   ({
     viewModel = defaultViewModel,
     onStartSimulation,

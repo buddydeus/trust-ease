@@ -62,15 +62,15 @@ const qaIdentity = {
 const qaPackageKey = createSkinPackageKey(qaIdentity);
 const logoContent = 'remote-logo-content';
 const heroContent = 'remote-hero-content';
-const manifestUrl =
-  'https://skins.example.com/skin-qa-remote/manifest.json';
+const manifestUrl = 'https://skins.example.com/skin-qa-remote/manifest.json';
 const assetBaseUrl = 'https://cdn.example.com/skin-qa-remote/';
 
-const createDownloaderFileSystem = (): jest.Mocked<SkinDownloaderFileSystem> => ({
-  makeDirectory: jest.fn().mockResolvedValue(undefined),
-  delete: jest.fn().mockResolvedValue(undefined),
-  move: jest.fn().mockResolvedValue(undefined)
-});
+const createDownloaderFileSystem =
+  (): jest.Mocked<SkinDownloaderFileSystem> => ({
+    makeDirectory: jest.fn().mockResolvedValue(undefined),
+    delete: jest.fn().mockResolvedValue(undefined),
+    move: jest.fn().mockResolvedValue(undefined)
+  });
 
 const createState = (): SkinStorageState => ({
   selectedSkinId: 'skin-001',
@@ -199,19 +199,20 @@ const createDependencies = (
   writeAsset: jest.fn().mockResolvedValue(undefined),
   makeDirectory: jest.fn().mockResolvedValue(undefined),
   wait: jest.fn().mockResolvedValue(undefined),
-  calculatePackageHash: jest.fn(({ descriptor, manifestSource, assetHashes }) =>
-    descriptor.packageHash ??
-    calculateSkinPackageHash({
-      identity: {
-        skinId: descriptor.skinId,
-        skinVersion: descriptor.skinVersion
-      },
-      manifestSource,
-      files: Object.entries(assetHashes).map(([assetPath, hash]) => ({
-        path: assetPath,
-        hash
-      }))
-    })
+  calculatePackageHash: jest.fn(
+    ({ descriptor, manifestSource, assetHashes }) =>
+      descriptor.packageHash ??
+      calculateSkinPackageHash({
+        identity: {
+          skinId: descriptor.skinId,
+          skinVersion: descriptor.skinVersion
+        },
+        manifestSource,
+        files: Object.entries(assetHashes).map(([assetPath, hash]) => ({
+          path: assetPath,
+          hash
+        }))
+      })
   )
 });
 

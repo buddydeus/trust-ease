@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import { useI18n } from '../../i18n';
 import { MyScreen } from '../../pages/my/MyScreen';
@@ -31,7 +31,7 @@ type BackupError =
   | 'write-failed'
   | 'save-failed';
 
-const MyRoute = React.memo<IMyRouteProps>(({ backupFileAdapter }) => {
+const MyRoute = memo<IMyRouteProps>(({ backupFileAdapter }) => {
   const { getMessage, setManualLocale, useSystemLocale } = useI18n();
   const activeSkinId = useAppStore(state => state.activeSkinId);
   const skinInitStatus = useAppStore(state => state.skinInitStatus);
@@ -39,20 +39,16 @@ const MyRoute = React.memo<IMyRouteProps>(({ backupFileAdapter }) => {
   const skinPackageStates = useAppStore(state => state.skinPackageStates);
   const setActiveSkinId = useAppStore(state => state.setActiveSkinId);
 
-  const fileAdapter = React.useMemo(
+  const fileAdapter = useMemo(
     () => backupFileAdapter || createExpoBackupFileAdapter(),
     [backupFileAdapter]
   );
   const [backupPreview, setBackupPreview] =
-    React.useState<ILocalTrustBackupPreview | null>(null);
+    useState<ILocalTrustBackupPreview | null>(null);
   const [pendingImportSnapshot, setPendingImportSnapshot] =
-    React.useState<ITrustDataSnapshot | null>(null);
-  const [backupStatus, setBackupStatus] = React.useState<BackupStatus | null>(
-    null
-  );
-  const [backupError, setBackupError] = React.useState<BackupError | null>(
-    null
-  );
+    useState<ITrustDataSnapshot | null>(null);
+  const [backupStatus, setBackupStatus] = useState<BackupStatus | null>(null);
+  const [backupError, setBackupError] = useState<BackupError | null>(null);
 
   const copy = {
     title: getMessage('my.title'),

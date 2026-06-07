@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 
 import { AppText } from '../../components';
 import { useI18n } from '../../i18n';
@@ -89,7 +89,7 @@ const getPackageStateText = (
  * @param props - `ISkinRuntimeStatusProps`
  * @returns 已 memo 的皮肤运行时状态组件。
  */
-export const SkinRuntimeStatus = React.memo<ISkinRuntimeStatusProps>(
+export const SkinRuntimeStatus = memo<ISkinRuntimeStatusProps>(
   ({ copy, skinOptions, status }) => {
     const { getMessage } = useI18n();
     const resolvedCopy: IResolvedSkinRuntimeCopy = {

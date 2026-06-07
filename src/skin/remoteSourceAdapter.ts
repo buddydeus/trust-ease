@@ -124,30 +124,6 @@ const calculateDefaultPackageHash = ({
   );
 };
 
-const mergeDependencies = (
-  overrides?: Partial<IRemoteSkinPackageAdapterDependencies>
-): IRemoteSkinPackageAdapterDependencies => {
-  const dependencies = createDefaultDependencies();
-
-  if (!overrides) {
-    return dependencies;
-  }
-
-  for (const key of Object.keys(overrides) as Array<
-    keyof IRemoteSkinPackageAdapterDependencies
-  >) {
-    const override = overrides[key];
-
-    if (override) {
-      Object.assign(dependencies, {
-        [key]: override
-      });
-    }
-  }
-
-  return dependencies;
-};
-
 const getFetch = (): ((
   url: string,
   init?: Record<string, unknown>
@@ -227,6 +203,30 @@ const createDefaultDependencies =
     wait,
     calculatePackageHash: calculateDefaultPackageHash
   });
+
+const mergeDependencies = (
+  overrides?: Partial<IRemoteSkinPackageAdapterDependencies>
+): IRemoteSkinPackageAdapterDependencies => {
+  const dependencies = createDefaultDependencies();
+
+  if (!overrides) {
+    return dependencies;
+  }
+
+  for (const key of Object.keys(overrides) as Array<
+    keyof IRemoteSkinPackageAdapterDependencies
+  >) {
+    const override = overrides[key];
+
+    if (override) {
+      Object.assign(dependencies, {
+        [key]: override
+      });
+    }
+  }
+
+  return dependencies;
+};
 
 const normalizeAssetPath = (path: string): string => {
   const normalized = path.replace(/\\/g, '/').replace(/^\/+/, '');

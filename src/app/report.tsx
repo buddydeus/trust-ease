@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import React, { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 
 import { useI18n } from '../i18n';
 import { ReportScreen } from '../pages/report/ReportScreen';
@@ -14,7 +14,7 @@ export interface IReportRouteProps {}
  *
  * @returns 已 memo 的申报路由元素。
  */
-const ReportRoute = React.memo<IReportRouteProps>(() => {
+const ReportRoute = memo<IReportRouteProps>(() => {
   const { getMessage } = useI18n();
 
   const copy = {

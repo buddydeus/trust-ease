@@ -125,10 +125,18 @@ test('renders backup preview and explicit import actions from props', () => {
   expect(screen.queryByText(/automatic delivery/i)).toBeNull();
   expect(screen.queryByText(/encryption/i)).toBeNull();
 
-  fireEvent.press(screen.getByRole('button', { name: zhCN['my.backupExportAction'] }));
-  fireEvent.press(screen.getByRole('button', { name: zhCN['my.backupImportAction'] }));
-  fireEvent.press(screen.getByRole('button', { name: zhCN['my.backupConfirmImport'] }));
-  fireEvent.press(screen.getByRole('button', { name: zhCN['my.backupCancelImport'] }));
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['my.backupExportAction'] })
+  );
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['my.backupImportAction'] })
+  );
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['my.backupConfirmImport'] })
+  );
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['my.backupCancelImport'] })
+  );
 
   expect(onExportBackup).toHaveBeenCalledTimes(1);
   expect(onImportBackup).toHaveBeenCalledTimes(1);
@@ -338,9 +346,7 @@ test('my route opens local helper management', () => {
 
   render(<MyRoute />);
 
-  fireEvent.press(
-    screen.getByRole('button', { name: zhCN['my.openHelpers'] })
-  );
+  fireEvent.press(screen.getByRole('button', { name: zhCN['my.openHelpers'] }));
 
   expect(pushMock).toHaveBeenCalledWith('/helpers');
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo, type ReactNode } from 'react';
 import { View, type ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
  */
 export interface IAppScreenProps extends ViewProps {
   /** 屏幕主体子节点。 */
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 /**
@@ -16,7 +16,7 @@ export interface IAppScreenProps extends ViewProps {
  * @param props - `IAppScreenProps`
  * @returns 已 memo 的屏幕布局。
  */
-export const AppScreen = React.memo<IAppScreenProps>(
+export const AppScreen = memo<IAppScreenProps>(
   ({ children, className, style, ...props }) => (
     <SafeAreaView className="flex-1 bg-page">
       <View

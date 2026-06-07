@@ -221,8 +221,12 @@ describe('skin package publishing tool', () => {
 
     expect(result.ok).toBe(true);
     expect(result.updated).toBe(true);
-    expect(manifest.assets[0].hash).toBe(calculateSkinContentHash('logo-content'));
-    expect(manifest.assets[1].hash).toBe(calculateSkinContentHash('hero-content'));
+    expect(manifest.assets[0].hash).toBe(
+      calculateSkinContentHash('logo-content')
+    );
+    expect(manifest.assets[1].hash).toBe(
+      calculateSkinContentHash('hero-content')
+    );
     expect(manifest.packageHash).toBe(result.packageHash);
   });
 

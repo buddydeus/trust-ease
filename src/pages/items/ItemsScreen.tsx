@@ -1,7 +1,7 @@
 /**
  * 事项列表中枢：由路由注入回调与文案，列表内容可在不改动导航代码的情况下替换或 mock。
  */
-import React from 'react';
+import { memo } from 'react';
 
 import {
   AppCard,
@@ -87,7 +87,7 @@ export interface IItemsScreenProps {
  * @param props - `IItemsScreenProps`
  * @returns 已 memo 的事项页元素。
  */
-export const ItemsScreen = React.memo<IItemsScreenProps>(
+export const ItemsScreen = memo<IItemsScreenProps>(
   ({ onCreateItem, onEditItem, onArchiveItem, items = [], copy } = {}) => {
     const { getMessage } = useI18n();
     const resolveKindLabel = (kind: IItemsScreenItem['kind']) =>

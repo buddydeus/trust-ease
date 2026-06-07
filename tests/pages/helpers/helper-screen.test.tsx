@@ -1,9 +1,4 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor
-} from '../../support/render-app';
+import { fireEvent, render, screen, waitFor } from '../../support/render-app';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 let mockSearchParams: Record<string, string> = {};
@@ -87,8 +82,12 @@ test('renders helper empty state and create action', () => {
 
   expect(screen.getByText('托付协助人')).toBeTruthy();
   expect(screen.getByText('还没有协助人')).toBeTruthy();
-  expect(screen.getByText('先记录一个你信任的人，后续可以关联到重要事项。')).toBeTruthy();
-  expect(screen.getByText('这里只是本地记录，不会自动发送消息或产生法律授权。')).toBeTruthy();
+  expect(
+    screen.getByText('先记录一个你信任的人，后续可以关联到重要事项。')
+  ).toBeTruthy();
+  expect(
+    screen.getByText('这里只是本地记录，不会自动发送消息或产生法律授权。')
+  ).toBeTruthy();
   expect(screen.getByRole('button', { name: '新增协助人' })).toBeTruthy();
 });
 
@@ -140,12 +139,18 @@ test('helper form submits trimmed helper values', () => {
   render(<HelperFormScreen copy={formCopy} onSubmit={onSubmit} />);
 
   fireEvent.changeText(screen.getByPlaceholderText('例如：林杉'), '  林杉  ');
-  fireEvent.changeText(screen.getByPlaceholderText('例如：朋友、家人'), '  朋友  ');
+  fireEvent.changeText(
+    screen.getByPlaceholderText('例如：朋友、家人'),
+    '  朋友  '
+  );
   fireEvent.changeText(
     screen.getByPlaceholderText('电话、邮箱或其他方式'),
     '  phone:13800000000  '
   );
-  fireEvent.changeText(screen.getByPlaceholderText('希望 TA 如何协助'), '  优先联系  ');
+  fireEvent.changeText(
+    screen.getByPlaceholderText('希望 TA 如何协助'),
+    '  优先联系  '
+  );
   fireEvent.press(screen.getByRole('button', { name: '保存' }));
 
   expect(onSubmit).toHaveBeenCalledWith({
@@ -229,7 +234,10 @@ test('new helper route persists a local helper and returns to helper list', asyn
     screen.getByPlaceholderText('电话、邮箱或其他方式'),
     'phone:13800000000'
   );
-  fireEvent.changeText(screen.getByPlaceholderText('希望 TA 如何协助'), '优先联系');
+  fireEvent.changeText(
+    screen.getByPlaceholderText('希望 TA 如何协助'),
+    '优先联系'
+  );
   fireEvent.press(screen.getByRole('button', { name: '保存' }));
 
   await waitFor(async () => {
