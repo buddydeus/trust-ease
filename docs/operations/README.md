@@ -31,3 +31,4 @@ OpenFlow change with a focused spec and build.
 
 - [Delivery Roadmap](./delivery-roadmap.md)
 - [Testing Strategy](./testing-strategy.md)
+- [macOS And iOS Device Testing Handoff](./macos-ios-handoff.md)

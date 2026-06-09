@@ -61,6 +61,16 @@ pnpm skin:qa:remote
 前端 QA 发现的问题记录到 `.bugs/*.md`，每个报告应包含问题描述、复现路径、问题定位、
 建议修复方式和验证方式。
 
+## macOS / iOS 真机测试
+
+后续如果从 Windows 切换到 macOS 并打 iOS 真机测试包，先读
+[docs/operations/macos-ios-handoff.md](./docs/operations/macos-ios-handoff.md)。
+
+当前 iOS 构建前还需要补齐：
+
+- `app.json` 的 `ios.bundleIdentifier`
+- `eas.json` 的 internal distribution build profile
+
 ### `pnpm design`
 
 运行 `pnpm design` 会执行 [scripts/render_current_app_screens.py](./scripts/render_current_app_screens.py)，把当前界面的多语言 PNG 预览导出到项目根目录的 `designs/`。
