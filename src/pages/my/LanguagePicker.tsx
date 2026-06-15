@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 
 import { LocaleType, useI18n } from '../../i18n';
 import {
@@ -52,7 +52,7 @@ export const LanguagePicker = memo<ILanguagePickerProps>(
     const { getMessage } = useI18n();
 
     return (
-      <>
+      <Fragment>
         <CardTitleText>
           {copy?.languageTitle || getMessage('my.languageTitle')}
         </CardTitleText>
@@ -93,7 +93,7 @@ export const LanguagePicker = memo<ILanguagePickerProps>(
                   </PickerRow>
                 ) : null}
                 {onSetManualLocale ? (
-                  <>
+                  <Fragment>
                     <PickerRow
                       accessibilityRole="button"
                       onPress={() => {
@@ -129,13 +129,13 @@ export const LanguagePicker = memo<ILanguagePickerProps>(
                         {copy?.english || getMessage('my.english')}
                       </PickerRowLabel>
                     </PickerRow>
-                  </>
+                  </Fragment>
                 ) : null}
               </PickerExpandList>
             ) : null}
           </PickerBlock>
         ) : null}
-      </>
+      </Fragment>
     );
   }
 );

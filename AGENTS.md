@@ -2,16 +2,14 @@
 
 本文件是本仓库的代理协作入口，作用类似 Claude Code 的
 `CLAUDE.md`。任何 AI 代理在修改本仓库前，都应先读取本文件，再按任务
-需要读取根目录 `README.md` 和 `.ai/` 中的当前文档。
+需要读取根目录 `README.md` 和 `docs/spec/` 中的核心规格文档。
 
 ## 适用范围与优先级
 
 - 本文件适用于整个仓库。
 - 用户在当前对话中的明确要求优先于本文件。
-- 如果 `.ai/` 文档、README 和代码互相冲突，以当前代码和
+- 如果 `docs/spec/`、README 和代码互相冲突，以当前代码和
   `package.json` 为准，并在必要时同步更新文档。
-- `.ai/archive/` 是历史计划与归档，只在追溯背景时读取，不要把它当成
-  当前实现状态。
 
 ## 项目定位
 
@@ -73,7 +71,7 @@ pnpm fix:all
 - `pnpm skin:qa:remote` 运行内部远程皮肤下载 QA harness，使用本地临时
   fixture、依赖注入的 remote fetch 和现有 downloader；它不是用户可见皮肤商店。
 - `pnpm check:qa` 是单机 App MVP 的确定性 QA gate，覆盖类型检查、三语文案、
-  核心 Jest、远程皮肤本地 fixture QA 和 OpenSpec 全量严格校验。
+  核心 Jest 和远程皮肤本地 fixture QA。
 - `pnpm check:qa:runtime` 运行真实 App bundle 截图链路，即 `pnpm thumbs`；它不应
   回退到设计预览图。
 - `pnpm check:qa:all` 先运行确定性 QA gate，再运行 runtime 截图 QA。
@@ -100,15 +98,13 @@ pnpm fix:all
 - `scripts/`：截图、预览、检查等项目脚本。
 - `skins/`：构建期 bundled skin 源。不要把它当作移动端运行时读写目录。
 - `tests/`：Jest 测试。
-- `.ai/`：AI 协作记录、计划、临时摘要和当前决策。
+- `docs/spec/`：项目需求、技术方案、设计需求的当前核心文档入口。
 
 ## AI 文档规则
 
-- 新的 AI 工作流文档、临时计划、交接摘要放在 `.ai/`。
-- 面向产品、设计、开发者的人类正式文档不要放进 `.ai/`。
-- 临时中间文件放 `.ai/tmp/`，该目录已由 `.gitignore` 忽略。
-- OpenFlow / Superpowers 执行计划可按旧标准放在 `docs/superpowers/plans/`。
-  其它临时 AI 摘要仍放 `.ai/`，不要把 `.superpowers/` 重新纳入版本控制。
+- 长期有效的产品、技术、设计说明统一维护在 `docs/spec/`。
+- 临时 AI 中间记录不要作为当前事实入口；确需留档时优先使用已忽略的工作记录目录。
+- 不要重新引入已清理的历史归档目录作为当前实现依据。
 
 ## 当前产品与页面事实
 
@@ -136,7 +132,7 @@ pnpm fix:all
 
 ## UI / UX 原则
 
-来自 `.ai/UXUI_安心_阶段1_体验策略与信息架构.md` 和已确认决策：
+来自 `docs/spec/design-requirements.md` 和已确认决策：
 
 - 体验关键词：温和、可信、克制、清晰、有秩序、可撤回。
 - 避免殡葬感、沉重黑白风、保险推销感、纯工具后台感，以及过度科技化的
@@ -209,7 +205,7 @@ pnpm fix:all
 
 ## 实现约定
 
-- 修改前先读现有实现和测试，不要只按 `.ai/archive/` 里的计划改代码。
+- 修改前先读现有实现和测试，不要只按历史计划或归档内容改代码。
 - 保持路由层轻薄：`src/app/*` 负责路由、文案装配和副作用绑定；
   页面 UI 放在 `src/pages/*`。
 - 共享业务副作用优先放到 store 或对应运行时辅助模块，避免每个页面重复实现。

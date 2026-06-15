@@ -11,6 +11,14 @@
 - 首次安装第一次打开时会先进入 `welcome`
 - 点击 `开始设置` 会直接完成一次正式申报并进入 `home`
 
+## 核心规格
+
+当前项目需求、技术方案与设计需求集中维护在 [docs/spec](./docs/spec/)：
+
+- [项目需求](./docs/spec/project-requirements.md)
+- [项目技术方案](./docs/spec/technical-solution.md)
+- [项目设计需求](./docs/spec/design-requirements.md)
+
 ## 安装与依赖锁定
 
 本仓库使用 `pnpm@11.5.0`，并提交 `pnpm-lock.yaml` 作为跨电脑协作和
@@ -50,7 +58,7 @@ pnpm skin:qa:remote
 
 `pnpm check:qa` 是 single-device MVP 的确定性 QA gate，用于进入前端 QA 或换电脑继续
 开发前的基线验证。它会按顺序运行类型检查、三语文案检查、核心 Jest 套件、远程皮肤
-本地 fixture QA，以及 OpenSpec 全量严格校验。任一子检查失败时，命令会以非零状态退出。
+本地 fixture QA。任一子检查失败时，命令会以非零状态退出。
 
 `pnpm check:qa:runtime` 单独运行真实运行时截图链路，也就是现有的 `pnpm thumbs`。该命令
 必须继续使用 Expo Web 导出的真实 App bundle，不应退回到设计预览图。运行前端视觉 QA 前
@@ -64,7 +72,7 @@ pnpm skin:qa:remote
 ## macOS / iOS 真机测试
 
 后续如果从 Windows 切换到 macOS 并打 iOS 真机测试包，先读
-[docs/operations/macos-ios-handoff.md](./docs/operations/macos-ios-handoff.md)。
+[项目技术方案](./docs/spec/technical-solution.md) 中的 iOS 真机准备章节。
 
 当前 iOS 构建前还需要补齐：
 
@@ -126,11 +134,11 @@ source adapter 与 downloader 验证 ready promotion 和可恢复失败。这个
 - `scripts/`
   截图、预览、检查等项目脚本
 - `docs/`
-  面向产品、架构、安全与运维的人类正式文档
+  核心规格文档
 - `thumbs/`
   真实运行页面截图
 - `designs/`
-  脚本绘制的设计预览图，属于可再生成产物，默认不纳入版本管理
+  设计预览图等可再生成视觉产物
 
 ## 皮肤运行时
 

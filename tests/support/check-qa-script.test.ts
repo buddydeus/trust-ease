@@ -36,11 +36,7 @@ describe('single-device MVP QA gate contract', () => {
       'tests/pages/trigger-state',
       'tests/pages/home',
       'tests/pages/my',
-      'skin:qa:remote',
-      'openspec',
-      'validate',
-      '--all',
-      '--strict'
+      'skin:qa:remote'
     ]) {
       expect(script).toContain(expected);
     }
@@ -55,7 +51,6 @@ describe('single-device MVP QA gate contract', () => {
   test('project docs explain QA gate and bug report convention', () => {
     const readme = readText('README.md');
     const agents = readText('AGENTS.md');
-    const bugsReadme = readText('.bugs/README.md');
 
     expect(readme).toContain('pnpm check:qa');
     expect(readme).toContain('pnpm check:qa:runtime');
@@ -76,7 +71,7 @@ describe('single-device MVP QA gate contract', () => {
       '建议修复方式',
       '验证方式'
     ]) {
-      expect(bugsReadme).toContain(expected);
+      expect(`${readme}\n${agents}`).toContain(expected);
     }
   });
 });

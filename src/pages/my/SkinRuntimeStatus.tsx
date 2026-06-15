@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 
 import { AppText } from '../../components';
 import { useI18n } from '../../i18n';
@@ -136,7 +136,7 @@ export const SkinRuntimeStatus = memo<ISkinRuntimeStatusProps>(
     const packageEntries = Object.entries(status.skinPackageStates);
 
     return (
-      <>
+      <Fragment>
         <SkinRuntimeHeader>
           <CardTitleText>{resolvedCopy.skinRuntimeTitle}</CardTitleText>
         </SkinRuntimeHeader>
@@ -162,7 +162,7 @@ export const SkinRuntimeStatus = memo<ISkinRuntimeStatusProps>(
           </SkinRuntimeFallbackNote>
         ) : null}
         {packageEntries.length > 0 ? (
-          <>
+          <Fragment>
             <SkinRuntimeRow>
               <SkinRuntimeRowLabel>
                 {resolvedCopy.skinRuntimePackageStates}
@@ -183,11 +183,11 @@ export const SkinRuntimeStatus = memo<ISkinRuntimeStatusProps>(
                 </SkinRuntimeRow>
               );
             })}
-          </>
+          </Fragment>
         ) : (
           <AppText>{resolvedCopy.skinRuntimePackageStates}</AppText>
         )}
-      </>
+      </Fragment>
     );
   }
 );

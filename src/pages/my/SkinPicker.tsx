@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { Fragment, memo } from 'react';
 
 import { useI18n } from '../../i18n';
 import {
@@ -57,7 +57,7 @@ export const SkinPicker = memo<ISkinPickerProps>(
     const activeSkin = skinOptions.find(skin => skin.skinId === activeSkinId);
 
     return (
-      <>
+      <Fragment>
         <CardTitleText>
           {copy?.skinTitle || getMessage('my.skinTitle')}
         </CardTitleText>
@@ -124,7 +124,7 @@ export const SkinPicker = memo<ISkinPickerProps>(
             ) : null}
           </PickerBlock>
         ) : null}
-      </>
+      </Fragment>
     );
   }
 );

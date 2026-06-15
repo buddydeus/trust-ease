@@ -1,13 +1,9 @@
 const { spawnSync } = require('node:child_process');
-const path = require('node:path');
 
 const isWindows = process.platform === 'win32';
 const includeRuntime = process.argv.includes('--include-runtime');
-const npmCachePath = path.join(process.cwd(), '.npm-cache');
 
-const executable = name =>
-  isWindows && name !== 'openspec' ? `${name}.cmd` : name;
-const systemNpm = isWindows ? 'C:\\Program Files\\nodejs\\npm.cmd' : 'npm';
+const executable = name => (isWindows ? `${name}.cmd` : name);
 const quoteWindowsCommandArg = value =>
   `"${String(value).replace(/"/g, '""')}"`;
 
@@ -60,19 +56,6 @@ const checks = [
     label: 'Remote skin QA fixture',
     command: executable('pnpm'),
     args: ['skin:qa:remote']
-  },
-  {
-    label: 'OpenSpec strict validation',
-    command: systemNpm,
-    args: [
-      'exec',
-      '--package=@fission-ai/openspec',
-      '--',
-      'openspec',
-      'validate',
-      '--all',
-      '--strict'
-    ]
   }
 ];
 
@@ -95,9 +78,7 @@ for (const check of checks) {
     cwd: process.cwd(),
     env: {
       ...process.env,
-      CI: process.env.CI || 'true',
-      npm_config_cache: process.env.npm_config_cache || npmCachePath,
-      NPM_CONFIG_CACHE: process.env.NPM_CONFIG_CACHE || npmCachePath
+      CI: process.env.CI || 'true'
     },
     stdio: 'inherit',
     shell: resolved.shell
