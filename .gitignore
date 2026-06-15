@@ -148,5 +148,7 @@ docs_cn/
 .review/
 .bugs/
 .codex/
+.tmp/
+thumbs/
 
 .DS_Store

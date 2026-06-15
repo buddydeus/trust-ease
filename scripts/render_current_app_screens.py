@@ -19,15 +19,16 @@ PHONE_H = 844
 SCALE = 2
 
 COLORS = {
-    "page": "#F7FBFA",
+    "page": "#F6FAF8",
     "card": "#FFFFFF",
-    "border": "#DEEBE6",
-    "muted": "#6F837D",
-    "text": "#243F39",
-    "accent": "#86B1A2",
-    "accent_soft": "#EEF5F2",
-    "offline_ribbon": "#DBEAE6",
-    "online_ribbon": "#EADFDB",
+    "border": "#D8E7E2",
+    "muted": "#667B76",
+    "text": "#173B37",
+    "body": "#2F4541",
+    "accent": "#0A6B63",
+    "accent_soft": "#EAF4F1",
+    "offline_ribbon": "#2F8A67",
+    "online_ribbon": "#9A6A2D",
 }
 
 LOCALES = ("zh-CN", "zh-TW", "en-US")
@@ -35,35 +36,50 @@ LOCALES = ("zh-CN", "zh-TW", "en-US")
 MESSAGES = {
     "zh-CN": {
         "home": {
-            "statusLabel": "今日状态",
-            "heroTitle": "今天也好好生活着",
-            "streakLabel": "已连续平安记录",
-            "reportButton": "查看本次确认",
-            "itemsLabel": "事项",
-            "helpersLabel": "协助人",
+            "statusLabel": "当前预案",
+            "heroTitle": "安心托付",
+            "heroBody": "重要事项先整理好，后续再一步步补充。",
+            "dailyStatus": "今日已申报",
+            "dailyTime": "最近申报 · 09:12",
+            "offlineLabel": "线下线索",
+            "onlineLabel": "线上说明",
+            "readinessHeading": "本地准备",
+            "readinessStatus": "可以做一次本地复核",
+            "readinessNotice": "这只是本机上的准备摘要。",
         },
         "my": {
             "title": "我的",
             "statusLabel": "当前状态",
             "statusValue": "今天已完成确认",
             "triggerStateTitle": "触发状态",
-            "triggerStateSummary": "死亡：3 次未申报",
+            "triggerStateSummary": "本地预警与演练设置",
             "identityTitle": "身份与安全",
             "identitySummary": "实名、密码与恢复方式",
         },
         "report": {
-            "streakTitle": "已申报 128 天",
-            "body": "慢一点也没关系，\n今天也为自己报个平安。",
-            "primaryButton": "我活着",
+            "brand": "安心",
+            "status": "今日未申报",
+            "eyebrow": "每日首次进入",
+            "title": "今天先确认一次",
+            "body": "只记录你的今日状态，不会触发任何执行。",
+            "lastLabel": "上次申报",
+            "lastValue": "昨天 21:08",
+            "waitingLabel": "本次状态",
+            "waitingValue": "等待确认",
+            "primaryButton": "我今天平安",
+            "secondaryButton": "先看预案",
+            "footer": "可随时暂停或修改托付内容",
         },
         "items": {
-            "title": "重要事项",
-            "filterAll": "全部",
-            "filterOffline": "线下事项",
-            "itemOneTitle": "把宠物交给林杉照料",
-            "itemOneMeta": "线下事项 · 协助人 1 位",
-            "itemTwoTitle": "导出私有仓库备份脚本",
-            "itemTwoMeta": "线上事项 · 自定义脚本",
+            "title": "事项",
+            "itemOneTitle": "医疗信息",
+            "itemOneMeta": "过敏、常用药、就诊偏好",
+            "itemTwoTitle": "重要文件",
+            "itemTwoMeta": "证件位置和查找说明",
+            "itemThreeTitle": "数字账号说明",
+            "itemThreeMeta": "不保存明文密码",
+            "kindOffline": "线下事项",
+            "kindOnline": "线上事项",
             "hint": "向下滚动后继续查看其他事项",
         },
         "itemForm": {
@@ -75,14 +91,21 @@ MESSAGES = {
             "onlineSummary": "触发后执行脚本",
             "stepLabel": "当前步骤",
             "stepValue": "选择协助人",
+            "previewLabel": "下一步预览",
+            "previewSummary": "补充说明与触发条件",
         },
         "triggerState": {
             "title": "触发状态",
             "currentLabel": "当前生效",
-            "currentValue": "死亡 = 3 次未申报",
+            "currentValue": "连续未确认才进入预警",
             "missingLabel": "失联状态",
             "missingToggle": "启用失联",
             "description": "连续未申报达到阈值后，才进入后续处理。",
+            "descriptionLabel": "触发说明",
+        },
+        "settings": {
+            "preferencesTitle": "提醒与偏好",
+            "preferencesSummary": "申报时间、通知方式与勿扰设置",
         },
         "tabs": {
             "home": "首页",
@@ -92,35 +115,50 @@ MESSAGES = {
     },
     "zh-TW": {
         "home": {
-            "statusLabel": "今日狀態",
-            "heroTitle": "今天也好好生活著",
-            "streakLabel": "已連續平安記錄",
-            "reportButton": "查看本次確認",
-            "itemsLabel": "事項",
-            "helpersLabel": "協助人",
+            "statusLabel": "目前預案",
+            "heroTitle": "安心託付",
+            "heroBody": "重要事項先整理好，之後再一步步補充。",
+            "dailyStatus": "今日已申報",
+            "dailyTime": "最近申報 · 09:12",
+            "offlineLabel": "線下線索",
+            "onlineLabel": "線上說明",
+            "readinessHeading": "本地準備",
+            "readinessStatus": "可以做一次本地複核",
+            "readinessNotice": "這只是本機上的準備摘要。",
         },
         "my": {
             "title": "我的",
             "statusLabel": "當前狀態",
             "statusValue": "今天已完成確認",
             "triggerStateTitle": "觸發狀態",
-            "triggerStateSummary": "死亡：3 次未申報",
+            "triggerStateSummary": "本地預警與演練設定",
             "identityTitle": "身份與安全",
             "identitySummary": "實名、密碼與恢復方式",
         },
         "report": {
-            "streakTitle": "已申報 128 天",
-            "body": "慢一點也沒關係，\n今天也為自己報個平安。",
-            "primaryButton": "我活著",
+            "brand": "安心",
+            "status": "今日未申報",
+            "eyebrow": "每日首次進入",
+            "title": "今天先確認一次",
+            "body": "只記錄你的今日狀態，不會觸發任何執行。",
+            "lastLabel": "上次申報",
+            "lastValue": "昨天 21:08",
+            "waitingLabel": "本次狀態",
+            "waitingValue": "等待確認",
+            "primaryButton": "我今天平安",
+            "secondaryButton": "先看預案",
+            "footer": "可隨時暫停或修改託付內容",
         },
         "items": {
-            "title": "重要事項",
-            "filterAll": "全部",
-            "filterOffline": "線下事項",
-            "itemOneTitle": "把寵物交給林杉照料",
-            "itemOneMeta": "線下事項 · 協助人 1 位",
-            "itemTwoTitle": "導出私有倉庫備份腳本",
-            "itemTwoMeta": "線上事項 · 自訂腳本",
+            "title": "事項",
+            "itemOneTitle": "醫療資訊",
+            "itemOneMeta": "過敏、常用藥、就診偏好",
+            "itemTwoTitle": "重要文件",
+            "itemTwoMeta": "證件位置和查找說明",
+            "itemThreeTitle": "數位帳號說明",
+            "itemThreeMeta": "不保存明文密碼",
+            "kindOffline": "線下事項",
+            "kindOnline": "線上事項",
             "hint": "向下捲動後繼續查看其他事項",
         },
         "itemForm": {
@@ -132,14 +170,21 @@ MESSAGES = {
             "onlineSummary": "觸發後執行腳本",
             "stepLabel": "當前步驟",
             "stepValue": "選擇協助人",
+            "previewLabel": "下一步預覽",
+            "previewSummary": "補充說明與觸發條件",
         },
         "triggerState": {
             "title": "觸發狀態",
             "currentLabel": "當前生效",
-            "currentValue": "死亡 = 3 次未申報",
+            "currentValue": "連續未確認才進入預警",
             "missingLabel": "失聯狀態",
             "missingToggle": "啟用失聯",
             "description": "連續未申報達到閾值後，才進入後續處理。",
+            "descriptionLabel": "觸發說明",
+        },
+        "settings": {
+            "preferencesTitle": "提醒與偏好",
+            "preferencesSummary": "申報時間、通知方式與勿擾設定",
         },
         "tabs": {
             "home": "首頁",
@@ -149,35 +194,50 @@ MESSAGES = {
     },
     "en-US": {
         "home": {
-            "statusLabel": "Today",
-            "heroTitle": "Still living well today",
-            "streakLabel": "Safe check-ins in a row",
-            "reportButton": "View this check-in",
-            "itemsLabel": "Items",
-            "helpersLabel": "Helpers",
+            "statusLabel": "Current plan",
+            "heroTitle": "Trusted handoff",
+            "heroBody": "Keep the important things organized first, then add details step by step.",
+            "dailyStatus": "Reported today",
+            "dailyTime": "Last report · 09:12",
+            "offlineLabel": "Offline clues",
+            "onlineLabel": "Online notes",
+            "readinessHeading": "Local readiness",
+            "readinessStatus": "Ready for a local review",
+            "readinessNotice": "This is a local advisory summary.",
         },
         "my": {
             "title": "My",
             "statusLabel": "Current status",
             "statusValue": "Checked in today",
             "triggerStateTitle": "Trigger status",
-            "triggerStateSummary": "Death: 3 missed check-ins",
+            "triggerStateSummary": "Local warning and rehearsal settings",
             "identityTitle": "Identity & Security",
             "identitySummary": "Identity, password, and recovery options",
         },
         "report": {
-            "streakTitle": "Checked in for 128 days",
-            "body": "No rush.\nCheck in safe for yourself today.",
-            "primaryButton": "I'm alive",
+            "brand": "Anxin",
+            "status": "Not reported today",
+            "eyebrow": "First entry today",
+            "title": "Confirm once today",
+            "body": "This only records today's status. It will not trigger any execution.",
+            "lastLabel": "Last report",
+            "lastValue": "Yesterday 21:08",
+            "waitingLabel": "This status",
+            "waitingValue": "Waiting",
+            "primaryButton": "I'm safe today",
+            "secondaryButton": "View plan first",
+            "footer": "You can pause or edit handoff details anytime",
         },
         "items": {
-            "title": "Important Items",
-            "filterAll": "All",
-            "filterOffline": "Offline",
-            "itemOneTitle": "Hand over pet care to Lin Shan",
-            "itemOneMeta": "Offline item · 1 helper",
-            "itemTwoTitle": "Export private repo backup script",
-            "itemTwoMeta": "Online item · Custom script",
+            "title": "Items",
+            "itemOneTitle": "Medical info",
+            "itemOneMeta": "Allergies, medications, care notes",
+            "itemTwoTitle": "Important files",
+            "itemTwoMeta": "Document location and lookup notes",
+            "itemThreeTitle": "Account notes",
+            "itemThreeMeta": "No plain-text passwords",
+            "kindOffline": "Offline item",
+            "kindOnline": "Online item",
             "hint": "Scroll down to continue viewing other items",
         },
         "itemForm": {
@@ -189,14 +249,21 @@ MESSAGES = {
             "onlineSummary": "Run a script after trigger",
             "stepLabel": "Current step",
             "stepValue": "Choose a helper",
+            "previewLabel": "Next preview",
+            "previewSummary": "Add notes and trigger conditions",
         },
         "triggerState": {
             "title": "Trigger status",
             "currentLabel": "Currently active",
-            "currentValue": "Death = 3 missed check-ins",
+            "currentValue": "Warning starts after repeated misses",
             "missingLabel": "Missing status",
             "missingToggle": "Enable missing state",
             "description": "The follow-up flow starts only after the missed check-ins reach the threshold.",
+            "descriptionLabel": "Trigger notes",
+        },
+        "settings": {
+            "preferencesTitle": "Reminders & preferences",
+            "preferencesSummary": "Report time, notifications, and quiet hours",
         },
         "tabs": {
             "home": "Home",
@@ -286,7 +353,7 @@ def phone_shell(inner: str) -> str:
 
 
 def content_card(x: int, y: int, w: int, h: int) -> str:
-    return rect(x, y, w, h, 24, COLORS["card"], COLORS["border"])
+    return rect(x, y, w, h, 8, COLORS["card"], COLORS["border"])
 
 
 def copy(locale: str, section: str) -> dict[str, str]:
@@ -344,45 +411,52 @@ def tab_icon(kind: str, x: int, y: int, color: str) -> str:
 def draw_report(locale: str) -> str:
     """Render the current `/report` page preview."""
     report = copy(locale, "report")
-    title_size = fit_text(report["streakTitle"], default=18, medium=17, small=15)
-    body_size = 18 if locale != "en-US" else 16
-    button_size = fit_text(report["primaryButton"], default=24, medium=20, small=17)
-    parts = [rect(31, 27, 328, 790, 34, "#F7F4EB")]
-    parts.append(rect(53, 170, 284, 410, 30, "#F8F5EE", "#E5E8DD"))
-    parts.append(circle(112, 238, 96, "#EAF2ED"))
-    parts.append(circle(298, 254, 84, "#EDF4EF"))
-    parts.append(circle(102, 530, 82, "#E5EFEB"))
-    parts.append(circle(314, 544, 102, "#EAF3EF"))
-    parts.append(path("M 70 508 C 106 470, 138 454, 176 448 C 210 442, 246 452, 318 500", "#D8E5E0", 2))
-    parts.append(path("M 88 434 C 132 396, 168 382, 206 378 C 244 374, 276 388, 322 426", "#DDE8E3", 1.8))
-    parts.append(path("M 120 304 C 156 278, 190 270, 228 270 C 262 270, 286 280, 314 300", "#DFEAE4", 1.6))
-    parts.append(path("M 114 252 C 160 228, 206 224, 254 234 C 282 240, 304 252, 320 266", "#E3ECE7", 1.3))
-    parts.append(text(195, 236, report["streakTitle"], size=title_size, weight=600, fill=COLORS["muted"], anchor="middle"))
-    parts.append(text(195, 318, report["body"], size=body_size, weight=600, anchor="middle", line_height=26))
-    parts.append(circle(195, 488, 82, COLORS["accent"]))
-    parts.append(text(195, 498, report["primaryButton"], size=button_size, weight=700, fill="#FFFFFF", anchor="middle"))
+    title_size = fit_text(report["title"], default=30, medium=27, small=24)
+    body_size = 16 if locale != "en-US" else 14
+    button_size = fit_text(report["primaryButton"], default=16, medium=15, small=14)
+    parts = [rect(31, 27, 328, 790, 34, COLORS["page"])]
+    parts.append(text(53, 102, report["brand"], size=22, weight=700))
+    parts.append(rect(246, 80, 91, 32, 16, COLORS["accent_soft"]))
+    parts.append(circle(260, 96, 4, COLORS["accent"]))
+    parts.append(text(292, 101, report["status"], size=12, weight=700, fill=COLORS["accent"], anchor="middle"))
+    parts.append(text(53, 206, report["eyebrow"], size=13, fill=COLORS["muted"]))
+    parts.append(text(53, 250, report["title"], size=title_size, weight=700))
+    parts.append(text(53, 302, report["body"], size=body_size, fill=COLORS["body"], line_height=24))
+    parts.append(rect(53, 374, 284, 114, 8, COLORS["accent_soft"], COLORS["border"]))
+    parts.append(text(72, 412, report["lastLabel"], size=13, fill=COLORS["muted"]))
+    parts.append(text(319, 412, report["lastValue"], size=14, weight=700, anchor="end"))
+    parts.append(text(72, 452, report["waitingLabel"], size=13, fill=COLORS["muted"]))
+    parts.append(text(319, 452, report["waitingValue"], size=14, weight=700, anchor="end"))
+    parts.append(rect(53, 650, 284, 54, 8, COLORS["accent"]))
+    parts.append(text(195, 684, report["primaryButton"], size=button_size, weight=700, fill="#FFFFFF", anchor="middle"))
+    parts.append(rect(53, 716, 284, 48, 8, COLORS["card"], COLORS["border"]))
+    parts.append(text(195, 746, report["secondaryButton"], size=15, weight=700, fill=COLORS["accent"], anchor="middle"))
+    parts.append(text(195, 800, report["footer"], size=11, fill=COLORS["muted"], anchor="middle"))
     return phone_shell("".join(parts))
 
 
 def draw_home(locale: str) -> str:
     home = copy(locale, "home")
-    hero_size = fit_text(home["heroTitle"], default=27, medium=24, small=22)
-    report_button_size = fit_text(home["reportButton"], default=15, medium=14, small=13)
+    hero_size = fit_text(home["heroTitle"], default=30, medium=27, small=24)
     parts = [rect(31, 27, 328, 790, 34, COLORS["page"])]
-    parts.append(content_card(53, 74, 284, 328))
-    parts.append(text(71, 108, home["statusLabel"], size=12, fill=COLORS["muted"]))
-    parts.append(text(71, 150, home["heroTitle"], size=hero_size, weight=700))
-    parts.append(rect(71, 214, 248, 114, 20, COLORS["accent_soft"]))
-    parts.append(text(89, 244, home["streakLabel"], size=12, fill=COLORS["muted"]))
-    parts.append(text(89, 294, "128", size=40, weight=700))
-    parts.append(rect(71, 338, 248, 50, 18, COLORS["accent"]))
-    parts.append(text(195, 369, home["reportButton"], size=report_button_size, weight=600, fill="#FFFFFF", anchor="middle"))
-    parts.append(content_card(53, 410, 136, 110))
-    parts.append(text(71, 444, home["itemsLabel"], size=12, fill=COLORS["muted"]))
-    parts.append(text(71, 488, "6", size=24, weight=700))
-    parts.append(content_card(201, 410, 136, 110))
-    parts.append(text(219, 444, home["helpersLabel"], size=12, fill=COLORS["muted"]))
-    parts.append(text(219, 488, "3", size=24, weight=700))
+    parts.append(rect(53, 82, 284, 48, 8, COLORS["accent_soft"], COLORS["border"]))
+    parts.append(circle(72, 106, 4, COLORS["offline_ribbon"]))
+    parts.append(text(86, 111, home["dailyStatus"], size=14, weight=700))
+    parts.append(text(319, 111, home["dailyTime"], size=11, fill=COLORS["muted"], anchor="end"))
+    parts.append(content_card(53, 146, 284, 140))
+    parts.append(text(71, 180, home["statusLabel"], size=12, fill=COLORS["muted"]))
+    parts.append(text(71, 224, home["heroTitle"], size=hero_size, weight=700))
+    parts.append(text(71, 260, home["heroBody"], size=13, fill=COLORS["muted"], line_height=20))
+    parts.append(content_card(53, 306, 136, 98))
+    parts.append(text(71, 340, home["offlineLabel"], size=12, fill=COLORS["muted"]))
+    parts.append(text(71, 374, "3", size=24, weight=700, fill=COLORS["accent"]))
+    parts.append(content_card(201, 306, 136, 98))
+    parts.append(text(219, 340, home["onlineLabel"], size=12, fill=COLORS["muted"]))
+    parts.append(text(219, 374, "3", size=24, weight=700, fill=COLORS["accent"]))
+    parts.append(content_card(53, 424, 284, 116))
+    parts.append(text(71, 458, home["readinessHeading"], size=12, fill=COLORS["muted"]))
+    parts.append(text(71, 494, home["readinessStatus"], size=15, weight=700))
+    parts.append(text(71, 520, home["readinessNotice"], size=12, fill=COLORS["muted"]))
     parts.append(tab_bar("home", locale))
     return phone_shell("".join(parts))
 
@@ -390,28 +464,23 @@ def draw_home(locale: str) -> str:
 def draw_items(locale: str) -> str:
     items_copy = copy(locale, "items")
     title_size = fit_text(items_copy["title"], default=23, medium=21, small=19)
-    filter_size = 12 if locale != "en-US" else 11
     card_title_size = 15 if locale != "en-US" else 14
     hint_size = 12 if locale != "en-US" else 11
     parts = [rect(31, 27, 328, 790, 34, COLORS["page"])]
     parts.append(text(53, 106, items_copy["title"], size=title_size, weight=700))
     parts.append(circle(316, 98, 21, COLORS["accent"]))
     parts.append(text(316, 104, "+", size=22, weight=600, fill="#FFFFFF", anchor="middle"))
-    parts.append(rect(53, 135, 68, 36, 18, COLORS["accent"]))
-    parts.append(text(87, 158, items_copy["filterAll"], size=filter_size, fill="#FFFFFF", anchor="middle"))
-    parts.append(rect(133, 135, 92, 36, 18, "#FFFFFF", COLORS["border"]))
-    parts.append(text(179, 158, items_copy["filterOffline"], size=filter_size, fill="#466059", anchor="middle"))
     cards = [
-        (194, items_copy["itemOneTitle"], items_copy["itemOneMeta"], COLORS["offline_ribbon"]),
-        (318, items_copy["itemTwoTitle"], items_copy["itemTwoMeta"], COLORS["online_ribbon"]),
-        (442, items_copy["itemOneTitle"], items_copy["itemOneMeta"], COLORS["offline_ribbon"]),
-        (566, items_copy["itemTwoTitle"], items_copy["itemTwoMeta"], COLORS["online_ribbon"]),
+        (154, items_copy["itemOneTitle"], items_copy["itemOneMeta"], items_copy["kindOffline"], COLORS["offline_ribbon"]),
+        (278, items_copy["itemTwoTitle"], items_copy["itemTwoMeta"], items_copy["kindOffline"], COLORS["offline_ribbon"]),
+        (402, items_copy["itemThreeTitle"], items_copy["itemThreeMeta"], items_copy["kindOnline"], COLORS["online_ribbon"]),
     ]
-    for y, title_value, sub, ribbon in cards:
+    for y, title_value, sub, kind_label, ribbon in cards:
         parts.append(content_card(53, y, 284, 104))
         parts.append(text(71, y + 34, title_value, size=card_title_size, weight=600))
-        parts.append(text(71, y + 59, sub, size=11, fill="#6B817B"))
-        parts.append(rect(309, y + 24, 10, 40, 5, ribbon))
+        parts.append(rect(71, y + 48, 70, 24, 12, COLORS["accent_soft"]))
+        parts.append(text(106, y + 64, kind_label, size=10, weight=700, fill=ribbon, anchor="middle"))
+        parts.append(text(71, y + 90, sub, size=11, fill="#6B817B"))
     parts.append(text(195, 708, items_copy["hint"], size=hint_size, fill="#728680", anchor="middle"))
     parts.append(tab_bar("items", locale))
     return phone_shell("".join(parts))
@@ -434,13 +503,14 @@ def draw_new_item(locale: str) -> str:
     parts.append(text(71, 374, item_form["stepLabel"], size=12, fill="#6F837D"))
     parts.append(text(71, 408, item_form["stepValue"], size=15, weight=600))
     parts.append(content_card(53, 474, 284, 112))
-    parts.append(text(71, 504, "下一步预览", size=12, fill="#6F837D"))
-    parts.append(text(71, 538, "补充说明与触发条件", size=15, weight=600))
+    parts.append(text(71, 504, item_form["previewLabel"], size=12, fill="#6F837D"))
+    parts.append(text(71, 538, item_form["previewSummary"], size=15, weight=600))
     return phone_shell("".join(parts))
 
 
 def draw_my(locale: str) -> str:
     my = copy(locale, "my")
+    settings = copy(locale, "settings")
     identity_summary_size = 12 if locale != "en-US" else 11
     parts = [rect(31, 27, 328, 790, 34, COLORS["page"])]
     parts.append(text(53, 106, my["title"], size=23, weight=700))
@@ -454,8 +524,8 @@ def draw_my(locale: str) -> str:
     parts.append(text(71, 414, my["identityTitle"], size=15, weight=600))
     parts.append(text(71, 439, my["identitySummary"], size=identity_summary_size, fill=COLORS["muted"]))
     parts.append(content_card(53, 496, 284, 98))
-    parts.append(text(71, 530, "提醒与偏好", size=15, weight=600))
-    parts.append(text(71, 555, "申报时间、通知方式与勿扰设置", size=12, fill=COLORS["muted"]))
+    parts.append(text(71, 530, settings["preferencesTitle"], size=15, weight=600))
+    parts.append(text(71, 555, settings["preferencesSummary"], size=12, fill=COLORS["muted"]))
     parts.append(tab_bar("my", locale))
     return phone_shell("".join(parts))
 
@@ -474,7 +544,7 @@ def draw_trigger_state(locale: str) -> str:
     parts.append(rect(273, 318, 46, 28, 14, COLORS["border"]))
     parts.append(circle(287, 332, 11, "#FFFFFF"))
     parts.append(content_card(53, 408, 284, 126))
-    parts.append(text(71, 442, "触发说明", size=12, fill=COLORS["muted"]))
+    parts.append(text(71, 442, trigger["descriptionLabel"], size=12, fill=COLORS["muted"]))
     parts.append(text(71, 476, trigger["description"], size=14 if locale != "en-US" else 13, line_height=22))
     return phone_shell("".join(parts))
 
@@ -590,9 +660,12 @@ def main() -> None:
     total_files = len(LOCALES) * len(build_screens(LOCALES[0]))
 
     log_stage(f"Starting thumbnail export to {OUT_DIR.relative_to(ROOT)}")
-    if OUT_DIR.exists():
-        log_stage(f"Cleaning output directory {OUT_DIR.relative_to(ROOT)}")
-        shutil.rmtree(OUT_DIR)
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    for locale in LOCALES:
+        locale_dir = OUT_DIR / locale
+        if locale_dir.exists():
+            log_stage(f"Cleaning output directory {locale_dir.relative_to(ROOT)}")
+            shutil.rmtree(locale_dir)
 
     generated = 0
     with tempfile.TemporaryDirectory() as tmp_name:

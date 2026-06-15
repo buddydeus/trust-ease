@@ -48,6 +48,21 @@ jest.mock('expo-router', () => ({
   }
 }));
 
+jest.mock('expo-document-picker', () => ({
+  getDocumentAsync: jest.fn()
+}));
+
+jest.mock('expo-file-system/legacy', () => ({
+  documentDirectory: 'file://documents/',
+  readAsStringAsync: jest.fn(),
+  writeAsStringAsync: jest.fn()
+}));
+
+jest.mock('expo-sharing', () => ({
+  isAvailableAsync: jest.fn(async () => false),
+  shareAsync: jest.fn()
+}));
+
 import HomeRoute from '../../../src/app/(tabs)/home';
 import ItemsRoute from '../../../src/app/(tabs)/items';
 import MyRoute from '../../../src/app/(tabs)/my';

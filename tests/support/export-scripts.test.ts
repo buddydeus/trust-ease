@@ -28,3 +28,11 @@ test('design preview script writes into designs instead of thumbs', () => {
   expect(script).toContain('OUT_DIR = ROOT / "designs"');
   expect(script).not.toContain('OUT_DIR = ROOT / "thumbs"');
 });
+
+test('design preview script preserves design specs and preview artifacts', () => {
+  const script = fs.readFileSync(designScriptPath, 'utf8');
+
+  expect(script).toContain('locale_dir = OUT_DIR / locale');
+  expect(script).toContain('shutil.rmtree(locale_dir)');
+  expect(script).not.toContain('shutil.rmtree(OUT_DIR)');
+});

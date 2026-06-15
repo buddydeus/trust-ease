@@ -20,10 +20,13 @@
   后续产品化 IA 方向，不能直接当作当前路由事实。
 - 当前只支持 `zh-CN`、`zh-TW`、`en-US`，不要重新引入裸 `en`。
 - 已确认新版简化设计方向：`designs/specs/anxin-simple-daily-redesign.md`。
-  该设计新增“每天首次进入 App 时的申报状态页面”，但尚未进入代码实现。
+  该设计新增“每天首次进入 App 时的申报状态页面”，当前已完成正式代码实现。
 - 阶段 1 已完成：正式申报时间已持久化，应用入口会按本地自然日判断今天是否
   已申报；今日未申报进入申报页，今日已申报进入首页。
 - 阶段 2 已完成：申报页、首页和事项页已按简化设计改造，并同步三语文案。
+- 阶段 3 已完成：设计预览脚本已同步简化设计语言，真实运行截图链路覆盖
+  `welcome / report / home / items / new-item / my / trigger-state` 三语页面，
+  且本地生成物 `.tmp/`、`thumbs/` 已作为 QA 产物忽略。
 
 ## 已完成内容概述
 
@@ -84,12 +87,17 @@
   - [x] `src/locals/zh-CN.json`
   - [x] `src/locals/zh-TW.json`
   - [x] `src/locals/en-US.json`
-- 补齐页面、状态和路由测试：
-  - 今日首次进入 gating。
-  - 今日已申报跳过。
-  - 欢迎页同日申报记录复用。
-  - `report` 与每日申报共用同一语义。
-- [ ] 更新截图脚本或截图配置，确保新增/调整页面能被设计预览和真实运行截图覆盖。
+- [x] 补齐页面、状态和路由测试：
+  - [x] 今日首次进入 gating。
+  - [x] 今日已申报跳过。
+  - [x] 欢迎页同日申报记录复用。
+  - [x] `report` 与每日申报共用同一语义。
+  - [x] Tab 路由能加载改造后的首页、事项页和我的页。
+- [x] 更新截图脚本或截图配置，确保新增/调整页面能被设计预览和真实运行截图覆盖。
+  - [x] `scripts/render_current_app_screens.py` 已按新版简化设计更新。
+  - [x] 设计预览脚本只清理三语输出目录，不删除 `designs/specs/`、
+        `designs/images/` 或 `designs/previews/`。
+  - [x] `pnpm thumbs` / `pnpm check:qa:runtime` 覆盖真实 App bundle 的三语截图。
 
 ### P1 - QA 与真机验证
 
@@ -98,8 +106,8 @@
   - `pnpm check:local`
   - 相关 Jest 测试
 - 进入视觉 QA 前运行：
-  - `pnpm check:qa`
-  - `pnpm check:qa:runtime`
+  - `pnpm check:qa`：2026-06-15 已通过。
+  - `pnpm check:qa:runtime`：2026-06-15 已通过，完成 21 张 runtime thumbnails。
 - 前端 QA 发现的问题记录到 `.bugs/*.md`，包含问题描述、复现路径、问题定位、
   建议修复方式和验证方式。
 - iOS 真机验证前补齐：
