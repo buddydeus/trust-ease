@@ -10,7 +10,7 @@ jest.mock('../../src/store/onboarding/storage', () => ({
 }));
 
 jest.mock('../../src/store/reporting/actions', () => ({
-  applyFormalReport: jest.fn()
+  applyFormalReport: jest.fn().mockResolvedValue(undefined)
 }));
 
 import { router } from 'expo-router';

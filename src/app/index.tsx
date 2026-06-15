@@ -2,7 +2,7 @@ import { Redirect } from 'expo-router';
 
 import { memo, useEffect, useState } from 'react';
 
-import { loadHasSeenWelcome } from '../store';
+import { loadFormalReportState, loadHasSeenWelcome } from '../store';
 
 /** 与其它 expo-router 文件保持一致的 memo 路由占位 props 类型。 */
 export interface IIndexRouteProps {}
@@ -13,19 +13,36 @@ export interface IIndexRouteProps {}
  * @returns 已 memo 的重定向门（加载中为 `null`）。
  */
 const IndexRoute = memo<IIndexRouteProps>(() => {
-  const [target, setTarget] = useState<'/report' | '/welcome' | null>(null);
+  const [target, setTarget] = useState<
+    '/(tabs)/home' | '/report' | '/welcome' | null
+  >(null);
 
   useEffect(() => {
     let active = true;
 
-    loadHasSeenWelcome().then(hasSeenWelcome => {
+    const resolveTarget = async (): Promise<void> => {
+      const hasSeenWelcome = await loadHasSeenWelcome();
+
       // 若在 AsyncStorage 异步期间路由已卸载，则忽略迟到的 Promise 结果。
       if (!active) {
         return;
       }
 
-      setTarget(hasSeenWelcome ? '/report' : '/welcome');
-    });
+      if (!hasSeenWelcome) {
+        setTarget('/welcome');
+        return;
+      }
+
+      const reportState = await loadFormalReportState();
+
+      if (!active) {
+        return;
+      }
+
+      setTarget(reportState.isReportedToday ? '/(tabs)/home' : '/report');
+    };
+
+    void resolveTarget();
 
     return () => {
       active = false;

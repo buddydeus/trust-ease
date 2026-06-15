@@ -23,8 +23,8 @@ const ReportRoute = memo<IReportRouteProps>(() => {
     primaryButton: getMessage('report.primaryButton')
   };
 
-  const handleSubmit = useCallback(() => {
-    applyFormalReport(new Date().toISOString());
+  const handleSubmit = useCallback(async () => {
+    await applyFormalReport(new Date().toISOString());
     // 使用 replace 避免用户多次申报时堆叠重复的首页历史记录。
     router.replace('/(tabs)/home');
   }, []);

@@ -34,7 +34,7 @@ const WelcomeRoute = memo<IWelcomeRouteProps>(() => {
 
     await saveHasSeenWelcome(true);
 
-    applyFormalReport(reportedAt);
+    await applyFormalReport(reportedAt);
 
     router.replace('/(tabs)/home');
   }, []);
