@@ -15,16 +15,16 @@ test('falls back to zh-CN for unsupported locales', () => {
 });
 
 test('contains translated home hero copy for all supported locales', () => {
-  expect(LOCALE_MESSAGES['zh-CN']['home.heroTitle']).toBe('今天也好好生活着');
-  expect(LOCALE_MESSAGES['zh-TW']['home.heroTitle']).toBe('今天也好好生活著');
-  expect(LOCALE_MESSAGES['en-US']['home.heroTitle']).toBe(
-    'Still living well today'
-  );
+  expect(LOCALE_MESSAGES['zh-CN']['home.heroTitle']).toBe('安心托付');
+  expect(LOCALE_MESSAGES['zh-TW']['home.heroTitle']).toBe('安心託付');
+  expect(LOCALE_MESSAGES['en-US']['home.heroTitle']).toBe('Trusted handoff');
 });
 
 test('loads locale dictionaries as flat key value maps', () => {
-  expect(LOCALE_MESSAGES['zh-CN']['report.primaryButton']).toBe('我活着');
-  expect(LOCALE_MESSAGES['zh-TW']['items.title']).toBe('重要事項');
+  expect(LOCALE_MESSAGES['zh-CN']['dailyReport.primaryAction']).toBe(
+    '我今天平安'
+  );
+  expect(LOCALE_MESSAGES['zh-TW']['items.title']).toBe('事項');
   expect(LOCALE_MESSAGES['en-US']['my.languageTitle']).toBe('Language');
   expect(LOCALE_MESSAGES['en-US']['my.skinTitle']).toBe('Style');
 });

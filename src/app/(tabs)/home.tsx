@@ -35,9 +35,14 @@ const HomeRoute = memo<IHomeRouteProps>(() => {
   const copy = {
     statusLabel: getMessage('home.statusLabel'),
     heroTitle: getMessage('home.heroTitle'),
+    heroBody: getMessage('home.heroBody'),
     streakLabel: getMessage('home.streakLabel'),
     offlineLabel: getMessage('home.offlineLabel'),
-    onlineLabel: getMessage('home.onlineLabel')
+    onlineLabel: getMessage('home.onlineLabel'),
+    dailyStatusPending: getMessage('home.dailyStatus.pending'),
+    dailyStatusCompleted: getMessage('home.dailyStatus.completed'),
+    dailyStatusLastReport: getMessage('home.dailyStatus.lastReport'),
+    dailyStatusNoRecord: getMessage('home.dailyStatus.noRecord')
   };
   const readiness = trustSnapshot
     ? deriveLocalReadinessSummary(trustSnapshot)

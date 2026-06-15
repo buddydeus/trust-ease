@@ -16,9 +16,9 @@ test('detects locale key drift and unused baseline entries', () => {
     path.join(root, 'src/locals/zh-CN.json'),
     JSON.stringify(
       {
-        'report.streakTitle': '已申报 128 天',
-        'report.body': '慢一点也没关系',
-        'report.primaryButton': '我活着',
+        'dailyReport.title': '今天先确认一次',
+        'dailyReport.description': '只记录今日状态',
+        'dailyReport.primaryAction': '我今天平安',
         'tabs.home': '首页',
         'tabs.items': '事项'
       },
@@ -31,9 +31,9 @@ test('detects locale key drift and unused baseline entries', () => {
     path.join(root, 'src/locals/en-US.json'),
     JSON.stringify(
       {
-        'report.streakTitle': 'Checked in for 128 days',
-        'report.primaryButton': "I'm alive",
-        'report.extraLabel': 'Extra',
+        'dailyReport.title': 'Confirm once today',
+        'dailyReport.primaryAction': "I'm safe today",
+        'dailyReport.extraLabel': 'Extra',
         'tabs.home': 'Home',
         'tabs.items': 'Items'
       },
@@ -60,8 +60,8 @@ test('detects locale key drift and unused baseline entries', () => {
         return (
           <ReportScreen
             copy={{
-              streakTitle: messages['report.streakTitle'],
-              primaryButton: messages['report.primaryButton'],
+              title: messages['dailyReport.title'],
+              primaryButton: messages['dailyReport.primaryAction'],
             }}
           />
         );
@@ -74,13 +74,13 @@ test('detects locale key drift and unused baseline entries', () => {
     `
       import { useI18n } from '../../src/i18n/useI18n';
 
-      export function ReportScreen({ copy }: { copy: { streakTitle: string; primaryButton: string } }) {
+      export function ReportScreen({ copy }: { copy: { title: string; primaryButton: string } }) {
         const { getMessage } = useI18n();
         const resolvedCopy = copy;
         return (
           <>
-            <Text>{resolvedCopy.streakTitle}</Text>
-            <Text>{getMessage('report.body')}</Text>
+            <Text>{resolvedCopy.title}</Text>
+            <Text>{getMessage('dailyReport.description')}</Text>
             <Text>{resolvedCopy.primaryButton}</Text>
           </>
         );
@@ -103,8 +103,8 @@ test('detects locale key drift and unused baseline entries', () => {
   const result = analyzeLocals(root);
 
   expect(result.localeDiffs['en-US']).toEqual({
-    missing: ['report.body'],
-    extra: ['report.extraLabel']
+    missing: ['dailyReport.description'],
+    extra: ['dailyReport.extraLabel']
   });
 
   expect(result.unusedBaselinePaths).toEqual(['tabs.items']);

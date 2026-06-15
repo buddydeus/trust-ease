@@ -4,7 +4,7 @@
  */
 import { memo } from 'react';
 
-import { AppCard, AppScreen } from '../../components';
+import { AppScreen } from '../../components';
 import { type HomeSummary } from '../../constants';
 import { useI18n } from '../../i18n';
 import type {
@@ -13,14 +13,15 @@ import type {
   LocalReadinessSectionStatus,
   LocalReadinessStatus
 } from '../../store/trust';
-import {
-  CaptionMutedText,
-  SectionHeading,
-  StatValueAccent,
-  StreakHighlight
-} from '../../theme';
+import { CaptionMutedText, SectionHeading, StatValueAccent } from '../../theme';
 
 import {
+  HomeDailyBanner,
+  HomeDailyDot,
+  HomeDailyMetaText,
+  HomeDailyStatusText,
+  HomeIntroCard,
+  HomeIntroBody,
   HeroHeadline,
   HomeStatCard,
   HomeStatRow,
@@ -34,8 +35,7 @@ import {
   ReadinessSectionLabel,
   ReadinessSectionRow,
   ReadinessSectionState,
-  ReadinessStatusText,
-  StreakDayNumber
+  ReadinessStatusText
 } from './home.styled';
 
 /**
@@ -46,12 +46,22 @@ interface HomeScreenCopy {
   statusLabel: string;
   /** 主视觉大标题。 */
   heroTitle: string;
+  /** 首页主标题下方说明。 */
+  heroBody: string;
   /** 连续天数上方的标签。 */
   streakLabel: string;
   /** 线下列标题。 */
   offlineLabel: string;
   /** 线上列标题。 */
   onlineLabel: string;
+  /** 今日未申报状态文案。 */
+  dailyStatusPending: string;
+  /** 今日已申报状态文案。 */
+  dailyStatusCompleted: string;
+  /** 最近申报标签。 */
+  dailyStatusLastReport: string;
+  /** 无最近申报记录时的文案。 */
+  dailyStatusNoRecord: string;
 }
 
 interface IHomeReadinessCopy {
@@ -86,6 +96,26 @@ export interface IHomeScreenProps {
   onReadinessAction?: (action: LocalReadinessNextAction) => void;
 }
 
+const formatReportTime = (
+  value: string | null | undefined,
+  fallback: string
+): string => {
+  if (!value) {
+    return fallback;
+  }
+
+  const date = new Date(value);
+
+  if (!Number.isFinite(date.getTime())) {
+    return fallback;
+  }
+
+  const hour = String(date.getHours()).padStart(2, '0');
+  const minute = String(date.getMinutes()).padStart(2, '0');
+
+  return `${hour}:${minute}`;
+};
+
 /**
  * 首页 Tab 仪表盘界面。
  *
@@ -96,34 +126,53 @@ export const HomeScreen = memo<IHomeScreenProps>(
   ({ summary, copy, readiness, readinessCopy, onReadinessAction }) => {
     const { getMessage } = useI18n();
     const sectionKeys = ['items', 'helpers', 'assignments', 'trigger'] as const;
+    const resolvedCopy = {
+      statusLabel: copy?.statusLabel || getMessage('home.statusLabel'),
+      heroTitle: copy?.heroTitle || getMessage('home.heroTitle'),
+      heroBody: copy?.heroBody || getMessage('home.heroBody'),
+      streakLabel: copy?.streakLabel || getMessage('home.streakLabel'),
+      offlineLabel: copy?.offlineLabel || getMessage('home.offlineLabel'),
+      onlineLabel: copy?.onlineLabel || getMessage('home.onlineLabel'),
+      dailyStatusPending:
+        copy?.dailyStatusPending || getMessage('home.dailyStatus.pending'),
+      dailyStatusCompleted:
+        copy?.dailyStatusCompleted || getMessage('home.dailyStatus.completed'),
+      dailyStatusLastReport:
+        copy?.dailyStatusLastReport ||
+        getMessage('home.dailyStatus.lastReport'),
+      dailyStatusNoRecord:
+        copy?.dailyStatusNoRecord || getMessage('home.dailyStatus.noRecord')
+    };
+    const dailyStatusText = summary.isReportedToday
+      ? resolvedCopy.dailyStatusCompleted
+      : resolvedCopy.dailyStatusPending;
 
     return (
       <AppScreen>
-        <AppCard>
-          <CaptionMutedText>
-            {copy?.statusLabel || getMessage('home.statusLabel')}
-          </CaptionMutedText>
-          <HeroHeadline>
-            {copy?.heroTitle || getMessage('home.heroTitle')}
-          </HeroHeadline>
-          <StreakHighlight>
-            <CaptionMutedText>
-              {copy?.streakLabel || getMessage('home.streakLabel')}
-            </CaptionMutedText>
-            <StreakDayNumber>{summary.streakDays}</StreakDayNumber>
-          </StreakHighlight>
-        </AppCard>
+        <HomeDailyBanner>
+          <HomeDailyDot reported={summary.isReportedToday} />
+          <HomeDailyStatusText>{dailyStatusText}</HomeDailyStatusText>
+          <HomeDailyMetaText>
+            {resolvedCopy.dailyStatusLastReport}
+            {' · '}
+            {formatReportTime(
+              summary.lastReportedAt,
+              resolvedCopy.dailyStatusNoRecord
+            )}
+          </HomeDailyMetaText>
+        </HomeDailyBanner>
+        <HomeIntroCard>
+          <CaptionMutedText>{resolvedCopy.statusLabel}</CaptionMutedText>
+          <HeroHeadline>{resolvedCopy.heroTitle}</HeroHeadline>
+          <HomeIntroBody>{resolvedCopy.heroBody}</HomeIntroBody>
+        </HomeIntroCard>
         <HomeStatRow>
           <HomeStatCard>
-            <SectionHeading>
-              {copy?.offlineLabel || getMessage('home.offlineLabel')}
-            </SectionHeading>
+            <SectionHeading>{resolvedCopy.offlineLabel}</SectionHeading>
             <StatValueAccent>{summary.offlineItemCount}</StatValueAccent>
           </HomeStatCard>
           <HomeStatCard>
-            <SectionHeading>
-              {copy?.onlineLabel || getMessage('home.onlineLabel')}
-            </SectionHeading>
+            <SectionHeading>{resolvedCopy.onlineLabel}</SectionHeading>
             <StatValueAccent>{summary.onlineItemCount}</StatValueAccent>
           </HomeStatCard>
         </HomeStatRow>

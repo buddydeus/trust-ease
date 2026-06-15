@@ -1,68 +1,147 @@
-import { View } from 'react-native';
+import { Pressable, View } from 'react-native';
 
 import styled from 'styled-components/native';
 
 import { AppScreen, AppText } from '../../components';
 
 export const ReportAppScreen = styled(AppScreen)`
-  justify-content: center;
-  background-color: #f7f4eb;
+  justify-content: space-between;
+  background-color: ${p => p.theme.color.page};
 `;
 
-export const ReportCard = styled(View)`
-  overflow: hidden;
-  border-radius: 30px;
-  border-width: 1px;
-  border-color: #e5e8dd;
-  background-color: #f8f5ee;
-  padding-horizontal: 28px;
-  padding-vertical: 56px;
+export const ReportTopRow = styled(View)`
+  min-height: 44px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 `;
 
-export const ReportBlobA = styled(View)`
-  position: absolute;
-  left: -18px;
-  top: 24px;
-  height: 180px;
-  width: 180px;
-  border-radius: 999px;
-  background-color: #eaf2ed;
-`;
-
-export const ReportBlobB = styled(View)`
-  position: absolute;
-  right: -30px;
-  top: 44px;
-  height: 160px;
-  width: 160px;
-  border-radius: 999px;
-  background-color: #edf4ef;
-`;
-
-export const ReportBlobC = styled(View)`
-  position: absolute;
-  left: -10px;
-  bottom: 38px;
-  height: 140px;
-  width: 140px;
-  border-radius: 999px;
-  background-color: #e5efeb;
-`;
-
-export const ReportBlobD = styled(View)`
-  position: absolute;
-  right: -24px;
-  bottom: 20px;
-  height: 170px;
-  width: 170px;
-  border-radius: 999px;
-  background-color: #eaf3ef;
-`;
-
-export const ReportBodyText = styled(AppText)`
-  margin-top: 46px;
-  text-align: center;
+export const ReportBrandText = styled(AppText)`
+  color: ${p => p.theme.color.foreground};
   font-size: 22px;
   font-weight: 700;
-  line-height: 32px;
+`;
+
+export const ReportStatusChip = styled(View)`
+  min-height: 32px;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+  border-radius: ${p => p.theme.radius.pill}px;
+  background-color: ${p => p.theme.color.accentSoft};
+  padding-horizontal: 12px;
+`;
+
+export const ReportDot = styled(View)`
+  height: 7px;
+  width: 7px;
+  border-radius: ${p => p.theme.radius.pill}px;
+  background-color: ${p => p.theme.color.accent};
+`;
+
+export const ReportStatusText = styled(AppText)`
+  color: ${p => p.theme.color.accent};
+  font-size: 12px;
+  font-weight: 700;
+`;
+
+export const ReportPanel = styled(View)`
+  margin-top: 82px;
+`;
+
+export const ReportEyebrowText = styled(AppText)`
+  color: ${p => p.theme.color.muted};
+  font-size: 13px;
+  line-height: 20px;
+`;
+
+export const ReportTitleText = styled(AppText)`
+  margin-top: 9px;
+  color: ${p => p.theme.color.foreground};
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 40px;
+`;
+
+export const ReportDescriptionText = styled(AppText)`
+  margin-top: 16px;
+  color: #2f4541;
+  font-size: 16px;
+  line-height: 26px;
+`;
+
+export const ReportStrip = styled(View)`
+  margin-top: 38px;
+  gap: 12px;
+  border-radius: ${p => p.theme.radius.card}px;
+  border-width: 1px;
+  border-color: ${p => p.theme.color.border};
+  background-color: ${p => p.theme.color.accentSoft};
+  padding: 16px;
+`;
+
+export const ReportMetaRow = styled(View)`
+  min-height: 28px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+`;
+
+export const ReportMetaLabel = styled(AppText)`
+  color: ${p => p.theme.color.muted};
+  font-size: 13px;
+  line-height: 20px;
+`;
+
+export const ReportMetaValue = styled(AppText)`
+  color: ${p => p.theme.color.foreground};
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: right;
+`;
+
+export const ReportActionStack = styled(View)`
+  gap: 12px;
+  padding-bottom: 4px;
+`;
+
+export const ReportPrimaryButton = styled(Pressable)`
+  min-height: 54px;
+  align-items: center;
+  justify-content: center;
+  border-radius: ${p => p.theme.radius.card}px;
+  background-color: ${p => p.theme.color.accent};
+`;
+
+export const ReportPrimaryLabel = styled(AppText)`
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+`;
+
+export const ReportSecondaryButton = styled(Pressable)`
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: ${p => p.theme.radius.card}px;
+  border-width: 1px;
+  border-color: ${p => p.theme.color.border};
+  background-color: ${p => p.theme.color.card};
+`;
+
+export const ReportSecondaryLabel = styled(AppText)`
+  color: ${p => p.theme.color.accent};
+  font-size: 15px;
+  font-weight: 700;
+`;
+
+export const ReportFooterNote = styled(AppText)`
+  margin-top: 4px;
+  color: ${p => p.theme.color.muted};
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
 `;

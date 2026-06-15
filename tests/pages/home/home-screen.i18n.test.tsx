@@ -14,11 +14,17 @@ test('renders english home copy when english strings are passed in', () => {
         lastReportedAt: '2026-05-05T09:30:00.000Z'
       }}
       copy={{
-        statusLabel: 'Today',
-        heroTitle: 'Still living well today',
-        streakLabel: 'Safe check-ins in a row',
-        offlineLabel: 'Offline',
-        onlineLabel: 'Online'
+        statusLabel: 'Current plan',
+        heroTitle: 'Trusted handoff',
+        heroBody:
+          'Keep the important things organized first, then add details step by step.',
+        streakLabel: 'Local readiness summary',
+        offlineLabel: 'Offline clues',
+        onlineLabel: 'Online notes',
+        dailyStatusPending: 'Not reported today',
+        dailyStatusCompleted: 'Reported today',
+        dailyStatusLastReport: 'Last report',
+        dailyStatusNoRecord: 'No record'
       }}
       readiness={deriveLocalReadinessSummary({
         schemaVersion: 1,
@@ -68,9 +74,10 @@ test('renders english home copy when english strings are passed in', () => {
     />
   );
 
-  expect(screen.getByText('Still living well today')).toBeTruthy();
-  expect(screen.getByText('Offline')).toBeTruthy();
-  expect(screen.getByText('Online')).toBeTruthy();
+  expect(screen.getByText('Reported today')).toBeTruthy();
+  expect(screen.getByText('Trusted handoff')).toBeTruthy();
+  expect(screen.getByText('Offline clues')).toBeTruthy();
+  expect(screen.getByText('Online notes')).toBeTruthy();
   expect(screen.getByText('Local readiness')).toBeTruthy();
   expect(screen.getByText('Start with the first local plan')).toBeTruthy();
   expect(

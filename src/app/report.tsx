@@ -4,7 +4,7 @@ import { memo, useCallback } from 'react';
 
 import { useI18n } from '../i18n';
 import { ReportScreen } from '../pages/report/ReportScreen';
-import { applyFormalReport } from '../store';
+import { applyFormalReport, useAppStore } from '../store';
 
 /** 与其它路由保持一致的 memo 占位 props。 */
 export interface IReportRouteProps {}
@@ -16,11 +16,21 @@ export interface IReportRouteProps {}
  */
 const ReportRoute = memo<IReportRouteProps>(() => {
   const { getMessage } = useI18n();
+  const lastReportedAt = useAppStore(state => state.homeSummary.lastReportedAt);
 
   const copy = {
-    streakTitle: getMessage('report.streakTitle'),
-    body: getMessage('report.body'),
-    primaryButton: getMessage('report.primaryButton')
+    brand: getMessage('welcome.brand'),
+    firstEntryLabel: getMessage('dailyReport.firstEntryLabel'),
+    statusPending: getMessage('dailyReport.status.pending'),
+    statusCompleted: getMessage('dailyReport.status.completed'),
+    title: getMessage('dailyReport.title'),
+    description: getMessage('dailyReport.description'),
+    lastReportLabel: getMessage('dailyReport.lastReport'),
+    waitingLabel: getMessage('dailyReport.waiting'),
+    noLastReport: getMessage('dailyReport.noLastReport'),
+    primaryButton: getMessage('dailyReport.primaryAction'),
+    secondaryButton: getMessage('dailyReport.secondaryAction'),
+    footerNote: getMessage('dailyReport.footerNote')
   };
 
   const handleSubmit = useCallback(async () => {
@@ -29,7 +39,18 @@ const ReportRoute = memo<IReportRouteProps>(() => {
     router.replace('/(tabs)/home');
   }, []);
 
-  return <ReportScreen copy={copy} onSubmit={handleSubmit} />;
+  const handleSecondaryAction = useCallback(() => {
+    router.replace('/(tabs)/home');
+  }, []);
+
+  return (
+    <ReportScreen
+      copy={copy}
+      lastReportedAt={lastReportedAt}
+      onSecondaryAction={handleSecondaryAction}
+      onSubmit={handleSubmit}
+    />
+  );
 });
 
 ReportRoute.displayName = 'ReportRoute';

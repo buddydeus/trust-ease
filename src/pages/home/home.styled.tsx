@@ -4,18 +4,57 @@ import styled from 'styled-components/native';
 
 import { AppCard, AppText } from '../../components';
 
-export const HeroHeadline = styled(AppText)`
-  margin-top: 8px;
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 46px;
+export const HomeDailyBanner = styled(View)`
+  min-height: 48px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  border-radius: ${p => p.theme.radius.card}px;
+  border-width: 1px;
+  border-color: ${p => p.theme.color.border};
+  background-color: ${p => p.theme.color.accentSoft};
+  padding-horizontal: 14px;
 `;
 
-export const StreakDayNumber = styled(AppText)`
-  margin-top: 8px;
-  font-size: 40px;
+export const HomeDailyDot = styled(View)<{ reported: boolean }>`
+  height: 8px;
+  width: 8px;
+  border-radius: ${p => p.theme.radius.pill}px;
+  background-color: ${p =>
+    p.reported ? p.theme.color.offlineRibbon : p.theme.color.onlineRibbon};
+`;
+
+export const HomeDailyStatusText = styled(AppText)`
+  flex-shrink: 0;
+  color: ${p => p.theme.color.foreground};
+  font-size: 14px;
   font-weight: 700;
-  text-align: center;
+`;
+
+export const HomeDailyMetaText = styled(AppText)`
+  flex: 1;
+  color: ${p => p.theme.color.muted};
+  font-size: 12px;
+  line-height: 18px;
+  text-align: right;
+`;
+
+export const HomeIntroCard = styled(AppCard)`
+  margin-top: 16px;
+`;
+
+export const HeroHeadline = styled(AppText)`
+  margin-top: 8px;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 38px;
+`;
+
+export const HomeIntroBody = styled(AppText)`
+  margin-top: 10px;
+  color: ${p => p.theme.color.muted};
+  font-size: 15px;
+  line-height: 24px;
 `;
 
 export const HomeStatRow = styled(View)`
@@ -81,10 +120,10 @@ export const ReadinessActionStack = styled(View)`
 `;
 
 export const ReadinessActionButton = styled(Pressable)`
-  min-height: 42px;
+  min-height: 44px;
   align-items: center;
   justify-content: center;
-  border-radius: ${p => p.theme.radius.pill}px;
+  border-radius: ${p => p.theme.radius.card}px;
   border-width: 1px;
   border-color: ${p => p.theme.color.border};
   background-color: ${p => p.theme.color.accentSoft};

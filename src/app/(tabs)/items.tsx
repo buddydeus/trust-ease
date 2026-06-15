@@ -30,15 +30,10 @@ const ItemsRoute = memo<IItemsRouteProps>(() => {
   const copy = {
     title: getMessage('items.title'),
     createLabel: getMessage('items.createLabel'),
-    filterAll: getMessage('items.filterAll'),
-    filterOffline: getMessage('items.filterOffline'),
-    itemOneTitle: getMessage('items.itemOneTitle'),
-    itemOneMeta: getMessage('items.itemOneMeta'),
-    itemTwoTitle: getMessage('items.itemTwoTitle'),
-    itemTwoMeta: getMessage('items.itemTwoMeta'),
     hint: getMessage('items.hint'),
     emptyTitle: getMessage('items.emptyTitle'),
     emptyBody: getMessage('items.emptyBody'),
+    kindOffline: getMessage('items.kindOffline'),
     kindOnline: getMessage('items.kindOnline'),
     editAction: getMessage('items.editAction'),
     archiveAction: getMessage('items.archiveAction')

@@ -5,21 +5,20 @@ import { memo } from 'react';
 
 import {
   AppCard,
-  AppPill,
   AppScreen,
   AppText,
   FloatingAddButton,
   SectionHint
 } from '../../components';
 import { useI18n } from '../../i18n';
-import { CardTitleText, ItemRibbon, ScreenTitleText } from '../../theme';
+import { CardTitleText, ScreenTitleText } from '../../theme';
 
 import {
   ItemCardInnerRow,
   ItemActionButton,
   ItemActionRow,
   ItemCardTextCol,
-  ItemsFilterRow,
+  ItemKindLabel,
   ItemsListStack,
   ItemsTitleRow
 } from './items.styled';
@@ -39,24 +38,14 @@ export interface IItemsScreenCopy {
   title: string;
   /** 悬浮添加按钮的无障碍标签。 */
   createLabel: string;
-  /** 「全部」筛选项文案。 */
-  filterAll: string;
-  /** 「线下」筛选项文案。 */
-  filterOffline: string;
-  /** 第一条示例列表项标题。 */
-  itemOneTitle: string;
-  /** 第一条示例列表项副标题。 */
-  itemOneMeta: string;
-  /** 第二条示例列表项标题。 */
-  itemTwoTitle: string;
-  /** 第二条示例列表项副标题。 */
-  itemTwoMeta: string;
   /** 底部提示文案。 */
   hint: string;
   /** 空列表标题。 */
   emptyTitle: string;
   /** 空列表说明。 */
   emptyBody: string;
+  /** 线下事项类型标签。 */
+  kindOffline: string;
   /** 线上事项类型标签。 */
   kindOnline: string;
   /** 编辑操作文案。 */
@@ -92,7 +81,7 @@ export const ItemsScreen = memo<IItemsScreenProps>(
     const { getMessage } = useI18n();
     const resolveKindLabel = (kind: IItemsScreenItem['kind']) =>
       kind === 'offline'
-        ? copy?.filterOffline || getMessage('items.filterOffline')
+        ? copy?.kindOffline || getMessage('items.kindOffline')
         : copy?.kindOnline || getMessage('items.kindOnline');
 
     return (
@@ -106,15 +95,6 @@ export const ItemsScreen = memo<IItemsScreenProps>(
             onPress={onCreateItem}
           />
         </ItemsTitleRow>
-        <ItemsFilterRow>
-          <AppPill
-            label={copy?.filterAll || getMessage('items.filterAll')}
-            active
-          />
-          <AppPill
-            label={copy?.filterOffline || getMessage('items.filterOffline')}
-          />
-        </ItemsFilterRow>
         <ItemsListStack>
           {items.length === 0 ? (
             <AppCard>
@@ -131,9 +111,9 @@ export const ItemsScreen = memo<IItemsScreenProps>(
                 <ItemCardInnerRow>
                   <ItemCardTextCol>
                     <CardTitleText>{item.title}</CardTitleText>
-                    <AppText className="mt-[9px] text-caption text-muted">
+                    <ItemKindLabel variant={item.kind}>
                       {resolveKindLabel(item.kind)}
-                    </AppText>
+                    </ItemKindLabel>
                     <AppText className="mt-[7px] text-caption text-muted">
                       {item.summary}
                     </AppText>
@@ -157,7 +137,6 @@ export const ItemsScreen = memo<IItemsScreenProps>(
                       </ItemActionButton>
                     </ItemActionRow>
                   </ItemCardTextCol>
-                  <ItemRibbon variant={item.kind} />
                 </ItemCardInnerRow>
               </AppCard>
             ))

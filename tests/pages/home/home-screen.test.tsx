@@ -36,7 +36,7 @@ test('renders the calm daily-safe home summary without next-check-in copy', () =
   );
 
   expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
-  expect(screen.getByText('128')).toBeTruthy();
+  expect(screen.getByText(zhCN['home.dailyStatus.completed'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.offlineLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.onlineLabel'])).toBeTruthy();
   expect(screen.getAllByText('3')).toHaveLength(2);
@@ -129,7 +129,7 @@ test('home route reads the seeded summary from the store', async () => {
   render(<HomeRoute />);
 
   expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
-  expect(screen.getByText('128')).toBeTruthy();
+  expect(screen.getByText(zhCN['home.dailyStatus.pending'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.offlineLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.onlineLabel'])).toBeTruthy();
   expect(screen.getAllByText('3')).toHaveLength(2);

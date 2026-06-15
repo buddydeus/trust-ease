@@ -44,8 +44,6 @@ test('renders an empty state when there are no active local items', () => {
   render(<ItemsScreen items={[]} />);
 
   expect(screen.getByText(zhCN['items.title'])).toBeTruthy();
-  expect(screen.getByText(zhCN['items.filterAll'])).toBeTruthy();
-  expect(screen.getByText(zhCN['items.filterOffline'])).toBeTruthy();
   expect(screen.getByText(zhCN['items.emptyTitle'])).toBeTruthy();
   expect(screen.getByText(zhCN['items.emptyBody'])).toBeTruthy();
   expect(screen.getByText(zhCN['items.hint'])).toBeTruthy();
@@ -59,10 +57,12 @@ test('renders active local item cards from props', () => {
 
   expect(screen.getByText('宠物照料')).toBeTruthy();
   expect(screen.getByText('把猫交给林杉照看')).toBeTruthy();
-  expect(screen.getAllByText('线下事项').length).toBeGreaterThanOrEqual(1);
+  expect(
+    screen.getAllByText(zhCN['items.kindOffline']).length
+  ).toBeGreaterThanOrEqual(1);
   expect(screen.getByText('仓库备份')).toBeTruthy();
   expect(screen.getByText('导出私有仓库备份脚本')).toBeTruthy();
-  expect(screen.getByText('线上事项')).toBeTruthy();
+  expect(screen.getByText(zhCN['items.kindOnline'])).toBeTruthy();
   expect(screen.queryByText(zhCN['items.emptyTitle'])).toBeNull();
 });
 
