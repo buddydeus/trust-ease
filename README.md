@@ -74,10 +74,13 @@ pnpm skin:qa:remote
 后续如果从 Windows 切换到 macOS 并打 iOS 真机测试包，先读
 [项目技术方案](./docs/spec/technical-solution.md) 中的 iOS 真机准备章节。
 
-当前 iOS 构建前还需要补齐：
+当前已补齐 iOS 构建前置配置：
 
 - `app.json` 的 `ios.bundleIdentifier`
-- `eas.json` 的 internal distribution build profile
+- `eas.json` 的 internal distribution 和 simulator build profile
+
+iOS 模拟器验证需要本机 Xcode 已安装可用 iOS Simulator runtime；如果本地
+`SDKROOT` 指向旧 SDK，运行 iOS 命令时先清理该环境变量。
 
 ### `pnpm design`
 

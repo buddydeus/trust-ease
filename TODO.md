@@ -1,6 +1,6 @@
 # TODO
 
-更新日期：2026-06-15
+更新日期：2026-06-16
 
 本文件用于记录当前交接状态和下一步工作。若本文件与代码、`package.json` 或
 `docs/spec/` 冲突，以当前代码和核心规格文档为准。
@@ -27,6 +27,10 @@
 - 阶段 3 已完成：设计预览脚本已同步简化设计语言，真实运行截图链路覆盖
   `welcome / report / home / items / new-item / my / trigger-state` 三语页面，
   且本地生成物 `.tmp/`、`thumbs/` 已作为 QA 产物忽略。
+- 阶段 4 已推进但被本机环境阻塞：进入 iOS 模拟器验证前置配置已补齐，
+  `pnpm check:qa` 已再次通过；本机 Xcode 需要清理旧 `SDKROOT` 后可用，但
+  iOS 26.3.1 Simulator runtime 通过 `xcodebuild -downloadPlatform iOS`
+  下载到 99.5% 后被 Apple MobileAsset 取消，当前仍没有可用 simulator runtime。
 
 ## 已完成内容概述
 
@@ -106,13 +110,25 @@
   - `pnpm check:local`
   - 相关 Jest 测试
 - 进入视觉 QA 前运行：
-  - `pnpm check:qa`：2026-06-15 已通过。
+  - `pnpm check:qa`：2026-06-15 已通过；2026-06-16 iOS 配置改动后再次通过。
   - `pnpm check:qa:runtime`：2026-06-15 已通过，完成 21 张 runtime thumbnails。
 - 前端 QA 发现的问题记录到 `.bugs/*.md`，包含问题描述、复现路径、问题定位、
   建议修复方式和验证方式。
-- iOS 真机验证前补齐：
-  - `app.json` 的 `ios.bundleIdentifier`
-  - `eas.json` 的 internal distribution build profile
+- [x] iOS 构建前置配置：
+  - [x] `app.json` 的 `ios.bundleIdentifier`
+  - [x] `eas.json` 的 internal distribution build profile
+  - [x] `eas.json` 的 simulator build profile
+- [ ] iOS 模拟器验证：
+  - [x] 确认本机 Xcode 可用，且需要清理旧 `SDKROOT` 环境变量。
+  - [ ] 安装可用 iOS Simulator runtime。
+    - 2026-06-16 尝试 `env -u SDKROOT DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -downloadPlatform iOS`。
+    - 下载目标为 iOS 26.3.1 Universal Simulator，大小约 10.47 GB。
+    - 首次下载停在 99.5%；中断后重试仍停在 99.5%，随后报
+      `Download was cancelled. (Asset download for com.apple.MobileAsset.iOSSimulatorRuntime ...)`。
+    - `xcrun simctl list runtimes` 当前仍为空，无法启动 iOS Simulator。
+  - [ ] 使用 iOS Simulator 运行 App。
+  - [ ] 验证首次进入、每日申报、首页、事项、我的、触发设置、备份入口。
+  - [ ] 如发现问题，记录到 `.bugs/*.md`。
 
 ### P2 - 产品化后续
 

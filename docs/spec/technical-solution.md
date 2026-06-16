@@ -281,9 +281,11 @@ QA 约束：
 
 ## iOS 真机准备
 
-当前 iOS 构建还需要：
+当前 iOS 构建前置配置已补齐：
 
-- 在 `app.json` 增加 `ios.bundleIdentifier`。
-- 新增 `eas.json` internal distribution build profile。
+- `app.json` 已声明 `ios.bundleIdentifier`。
+- `eas.json` 已提供 internal distribution 和 simulator build profile。
 - 在 macOS 或 EAS 环境跑 `pnpm check:qa` 和 `pnpm check:qa:runtime`。
 - 使用 Expo Go 做轻量预览，使用 EAS 或本地 Xcode 构建做真机 QA。
+- iOS 模拟器验证需要本机 Xcode 安装可用 iOS Simulator runtime；如果本地
+  `SDKROOT` 指向旧 SDK，运行 iOS 命令时需要清理该环境变量。

@@ -20,6 +20,9 @@
     },
     "android": {
       "package": "com.buddydeus.trustease"
+    },
+    "ios": {
+      "bundleIdentifier": "com.buddydeus.trustease"
     }
   }
 }
