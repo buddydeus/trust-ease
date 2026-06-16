@@ -27,10 +27,12 @@
 - 阶段 3 已完成：设计预览脚本已同步简化设计语言，真实运行截图链路覆盖
   `welcome / report / home / items / new-item / my / trigger-state` 三语页面，
   且本地生成物 `.tmp/`、`thumbs/` 已作为 QA 产物忽略。
-- 阶段 4 已推进但被本机环境阻塞：进入 iOS 模拟器验证前置配置已补齐，
-  `pnpm check:qa` 已再次通过；本机 Xcode 需要清理旧 `SDKROOT` 后可用，但
-  iOS 26.3.1 Simulator runtime 通过 `xcodebuild -downloadPlatform iOS`
-  下载到 99.5% 后被 Apple MobileAsset 取消，当前仍没有可用 simulator runtime。
+- 阶段 4 已完成当前可脚本化部分：本机已有 iOS 26.3 simulator runtime，
+  iPhone 17 模拟器可启动；Expo 55 依赖已与 `expo install --check` 期望版本对齐，
+  iOS bundle 能在 Expo Go 中成功加载并显示欢迎页。
+- 当前 iOS 手动交互验证仍待继续：本机未开放 macOS 辅助访问，`simctl` 也没有 tap
+  能力，因此“点击开始设置后进入每日申报 / 首页”等操作链路需要人工点按或补充
+  Maestro / idb / Appium 等移动端自动化工具后继续。
 
 ## 已完成内容概述
 
@@ -110,7 +112,7 @@
   - `pnpm check:local`
   - 相关 Jest 测试
 - 进入视觉 QA 前运行：
-  - `pnpm check:qa`：2026-06-15 已通过；2026-06-16 iOS 配置改动后再次通过。
+  - `pnpm check:qa`：2026-06-15 已通过；2026-06-16 iOS 依赖与运行期修复后再次通过。
   - `pnpm check:qa:runtime`：2026-06-15 已通过，完成 21 张 runtime thumbnails。
 - 前端 QA 发现的问题记录到 `.bugs/*.md`，包含问题描述、复现路径、问题定位、
   建议修复方式和验证方式。
@@ -120,14 +122,19 @@
   - [x] `eas.json` 的 simulator build profile
 - [ ] iOS 模拟器验证：
   - [x] 确认本机 Xcode 可用，且需要清理旧 `SDKROOT` 环境变量。
-  - [ ] 安装可用 iOS Simulator runtime。
-    - 2026-06-16 尝试 `env -u SDKROOT DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -downloadPlatform iOS`。
-    - 下载目标为 iOS 26.3.1 Universal Simulator，大小约 10.47 GB。
-    - 首次下载停在 99.5%；中断后重试仍停在 99.5%，随后报
-      `Download was cancelled. (Asset download for com.apple.MobileAsset.iOSSimulatorRuntime ...)`。
-    - `xcrun simctl list runtimes` 当前仍为空，无法启动 iOS Simulator。
-  - [ ] 使用 iOS Simulator 运行 App。
+  - [x] 安装可用 iOS Simulator runtime。
+    - 2026-06-16 已确认 `xcrun simctl list runtimes` 包含
+      `iOS 26.3 (26.3.1 - 23D8133)`。
+  - [x] 使用 iOS Simulator 运行 App。
+    - 使用 iPhone 17 模拟器和 Expo Go 55.0.34。
+    - 需要通过
+      `env -u SDKROOT DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`
+      清理旧 `SDKROOT`。
+    - 依赖对齐到 Expo 55 期望版本后，iOS bundle 可成功完成；最近一次清缓存
+      bundle 用时约 10 秒，无 Expo Router 非路由文件警告和 i18n/store 循环引用警告。
+    - 已截图确认欢迎页能在 iOS 模拟器显示。
   - [ ] 验证首次进入、每日申报、首页、事项、我的、触发设置、备份入口。
+    - 当前脚本化验证停在欢迎页截图；后续需要人工点按或安装移动端自动化工具继续。
   - [ ] 如发现问题，记录到 `.bugs/*.md`。
 
 ### P2 - 产品化后续

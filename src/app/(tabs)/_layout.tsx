@@ -5,8 +5,6 @@ import { type TextStyle } from 'react-native';
 
 import { useTheme } from 'styled-components/native';
 
-import { useI18n } from '../../i18n';
-
 import {
   TabHomeBase,
   TabHomeRoof,
@@ -15,7 +13,8 @@ import {
   TabItemsLine,
   TabMyAvatar,
   TabMyShoulders
-} from './tabs-layout.styled';
+} from '../../appSupport/tabs/tabs-layout.styled';
+import { useI18n } from '../../i18n';
 
 /**
  * 底部 Tab 栏图标标识，对应矢量形状。

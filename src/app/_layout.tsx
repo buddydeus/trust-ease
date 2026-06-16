@@ -5,15 +5,28 @@ import '../global.css';
 import { Stack, usePathname } from 'expo-router';
 
 import { memo } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 
 import { usePreviewConfig } from '../store';
 import { appTheme } from '../theme';
 
-import { usePreviewReadyMarker } from './usePreviewReadyMarker';
-import { usePreviewRouteSync } from './usePreviewRouteSync';
-import { useSkinStorageSync } from './useSkinStorageSync';
+import { usePreviewReadyMarker } from '../appSupport/usePreviewReadyMarker';
+import { usePreviewRouteSync } from '../appSupport/usePreviewRouteSync';
+import { useSkinStorageSync } from '../appSupport/useSkinStorageSync';
+
+const styles = StyleSheet.create({
+  previewMarker: {
+    position: 'absolute',
+    width: 1,
+    height: 1,
+    opacity: 0
+  },
+  root: {
+    flex: 1,
+    backgroundColor: appTheme.color.page
+  }
+});
 
 /**
  * 故意留空：为将来根级路由参数预留稳定具名 props 位，避免路由膨胀时反复改写 `React.memo` 泛型。
@@ -42,12 +55,9 @@ const RootLayout = memo<IRootLayoutProps>(() => {
   });
 
   return (
-    <View className="flex-1 bg-page">
+    <View style={styles.root}>
       {preview.enabled ? (
-        <View
-          nativeID="preview-ready-marker"
-          className="absolute h-px w-px opacity-0"
-        />
+        <View nativeID="preview-ready-marker" style={styles.previewMarker} />
       ) : null}
       <ThemeProvider theme={appTheme}>
         <Stack screenOptions={{ headerShown: false }}>

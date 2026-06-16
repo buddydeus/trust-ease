@@ -1,7 +1,7 @@
 import { create, type StoreApi, type UseBoundStore } from 'zustand';
 
 import { defaultHomeSummary, type HomeSummary } from '../constants';
-import { LocaleType, type LocaleMode } from '../i18n';
+import { LocaleType, type LocaleMode } from '../i18n/types';
 import {
   appSkinConfig,
   type SkinInitStatus,

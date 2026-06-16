@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 
 import { memo, useMemo, useState } from 'react';
 
+import { createExpoBackupFileAdapter } from '../../appSupport/tabs/backupFileAdapter';
 import { useI18n } from '../../i18n';
 import { MyScreen } from '../../pages/my/MyScreen';
 import { loadConfiguredBundledSkinPackages } from '../../skin';
@@ -17,8 +18,6 @@ import {
   previewLocalTrustBackupImport,
   saveTrustDataSnapshot
 } from '../../store/trust';
-
-import { createExpoBackupFileAdapter } from './backupFileAdapter';
 
 export interface IMyRouteProps {
   backupFileAdapter?: ILocalTrustBackupFileAdapter;

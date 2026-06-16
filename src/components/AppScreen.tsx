@@ -1,6 +1,8 @@
 import { memo, type ReactNode } from 'react';
-import { View, type ViewProps } from 'react-native';
+import { StyleSheet, View, type ViewProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import { appTheme } from '../theme';
 
 /**
  * `AppScreen` 的 props；内层内容区继承 `View` 属性。
@@ -10,6 +12,17 @@ export interface IAppScreenProps extends ViewProps {
   children?: ReactNode;
 }
 
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    padding: 22
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: appTheme.color.page
+  }
+});
+
 /**
  * 全屏安全区内层：统一页面背景与内边距。
  *
@@ -17,13 +30,9 @@ export interface IAppScreenProps extends ViewProps {
  * @returns 已 memo 的屏幕布局。
  */
 export const AppScreen = memo<IAppScreenProps>(
-  ({ children, className, style, ...props }) => (
-    <SafeAreaView className="flex-1 bg-page">
-      <View
-        className={['flex-1 p-[22px]', className].filter(Boolean).join(' ')}
-        style={style}
-        {...props}
-      >
+  ({ children, style, ...props }) => (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.content, style]} {...props}>
         {children}
       </View>
     </SafeAreaView>
