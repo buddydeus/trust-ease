@@ -220,7 +220,7 @@ test('helpers route loads active helpers and opens the create flow', async () =>
   expect(await screen.findByText('林杉')).toBeTruthy();
   expect(screen.queryByText('旧联系人')).toBeNull();
 
-  fireEvent.press(screen.getByRole('button', { name: '新增协助人' }));
+  fireEvent.press(screen.getByRole('button', { name: '新增联系人' }));
 
   expect(router.push).toHaveBeenCalledWith('/helpers/new');
 });

@@ -6,7 +6,8 @@ import { AppCard, AppText } from '../../components';
 import { CardTitleText } from '../../theme';
 
 export const PolicySummaryCard = styled(AppCard)`
-  margin-top: 20px;
+  margin-top: 18px;
+  background-color: ${p => p.theme.color.accentSoft};
 `;
 
 export const MissingSectionCard = styled(AppCard)`
@@ -37,6 +38,7 @@ export const MetricRow = styled(View)`
 
 export const MetricValue = styled(CardTitleText)`
   color: ${p => p.theme.color.accent};
+  font-size: 20px;
 `;
 
 export const ToggleRowLabel = styled(AppText)`
@@ -55,13 +57,13 @@ export const ActionGrid = styled(View)`
 `;
 
 export const ActionButton = styled(Pressable)`
-  min-height: 44px;
+  min-height: 48px;
   align-items: center;
   justify-content: center;
-  border-radius: ${p => p.theme.radius.pill}px;
+  border-radius: 16px;
   border-width: 1px;
   border-color: ${p => p.theme.color.border};
-  background-color: ${p => p.theme.color.accentSoft};
+  background-color: ${p => p.theme.color.card};
 `;
 
 export const ActionLabel = styled(AppText)`

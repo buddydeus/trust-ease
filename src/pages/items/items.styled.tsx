@@ -7,11 +7,12 @@ export const ItemsTitleRow = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  padding-horizontal: 4px;
 `;
 
 export const ItemsListStack = styled(View)`
-  margin-top: 24px;
-  gap: 12px;
+  margin-top: 18px;
+  gap: 10px;
 `;
 
 export const ItemCardInnerRow = styled(View)`
@@ -30,11 +31,11 @@ export const ItemKindLabel = styled.Text<{ variant: 'offline' | 'online' }>`
   border-radius: ${p => p.theme.radius.pill}px;
   background-color: ${p =>
     p.variant === 'offline'
-      ? 'rgba(47, 138, 103, 0.12)'
-      : 'rgba(154, 106, 45, 0.12)'};
+      ? p.theme.color.accentSoft
+      : 'rgba(165, 106, 33, 0.14)'};
   color: ${p =>
     p.variant === 'offline'
-      ? p.theme.color.offlineRibbon
+      ? p.theme.color.accent
       : p.theme.color.onlineRibbon};
   font-size: 12px;
   font-weight: 700;

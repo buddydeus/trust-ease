@@ -26,7 +26,10 @@ const WelcomeRoute = memo<IWelcomeRouteProps>(() => {
     bookletRibbon: getMessage('welcome.bookletRibbon'),
     bookletLine1: getMessage('welcome.bookletLine1'),
     bookletLine2: getMessage('welcome.bookletLine2'),
-    bookletLine3: getMessage('welcome.bookletLine3')
+    bookletLine3: getMessage('welcome.bookletLine3'),
+    assuranceMeta1: getMessage('welcome.assuranceMeta1'),
+    assuranceMeta2: getMessage('welcome.assuranceMeta2'),
+    assuranceMeta3: getMessage('welcome.assuranceMeta3')
   };
 
   const handleStart = useCallback(async () => {

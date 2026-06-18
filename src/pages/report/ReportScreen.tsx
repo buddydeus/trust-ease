@@ -5,54 +5,33 @@ import { useI18n } from '../../i18n';
 import {
   ReportAppScreen,
   ReportActionStack,
-  ReportBrandText,
-  ReportDescriptionText,
-  ReportDot,
+  ReportCircleButton,
+  ReportCircleButtonText,
+  ReportDateText,
+  ReportEncouragementText,
   ReportEyebrowText,
-  ReportFooterNote,
-  ReportMetaLabel,
-  ReportMetaRow,
-  ReportMetaValue,
-  ReportPanel,
-  ReportPrimaryButton,
-  ReportPrimaryLabel,
-  ReportSecondaryButton,
-  ReportSecondaryLabel,
-  ReportStatusChip,
-  ReportStatusText,
-  ReportStrip,
-  ReportTitleText,
-  ReportTopRow
+  ReportHintText,
+  ReportPanel
 } from './report.styled';
 
 /**
  * `ReportScreen` 使用的本地化文案。
  */
 interface IReportScreenCopy {
-  /** App 品牌名称。 */
-  brand: string;
   /** 顶部场景标签。 */
   firstEntryLabel: string;
-  /** 待申报状态标签。 */
-  statusPending: string;
-  /** 已申报状态标签。 */
-  statusCompleted: string;
-  /** 页面主标题。 */
-  title: string;
-  /** 页面说明文案。 */
-  description: string;
-  /** 最近申报字段标签。 */
-  lastReportLabel: string;
-  /** 当前等待确认字段值。 */
-  waitingLabel: string;
-  /** 从未申报时的兜底文案。 */
-  noLastReport: string;
+  /** 鼓励文案。 */
+  encouragement: string;
+  /** 日期格式文案。 */
+  dateText?: string;
   /** 主按钮文案。 */
   primaryButton: string;
-  /** 次按钮文案。 */
-  secondaryButton: string;
-  /** 页面底部边界提示。 */
-  footerNote: string;
+  /** 主按钮第一行。 */
+  primaryLine1: string;
+  /** 主按钮第二行。 */
+  primaryLine2: string;
+  /** 页面底部轻提示。 */
+  hint: string;
 }
 
 /**
@@ -61,34 +40,18 @@ interface IReportScreenCopy {
 export interface IReportScreenProps {
   /** 用户完成报平安手势时调用。 */
   onSubmit: () => void;
-  /** 用户暂时进入预案时调用。 */
-  onSecondaryAction?: () => void;
-  /** 最近一次正式申报时间。 */
-  lastReportedAt?: string | null;
   /** 可选本地化文案；省略时使用内置默认。 */
   copy?: IReportScreenCopy;
 }
 
-const formatReportTime = (
-  value: string | null | undefined,
-  fallback: string
-): string => {
-  if (!value) {
-    return fallback;
-  }
+const weekdayLabels = ['日', '一', '二', '三', '四', '五', '六'];
 
-  const date = new Date(value);
+const formatTodayDate = () => {
+  const date = new Date();
 
-  if (!Number.isFinite(date.getTime())) {
-    return fallback;
-  }
-
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hour = String(date.getHours()).padStart(2, '0');
-  const minute = String(date.getMinutes()).padStart(2, '0');
-
-  return `${month}/${day} ${hour}:${minute}`;
+  return `${date.getMonth() + 1}月${date.getDate()}日 周${
+    weekdayLabels[date.getDay()]
+  }`;
 };
 
 /**
@@ -97,80 +60,47 @@ const formatReportTime = (
  * @param props - `IReportScreenProps`
  * @returns 已 memo 的申报页元素。
  */
-export const ReportScreen = memo<IReportScreenProps>(
-  ({ lastReportedAt, onSecondaryAction, onSubmit, copy }) => {
-    const { getMessage } = useI18n();
-    const resolvedCopy = {
-      brand: copy?.brand || getMessage('welcome.brand'),
-      firstEntryLabel:
-        copy?.firstEntryLabel || getMessage('dailyReport.firstEntryLabel'),
-      statusPending:
-        copy?.statusPending || getMessage('dailyReport.status.pending'),
-      statusCompleted:
-        copy?.statusCompleted || getMessage('dailyReport.status.completed'),
-      title: copy?.title || getMessage('dailyReport.title'),
-      description: copy?.description || getMessage('dailyReport.description'),
-      lastReportLabel:
-        copy?.lastReportLabel || getMessage('dailyReport.lastReport'),
-      waitingLabel: copy?.waitingLabel || getMessage('dailyReport.waiting'),
-      noLastReport:
-        copy?.noLastReport || getMessage('dailyReport.noLastReport'),
-      primaryButton:
-        copy?.primaryButton || getMessage('dailyReport.primaryAction'),
-      secondaryButton:
-        copy?.secondaryButton || getMessage('dailyReport.secondaryAction'),
-      footerNote: copy?.footerNote || getMessage('dailyReport.footerNote')
-    };
+export const ReportScreen = memo<IReportScreenProps>(({ onSubmit, copy }) => {
+  const { getMessage } = useI18n();
+  const resolvedCopy = {
+    firstEntryLabel:
+      copy?.firstEntryLabel || getMessage('dailyReport.firstEntryLabel'),
+    encouragement:
+      copy?.encouragement || getMessage('dailyReport.encouragement'),
+    dateText: copy?.dateText || formatTodayDate(),
+    primaryButton:
+      copy?.primaryButton || getMessage('dailyReport.primaryAction'),
+    primaryLine1: copy?.primaryLine1 || getMessage('dailyReport.primaryLine1'),
+    primaryLine2: copy?.primaryLine2 || getMessage('dailyReport.primaryLine2'),
+    hint: copy?.hint || getMessage('dailyReport.hint')
+  };
 
-    return (
-      <ReportAppScreen>
-        <ReportTopRow>
-          <ReportBrandText>{resolvedCopy.brand}</ReportBrandText>
-          <ReportStatusChip>
-            <ReportDot />
-            <ReportStatusText>{resolvedCopy.statusPending}</ReportStatusText>
-          </ReportStatusChip>
-        </ReportTopRow>
+  return (
+    <ReportAppScreen>
+      <ReportEyebrowText>{resolvedCopy.firstEntryLabel}</ReportEyebrowText>
 
-        <ReportPanel>
-          <ReportEyebrowText>{resolvedCopy.firstEntryLabel}</ReportEyebrowText>
-          <ReportTitleText>{resolvedCopy.title}</ReportTitleText>
-          <ReportDescriptionText>
-            {resolvedCopy.description}
-          </ReportDescriptionText>
-          <ReportStrip>
-            <ReportMetaRow>
-              <ReportMetaLabel>{resolvedCopy.lastReportLabel}</ReportMetaLabel>
-              <ReportMetaValue>
-                {formatReportTime(lastReportedAt, resolvedCopy.noLastReport)}
-              </ReportMetaValue>
-            </ReportMetaRow>
-            <ReportMetaRow>
-              <ReportMetaLabel>{resolvedCopy.statusPending}</ReportMetaLabel>
-              <ReportMetaValue>{resolvedCopy.waitingLabel}</ReportMetaValue>
-            </ReportMetaRow>
-          </ReportStrip>
-        </ReportPanel>
+      <ReportPanel>
+        <ReportEncouragementText>
+          {resolvedCopy.encouragement}
+        </ReportEncouragementText>
+        <ReportDateText>{resolvedCopy.dateText}</ReportDateText>
+        <ReportCircleButton
+          accessibilityLabel={resolvedCopy.primaryButton}
+          accessibilityRole="button"
+          onPress={onSubmit}
+        >
+          <ReportCircleButtonText>
+            {resolvedCopy.primaryLine1}
+            {'\n'}
+            {resolvedCopy.primaryLine2}
+          </ReportCircleButtonText>
+        </ReportCircleButton>
+        <ReportHintText>{resolvedCopy.hint}</ReportHintText>
+      </ReportPanel>
 
-        <ReportActionStack>
-          <ReportPrimaryButton accessibilityRole="button" onPress={onSubmit}>
-            <ReportPrimaryLabel>
-              {resolvedCopy.primaryButton}
-            </ReportPrimaryLabel>
-          </ReportPrimaryButton>
-          <ReportSecondaryButton
-            accessibilityRole="button"
-            onPress={onSecondaryAction}
-          >
-            <ReportSecondaryLabel>
-              {resolvedCopy.secondaryButton}
-            </ReportSecondaryLabel>
-          </ReportSecondaryButton>
-          <ReportFooterNote>{resolvedCopy.footerNote}</ReportFooterNote>
-        </ReportActionStack>
-      </ReportAppScreen>
-    );
-  }
-);
+      <ReportActionStack />
+    </ReportAppScreen>
+  );
+});
 
 ReportScreen.displayName = 'ReportScreen';

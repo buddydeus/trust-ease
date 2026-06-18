@@ -24,7 +24,8 @@ test('renders english home copy when english strings are passed in', () => {
         dailyStatusPending: 'Not reported today',
         dailyStatusCompleted: 'Reported today',
         dailyStatusLastReport: 'Last report',
-        dailyStatusNoRecord: 'No record'
+        dailyStatusNoRecord: 'No record',
+        dailyStatusViewAction: 'View'
       }}
       readiness={deriveLocalReadinessSummary({
         schemaVersion: 1,
@@ -74,10 +75,10 @@ test('renders english home copy when english strings are passed in', () => {
     />
   );
 
-  expect(screen.getByText('Reported today')).toBeTruthy();
-  expect(screen.getByText('Trusted handoff')).toBeTruthy();
-  expect(screen.getByText('Offline clues')).toBeTruthy();
-  expect(screen.getByText('Online notes')).toBeTruthy();
+  expect(screen.getAllByText('Reported today').length).toBeGreaterThan(0);
+  expect(screen.getByText('Current plan')).toBeTruthy();
+  expect(screen.getByText('Important items')).toBeTruthy();
+  expect(screen.getByText('Trusted helpers')).toBeTruthy();
   expect(screen.getByText('Local readiness')).toBeTruthy();
   expect(screen.getByText('Start with the first local plan')).toBeTruthy();
   expect(
@@ -85,5 +86,5 @@ test('renders english home copy when english strings are passed in', () => {
       'This is a local advisory summary. It will not notify helpers or create legal authority.'
     )
   ).toBeTruthy();
-  expect(screen.getAllByText('3')).toHaveLength(2);
+  expect(screen.getByText('0 important items')).toBeTruthy();
 });

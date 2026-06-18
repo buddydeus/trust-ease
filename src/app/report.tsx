@@ -4,7 +4,7 @@ import { memo, useCallback } from 'react';
 
 import { useI18n } from '../i18n';
 import { ReportScreen } from '../pages/report/ReportScreen';
-import { applyFormalReport, useAppStore } from '../store';
+import { applyFormalReport } from '../store';
 
 /** 与其它路由保持一致的 memo 占位 props。 */
 export interface IReportRouteProps {}
@@ -16,21 +16,14 @@ export interface IReportRouteProps {}
  */
 const ReportRoute = memo<IReportRouteProps>(() => {
   const { getMessage } = useI18n();
-  const lastReportedAt = useAppStore(state => state.homeSummary.lastReportedAt);
 
   const copy = {
-    brand: getMessage('welcome.brand'),
     firstEntryLabel: getMessage('dailyReport.firstEntryLabel'),
-    statusPending: getMessage('dailyReport.status.pending'),
-    statusCompleted: getMessage('dailyReport.status.completed'),
-    title: getMessage('dailyReport.title'),
-    description: getMessage('dailyReport.description'),
-    lastReportLabel: getMessage('dailyReport.lastReport'),
-    waitingLabel: getMessage('dailyReport.waiting'),
-    noLastReport: getMessage('dailyReport.noLastReport'),
+    encouragement: getMessage('dailyReport.encouragement'),
     primaryButton: getMessage('dailyReport.primaryAction'),
-    secondaryButton: getMessage('dailyReport.secondaryAction'),
-    footerNote: getMessage('dailyReport.footerNote')
+    primaryLine1: getMessage('dailyReport.primaryLine1'),
+    primaryLine2: getMessage('dailyReport.primaryLine2'),
+    hint: getMessage('dailyReport.hint')
   };
 
   const handleSubmit = useCallback(async () => {
@@ -39,18 +32,7 @@ const ReportRoute = memo<IReportRouteProps>(() => {
     router.replace('/(tabs)/home');
   }, []);
 
-  const handleSecondaryAction = useCallback(() => {
-    router.replace('/(tabs)/home');
-  }, []);
-
-  return (
-    <ReportScreen
-      copy={copy}
-      lastReportedAt={lastReportedAt}
-      onSecondaryAction={handleSecondaryAction}
-      onSubmit={handleSubmit}
-    />
-  );
+  return <ReportScreen copy={copy} onSubmit={handleSubmit} />;
 });
 
 ReportRoute.displayName = 'ReportRoute';

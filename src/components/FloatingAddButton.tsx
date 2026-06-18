@@ -29,7 +29,7 @@ export const FloatingAddButton = memo<IFloatingAddButtonProps>(
       <Pressable
         accessibilityLabel={label || getMessage('items.createLabel')}
         accessibilityRole="button"
-        className="h-[42px] w-[42px] items-center justify-center rounded-full bg-accent"
+        className="h-[44px] w-[44px] items-center justify-center rounded-full bg-accent"
         onPress={onPress}
       >
         <AppText className="text-[20px] leading-[20px] text-white">+</AppText>

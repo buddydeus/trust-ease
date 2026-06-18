@@ -5,15 +5,17 @@ import styled from 'styled-components/native';
 import { AppText } from '../../components';
 
 export const HelpersTitleRow = styled(View)`
+  min-height: 44px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  padding-horizontal: 4px;
 `;
 
 export const HelpersListStack = styled(View)`
   margin-top: 18px;
-  gap: 14px;
+  gap: 10px;
 `;
 
 export const HelperCardTextCol = styled(View)`

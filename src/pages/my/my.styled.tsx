@@ -6,7 +6,8 @@ import { AppCard, AppText } from '../../components';
 import { CardTitleText } from '../../theme';
 
 export const StatusHighlightCard = styled(AppCard)`
-  margin-top: 22px;
+  margin-top: 18px;
+  background-color: ${p => p.theme.color.accentSoft};
 `;
 
 export const StatusValueLine = styled(CardTitleText)`
@@ -14,8 +15,8 @@ export const StatusValueLine = styled(CardTitleText)`
 `;
 
 export const MyScreenCardStack = styled(View)`
-  margin-top: 18px;
-  gap: 14px;
+  margin-top: 14px;
+  gap: 10px;
 `;
 
 export const PickerBlock = styled(View)`
@@ -87,13 +88,13 @@ export const BackupActionRow = styled(View)`
 `;
 
 export const BackupActionButton = styled(Pressable)<{ $variant?: 'secondary' }>`
-  min-height: 38px;
+  min-height: 44px;
   flex: 1;
   align-items: center;
   justify-content: center;
   border-width: 1px;
   border-color: ${({ theme }) => theme.color.accent};
-  border-radius: 18px;
+  border-radius: 16px;
   padding-horizontal: 12px;
   background-color: ${({ $variant, theme }) =>
     $variant === 'secondary' ? theme.color.card : theme.color.accent};

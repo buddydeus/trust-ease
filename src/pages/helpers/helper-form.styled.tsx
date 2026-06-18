@@ -12,18 +12,18 @@ export const HelperFormInput = styled(TextInput).attrs(({ theme }) => ({
   placeholderTextColor: theme.color.muted
 }))`
   margin-top: 8px;
-  min-height: 42px;
-  border-width: 1px;
-  border-color: ${({ theme }) => theme.color.border};
-  border-radius: 12px;
+  min-height: 44px;
+  border-width: 0;
+  border-radius: 14px;
+  background-color: #f4f8f6;
   padding-horizontal: 12px;
   font-size: 14px;
   color: ${({ theme }) => theme.color.foreground};
 `;
 
 export const HelperNotesInput = styled(HelperFormInput)`
-  min-height: 82px;
-  padding-top: 10px;
+  min-height: 98px;
+  padding-top: 12px;
   text-align-vertical: top;
 `;
 

@@ -42,7 +42,8 @@ const HomeRoute = memo<IHomeRouteProps>(() => {
     dailyStatusPending: getMessage('home.dailyStatus.pending'),
     dailyStatusCompleted: getMessage('home.dailyStatus.completed'),
     dailyStatusLastReport: getMessage('home.dailyStatus.lastReport'),
-    dailyStatusNoRecord: getMessage('home.dailyStatus.noRecord')
+    dailyStatusNoRecord: getMessage('home.dailyStatus.noRecord'),
+    dailyStatusViewAction: getMessage('home.dailyStatus.viewAction')
   };
   const readiness = trustSnapshot
     ? deriveLocalReadinessSummary(trustSnapshot)

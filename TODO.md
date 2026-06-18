@@ -1,6 +1,6 @@
 # TODO
 
-更新日期：2026-06-16
+更新日期：2026-06-18
 
 本文件用于记录当前交接状态和下一步工作。若本文件与代码、`package.json` 或
 `docs/spec/` 冲突，以当前代码和核心规格文档为准。
@@ -21,6 +21,9 @@
 - 当前只支持 `zh-CN`、`zh-TW`、`en-US`，不要重新引入裸 `en`。
 - 已确认新版简化设计方向：`designs/specs/anxin-simple-daily-redesign.md`。
   该设计新增“每天首次进入 App 时的申报状态页面”，当前已完成正式代码实现。
+- 已确认个人轻量版重新设计：`designs/specs/anxin-personal-lite-redesign.md`。
+  当前已进入正式开发并完成首轮代码还原，重点覆盖 `welcome`、`report`、`home`、
+  `items`、`new-item`、`helpers`、`my`、`trigger-state` 的浅色清新布局。
 - 阶段 1 已完成：正式申报时间已持久化，应用入口会按本地自然日判断今天是否
   已申报；今日未申报进入申报页，今日已申报进入首页。
 - 阶段 2 已完成：申报页、首页和事项页已按简化设计改造，并同步三语文案。
@@ -30,6 +33,8 @@
 - 阶段 4 已完成当前可脚本化部分：本机已有 iOS 26.3 simulator runtime，
   iPhone 17 模拟器可启动；Expo 55 依赖已与 `expo install --check` 期望版本对齐，
   iOS bundle 能在 Expo Go 中成功加载并显示欢迎页。
+- 阶段 5 已完成：已按确认版个人轻量设计正式改造运行界面，完成三语文案同步、
+  页面测试、确定性 QA、真实 runtime 截图和 iOS 模拟器首屏加载验证。
 - 当前 iOS 手动交互验证仍待继续：本机未开放 macOS 辅助访问，`simctl` 也没有 tap
   能力，因此“点击开始设置后进入每日申报 / 首页”等操作链路需要人工点按或补充
   Maestro / idb / Appium 等移动端自动化工具后继续。
@@ -68,6 +73,11 @@
   - 预览图：
     `designs/previews/anxin-simple-daily-redesign-desktop.png`
     `designs/previews/anxin-simple-daily-redesign-mobile.png`
+- 已确认并实现个人轻量版 UI：
+  - 设计规格：`designs/specs/anxin-personal-lite-redesign.md`
+  - 实现交接：`designs/specs/anxin-personal-lite-redesign-implementation.md`
+  - 设计总览：`designs/previews/anxin-personal-lite-redesign-overview.png`
+  - 当前实现主色回到确认的淡雅绿色 `#4F907C`，整体保持浅色、克制、个人工具感。
 
 ## 后续需要做的内容
 
@@ -112,8 +122,10 @@
   - `pnpm check:local`
   - 相关 Jest 测试
 - 进入视觉 QA 前运行：
-  - `pnpm check:qa`：2026-06-15 已通过；2026-06-16 iOS 依赖与运行期修复后再次通过。
-  - `pnpm check:qa:runtime`：2026-06-15 已通过，完成 21 张 runtime thumbnails。
+  - `pnpm check:qa`：2026-06-15 已通过；2026-06-16 iOS 依赖与运行期修复后再次通过；
+    2026-06-18 个人轻量 UI 正式开发后再次通过，32 个测试套件、179 个测试通过。
+  - `pnpm check:qa:runtime`：2026-06-15 已通过；2026-06-18 通过 `pnpm thumbs`
+    完成 21 张 runtime thumbnails。
 - 前端 QA 发现的问题记录到 `.bugs/*.md`，包含问题描述、复现路径、问题定位、
   建议修复方式和验证方式。
 - [x] iOS 构建前置配置：
@@ -133,6 +145,10 @@
     - 依赖对齐到 Expo 55 期望版本后，iOS bundle 可成功完成；最近一次清缓存
       bundle 用时约 10 秒，无 Expo Router 非路由文件警告和 i18n/store 循环引用警告。
     - 已截图确认欢迎页能在 iOS 模拟器显示。
+    - 2026-06-18 使用 iPhone 17 模拟器和 Expo Go，经
+      `pnpm exec expo start --ios --localhost` 成功完成 iOS bundle，并截图确认
+      新版每日申报页可加载显示。直接 LAN 地址曾停在 Expo Go `Opening project...`，
+      localhost 模式可避开该网络路径问题。
   - [ ] 验证首次进入、每日申报、首页、事项、我的、触发设置、备份入口。
     - 当前脚本化验证停在欢迎页截图；后续需要人工点按或安装移动端自动化工具继续。
   - [ ] 如发现问题，记录到 `.bugs/*.md`。

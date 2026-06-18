@@ -35,11 +35,15 @@ test('renders the calm daily-safe home summary without next-check-in copy', () =
     />
   );
 
-  expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
-  expect(screen.getByText(zhCN['home.dailyStatus.completed'])).toBeTruthy();
+  expect(screen.getByText(zhCN['home.statusLabel'])).toBeTruthy();
+  expect(
+    screen.getAllByText(zhCN['home.dailyStatus.completed']).length
+  ).toBeGreaterThan(0);
   expect(screen.getByText(zhCN['home.offlineLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.onlineLabel'])).toBeTruthy();
-  expect(screen.getAllByText('3')).toHaveLength(2);
+  expect(
+    screen.getByText(zhCN['home.quick.itemsRecorded'].replace('{count}', '3'))
+  ).toBeTruthy();
   expect(screen.queryByText('Legacy same-day check label')).toBeNull();
   expect(screen.queryByText('Legacy next check label')).toBeNull();
 });
@@ -128,11 +132,15 @@ test('renders advisory local readiness summary and actions from props', () => {
 test('home route reads the seeded summary from the store', async () => {
   render(<HomeRoute />);
 
-  expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
-  expect(screen.getByText(zhCN['home.dailyStatus.pending'])).toBeTruthy();
+  expect(screen.getByText(zhCN['home.statusLabel'])).toBeTruthy();
+  expect(
+    screen.getAllByText(zhCN['home.dailyStatus.pending']).length
+  ).toBeGreaterThan(0);
   expect(screen.getByText(zhCN['home.offlineLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['home.onlineLabel'])).toBeTruthy();
-  expect(screen.getAllByText('3')).toHaveLength(2);
+  expect(
+    screen.getByText(zhCN['home.quick.itemsRecorded'].replace('{count}', '3'))
+  ).toBeTruthy();
 
   await waitFor(() => {
     expect(screen.getByText(zhCN['home.readiness.heading'])).toBeTruthy();
@@ -184,7 +192,6 @@ test('home route renders readiness from local trust data and maps actions', asyn
 
   expect(screen.getByText('1 项重要事项')).toBeTruthy();
   expect(screen.getByText('1 位协助人')).toBeTruthy();
-  expect(screen.getByText('1 项已关联 / 0 项待确认')).toBeTruthy();
 
   fireEvent.press(screen.getByText('查看摘要'));
 

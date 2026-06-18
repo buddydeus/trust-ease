@@ -15,7 +15,9 @@ export interface IAppScreenProps extends ViewProps {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    padding: 22
+    paddingHorizontal: 18,
+    paddingBottom: 24,
+    paddingTop: 26
   },
   safeArea: {
     flex: 1,

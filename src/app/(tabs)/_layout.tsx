@@ -39,7 +39,7 @@ interface ITabIconProps {
  */
 const TabIcon = memo<ITabIconProps>(({ name, focused }) => {
   const theme = useTheme();
-  const stroke = focused ? theme.color.foreground : theme.color.muted;
+  const stroke = focused ? theme.color.accent : theme.color.muted;
   const fill = focused ? theme.color.accentSoft : theme.color.card;
 
   if (name === 'home') {
@@ -98,7 +98,7 @@ const TabsLayout = memo<ITabsLayoutProps>(() => {
   const screenOptions = useMemo(
     () => ({
       headerShown: false,
-      tabBarActiveTintColor: theme.color.foreground,
+      tabBarActiveTintColor: theme.color.accent,
       tabBarInactiveTintColor: theme.color.muted,
       tabBarLabelStyle,
       tabBarIconStyle: {

@@ -6,7 +6,7 @@ import { AppCard, AppText } from '../../components';
 import { CardTitleText } from '../../theme';
 
 export const TypeSectionCard = styled(AppCard)`
-  margin-top: 18px;
+  margin-top: 14px;
 `;
 
 export const TypeChoiceRow = styled(View)`
@@ -47,13 +47,16 @@ export const FormTextInput = styled(TextInput)`
   min-height: 44px;
   margin-top: 10px;
   border-radius: ${p => p.theme.radius.card}px;
-  border: 1px solid ${p => p.theme.color.border};
+  border-width: 0;
+  background-color: #f4f8f6;
   color: ${p => p.theme.color.foreground};
-  padding: 10px 12px;
+  padding: 12px;
 `;
 
 export const SummaryTextInput = styled(FormTextInput)`
-  min-height: 76px;
+  min-height: 98px;
+  padding-top: 12px;
+  text-align-vertical: top;
 `;
 
 export const ValidationText = styled(AppText)`
@@ -66,7 +69,7 @@ export const SaveButton = styled(Pressable)`
   align-items: center;
   justify-content: center;
   margin-top: 18px;
-  border-radius: ${p => p.theme.radius.pill}px;
+  border-radius: 16px;
   background-color: ${p => p.theme.color.accent};
 `;
 

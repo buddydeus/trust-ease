@@ -4,19 +4,14 @@
 import { memo } from 'react';
 import { View } from 'react-native';
 
-import { CardTitleText } from '../../theme';
-
 import {
-  BookletBack,
-  BookletFront,
-  BookletMid,
-  BookletStack,
-  BookletRow,
   BrandHero,
   EyebrowMuted,
-  ListUnderline,
-  RibbonChip,
-  RibbonChipTitle,
+  LogoMark,
+  AssuranceGroup,
+  AssuranceRow,
+  AssuranceText,
+  AssuranceMetaText,
   WelcomeAppScreen,
   WelcomeBody,
   WelcomeCtaLabel,
@@ -45,6 +40,9 @@ export interface IWelcomeScreenCopy {
   bookletLine1: string;
   bookletLine2: string;
   bookletLine3: string;
+  assuranceMeta1?: string;
+  assuranceMeta2?: string;
+  assuranceMeta3?: string;
 }
 
 /**
@@ -70,29 +68,28 @@ export const WelcomeScreen = memo<IWelcomeScreenProps>(({ copy, onStart }) => (
       <EyebrowMuted>{copy.eyebrow}</EyebrowMuted>
     </View>
 
-    <BookletStack>
-      {/* 用代码复现层叠「安心手册」视觉母题，页面仍可感知皮肤配置。 */}
-      <BookletBack />
-      <BookletMid />
-      <BookletFront>
-        <RibbonChip>
-          <RibbonChipTitle>{copy.bookletRibbon}</RibbonChipTitle>
-        </RibbonChip>
-        {[copy.bookletLine1, copy.bookletLine2, copy.bookletLine3].map(
-          (label, index) => (
-            <BookletRow key={label} $first={index === 0}>
-              <CardTitleText>{label}</CardTitleText>
-              <ListUnderline $width={index === 1 ? 90 : 118} />
-            </BookletRow>
-          )
-        )}
-      </BookletFront>
-    </BookletStack>
-
     <WelcomeFooterBlock>
+      <LogoMark>{copy.bookletRibbon}</LogoMark>
       <WelcomeTitle>{copy.title}</WelcomeTitle>
       <WelcomeBody>{copy.body}</WelcomeBody>
     </WelcomeFooterBlock>
+
+    <AssuranceGroup>
+      {[copy.bookletLine1, copy.bookletLine2, copy.bookletLine3].map(
+        (label, index) => (
+          <AssuranceRow key={label}>
+            <AssuranceText>{label}</AssuranceText>
+            <AssuranceMetaText>
+              {
+                [copy.assuranceMeta1, copy.assuranceMeta2, copy.assuranceMeta3][
+                  index
+                ]
+              }
+            </AssuranceMetaText>
+          </AssuranceRow>
+        )
+      )}
+    </AssuranceGroup>
 
     <WelcomePrimaryCta accessibilityRole="button" onPress={onStart}>
       <WelcomeCtaLabel>{copy.primaryButton}</WelcomeCtaLabel>

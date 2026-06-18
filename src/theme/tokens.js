@@ -8,23 +8,23 @@ module.exports = {
   color: {
     page: '#F6FAF8',
     card: '#FFFFFF',
-    border: '#D8E7E2',
-    muted: '#667B76',
-    foreground: '#173B37',
-    accent: '#0A6B63',
-    accentSoft: '#EAF4F1',
-    offlineRibbon: '#2F8A67',
-    onlineRibbon: '#9A6A2D',
-    pillLabel: '#0A6B63',
-    hint: '#667B76'
+    border: '#D7E5DF',
+    muted: '#6F7E7B',
+    foreground: '#213934',
+    accent: '#4F907C',
+    accentSoft: '#EEF6F2',
+    offlineRibbon: '#4F907C',
+    onlineRibbon: '#A56A21',
+    pillLabel: '#3E7666',
+    hint: '#6F7E7B'
   },
   radius: {
-    screen: 28,
-    card: 8,
+    screen: 36,
+    card: 20,
     pill: 999
   },
   fontSize: {
-    title: 23,
+    title: 26,
     section: 15,
     body: 15,
     caption: 12

@@ -4,7 +4,6 @@
  */
 import { memo } from 'react';
 
-import { AppScreen } from '../../components';
 import { type HomeSummary } from '../../constants';
 import { useI18n } from '../../i18n';
 import type {
@@ -13,29 +12,32 @@ import type {
   LocalReadinessSectionStatus,
   LocalReadinessStatus
 } from '../../store/trust';
-import { CaptionMutedText, SectionHeading, StatValueAccent } from '../../theme';
 
 import {
-  HomeDailyBanner,
-  HomeDailyDot,
+  HomeAppScreen,
+  HomeHeaderBody,
+  HomeHeaderKicker,
+  HomeHeaderTitle,
+  HomeNextBody,
+  HomeNextCard,
+  HomeNextLabel,
+  HomeNextTitle,
+  HomePrimaryButton,
+  HomePrimaryButtonText,
+  HomeQuickGroup,
+  HomeQuickIcon,
+  HomeQuickMeta,
+  HomeQuickRow,
+  HomeQuickText,
+  HomeQuickTitle,
+  HomeSectionCaption,
+  HomeStatusCard,
+  HomeStatusCta,
+  HomeStatusCtaText,
+  HomeStatusLabel,
   HomeDailyMetaText,
   HomeDailyStatusText,
-  HomeIntroCard,
-  HomeIntroBody,
-  HeroHeadline,
-  HomeStatCard,
-  HomeStatRow,
-  ReadinessActionButton,
-  ReadinessActionLabel,
-  ReadinessActionStack,
-  ReadinessCard,
-  ReadinessCountText,
-  ReadinessNoticeText,
-  ReadinessSectionGrid,
-  ReadinessSectionLabel,
-  ReadinessSectionRow,
-  ReadinessSectionState,
-  ReadinessStatusText
+  HomeChevron
 } from './home.styled';
 
 /**
@@ -62,6 +64,8 @@ interface HomeScreenCopy {
   dailyStatusLastReport: string;
   /** 无最近申报记录时的文案。 */
   dailyStatusNoRecord: string;
+  /** 查看今日申报按钮。 */
+  dailyStatusViewAction: string;
 }
 
 interface IHomeReadinessCopy {
@@ -125,7 +129,6 @@ const formatReportTime = (
 export const HomeScreen = memo<IHomeScreenProps>(
   ({ summary, copy, readiness, readinessCopy, onReadinessAction }) => {
     const { getMessage } = useI18n();
-    const sectionKeys = ['items', 'helpers', 'assignments', 'trigger'] as const;
     const resolvedCopy = {
       statusLabel: copy?.statusLabel || getMessage('home.statusLabel'),
       heroTitle: copy?.heroTitle || getMessage('home.heroTitle'),
@@ -141,91 +144,136 @@ export const HomeScreen = memo<IHomeScreenProps>(
         copy?.dailyStatusLastReport ||
         getMessage('home.dailyStatus.lastReport'),
       dailyStatusNoRecord:
-        copy?.dailyStatusNoRecord || getMessage('home.dailyStatus.noRecord')
+        copy?.dailyStatusNoRecord || getMessage('home.dailyStatus.noRecord'),
+      dailyStatusViewAction:
+        copy?.dailyStatusViewAction || getMessage('home.dailyStatus.viewAction')
     };
     const dailyStatusText = summary.isReportedToday
       ? resolvedCopy.dailyStatusCompleted
       : resolvedCopy.dailyStatusPending;
+    const firstAction = readiness?.nextActions[0]?.id;
+    const firstActionLabel = firstAction
+      ? readinessCopy?.actionLabels[firstAction]
+      : void 0;
+    const readinessStatus =
+      readiness && readinessCopy
+        ? readinessCopy.statusLabels[readiness.status]
+        : resolvedCopy.heroTitle;
+    const itemCount =
+      readiness?.counts.activeItemCount ?? summary.offlineItemCount;
+    const helperCount = readiness?.counts.activeHelperCount ?? 0;
+    const triggerStatus =
+      readiness && readinessCopy
+        ? readinessCopy.sectionStatusLabels[readiness.sections.trigger.status]
+        : resolvedCopy.dailyStatusCompleted;
+    const quickItemTitle =
+      readiness && readinessCopy
+        ? readinessCopy.sectionLabels.items
+        : resolvedCopy.offlineLabel;
+    const quickHelperTitle =
+      readiness && readinessCopy
+        ? readinessCopy.sectionLabels.helpers
+        : resolvedCopy.onlineLabel;
+    const quickTriggerTitle =
+      readiness && readinessCopy
+        ? readinessCopy.sectionLabels.trigger
+        : getMessage('home.readiness.section.trigger');
+    const quickItemMeta =
+      readiness && readinessCopy
+        ? readinessCopy.countLabels.items
+        : getMessage('home.quick.itemsRecorded', {
+            fallback: '{count} items recorded'
+          }).replace('{count}', String(itemCount));
+    const quickHelperMeta =
+      readiness && readinessCopy
+        ? readinessCopy.countLabels.helpers
+        : helperCount > 0
+          ? getMessage('home.quick.helpersAdded', {
+              fallback: '{count} helpers added'
+            }).replace('{count}', String(helperCount))
+          : getMessage('home.quick.helpersMissing', {
+              fallback: 'Not completed yet'
+            });
 
     return (
-      <AppScreen>
-        <HomeDailyBanner>
-          <HomeDailyDot reported={summary.isReportedToday} />
+      <HomeAppScreen>
+        <HomeHeaderKicker>{resolvedCopy.statusLabel}</HomeHeaderKicker>
+        <HomeHeaderTitle>{dailyStatusText}</HomeHeaderTitle>
+        <HomeHeaderBody>{resolvedCopy.heroBody}</HomeHeaderBody>
+
+        <HomeStatusCard>
+          <HomeStatusLabel>
+            {resolvedCopy.dailyStatusLastReport}
+          </HomeStatusLabel>
           <HomeDailyStatusText>{dailyStatusText}</HomeDailyStatusText>
           <HomeDailyMetaText>
-            {resolvedCopy.dailyStatusLastReport}
-            {' · '}
             {formatReportTime(
               summary.lastReportedAt,
               resolvedCopy.dailyStatusNoRecord
             )}
           </HomeDailyMetaText>
-        </HomeDailyBanner>
-        <HomeIntroCard>
-          <CaptionMutedText>{resolvedCopy.statusLabel}</CaptionMutedText>
-          <HeroHeadline>{resolvedCopy.heroTitle}</HeroHeadline>
-          <HomeIntroBody>{resolvedCopy.heroBody}</HomeIntroBody>
-        </HomeIntroCard>
-        <HomeStatRow>
-          <HomeStatCard>
-            <SectionHeading>{resolvedCopy.offlineLabel}</SectionHeading>
-            <StatValueAccent>{summary.offlineItemCount}</StatValueAccent>
-          </HomeStatCard>
-          <HomeStatCard>
-            <SectionHeading>{resolvedCopy.onlineLabel}</SectionHeading>
-            <StatValueAccent>{summary.onlineItemCount}</StatValueAccent>
-          </HomeStatCard>
-        </HomeStatRow>
+          <HomeStatusCta accessibilityRole="button">
+            <HomeStatusCtaText>
+              {resolvedCopy.dailyStatusViewAction}
+            </HomeStatusCtaText>
+          </HomeStatusCta>
+        </HomeStatusCard>
+
         {readiness && readinessCopy ? (
-          <ReadinessCard>
-            <CaptionMutedText>{readinessCopy.heading}</CaptionMutedText>
-            <ReadinessStatusText>
-              {readinessCopy.statusLabels[readiness.status]}
-            </ReadinessStatusText>
-            <ReadinessSectionGrid>
-              {sectionKeys.map(sectionKey => (
-                <ReadinessSectionRow key={sectionKey}>
-                  <ReadinessSectionLabel>
-                    {readinessCopy.sectionLabels[sectionKey]}
-                  </ReadinessSectionLabel>
-                  <ReadinessSectionState>
-                    {
-                      readinessCopy.sectionStatusLabels[
-                        readiness.sections[sectionKey].status
-                      ]
-                    }
-                  </ReadinessSectionState>
-                </ReadinessSectionRow>
-              ))}
-            </ReadinessSectionGrid>
-            <ReadinessCountText>
-              {readinessCopy.countLabels.items}
-            </ReadinessCountText>
-            <ReadinessCountText>
-              {readinessCopy.countLabels.helpers}
-            </ReadinessCountText>
-            <ReadinessCountText>
-              {readinessCopy.countLabels.coverage}
-            </ReadinessCountText>
-            <ReadinessNoticeText>
-              {readinessCopy.localOnlyNotice}
-            </ReadinessNoticeText>
-            <ReadinessActionStack>
-              {readiness.nextActions.map(action => (
-                <ReadinessActionButton
-                  accessibilityRole="button"
-                  key={action.id}
-                  onPress={() => onReadinessAction?.(action.id)}
-                >
-                  <ReadinessActionLabel>
-                    {readinessCopy.actionLabels[action.id]}
-                  </ReadinessActionLabel>
-                </ReadinessActionButton>
-              ))}
-            </ReadinessActionStack>
-          </ReadinessCard>
+          <HomeNextCard>
+            <HomeNextLabel>{readinessCopy.heading}</HomeNextLabel>
+            <HomeNextTitle>{readinessStatus}</HomeNextTitle>
+            <HomeNextBody>{readinessCopy.localOnlyNotice}</HomeNextBody>
+            {firstAction && firstActionLabel ? (
+              <HomePrimaryButton
+                accessibilityRole="button"
+                onPress={() => onReadinessAction?.(firstAction)}
+              >
+                <HomePrimaryButtonText>
+                  {firstActionLabel}
+                </HomePrimaryButtonText>
+              </HomePrimaryButton>
+            ) : null}
+          </HomeNextCard>
         ) : null}
-      </AppScreen>
+
+        <HomeQuickGroup>
+          <HomeSectionCaption>{resolvedCopy.streakLabel}</HomeSectionCaption>
+          <HomeQuickRow
+            accessibilityRole="button"
+            onPress={() => onReadinessAction?.('review-item-assignments')}
+          >
+            <HomeQuickIcon>事</HomeQuickIcon>
+            <HomeQuickText>
+              <HomeQuickTitle>{quickItemTitle}</HomeQuickTitle>
+              <HomeQuickMeta>{quickItemMeta}</HomeQuickMeta>
+            </HomeQuickText>
+            <HomeChevron>›</HomeChevron>
+          </HomeQuickRow>
+          <HomeQuickRow
+            accessibilityRole="button"
+            onPress={() => onReadinessAction?.('create-helper')}
+          >
+            <HomeQuickIcon>人</HomeQuickIcon>
+            <HomeQuickText>
+              <HomeQuickTitle>{quickHelperTitle}</HomeQuickTitle>
+              <HomeQuickMeta>{quickHelperMeta}</HomeQuickMeta>
+            </HomeQuickText>
+            <HomeChevron>›</HomeChevron>
+          </HomeQuickRow>
+          <HomeQuickRow
+            accessibilityRole="button"
+            onPress={() => onReadinessAction?.('review-trigger-rehearsal')}
+          >
+            <HomeQuickIcon>态</HomeQuickIcon>
+            <HomeQuickText>
+              <HomeQuickTitle>{quickTriggerTitle}</HomeQuickTitle>
+              <HomeQuickMeta>{triggerStatus}</HomeQuickMeta>
+            </HomeQuickText>
+            <HomeChevron>›</HomeChevron>
+          </HomeQuickRow>
+        </HomeQuickGroup>
+      </HomeAppScreen>
     );
   }
 );
