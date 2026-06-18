@@ -5,6 +5,7 @@ let mockSearchParams: Record<string, string> = {};
 
 jest.mock('expo-router', () => ({
   router: {
+    back: jest.fn(),
     push: jest.fn(),
     replace: jest.fn()
   },
@@ -73,6 +74,7 @@ const activeHelpers = [
 beforeEach(async () => {
   mockSearchParams = {};
   await AsyncStorage.clear();
+  (router.back as jest.Mock).mockClear();
   (router.push as jest.Mock).mockClear();
   (router.replace as jest.Mock).mockClear();
 });
@@ -89,6 +91,16 @@ test('renders helper empty state and create action', () => {
     screen.getByText('这里只是本地记录，不会自动发送消息或产生法律授权。')
   ).toBeTruthy();
   expect(screen.getByRole('button', { name: '新增协助人' })).toBeTruthy();
+});
+
+test('helper list exposes a back action when provided', () => {
+  const onBack = jest.fn();
+
+  render(<HelpersScreen copy={listCopy} helpers={[]} onBack={onBack} />);
+
+  fireEvent.press(screen.getByRole('button', { name: '返回' }));
+
+  expect(onBack).toHaveBeenCalledTimes(1);
 });
 
 test('renders active helpers and calls edit/archive callbacks', () => {
@@ -219,6 +231,7 @@ test('helpers route loads active helpers and opens the create flow', async () =>
 
   expect(await screen.findByText('林杉')).toBeTruthy();
   expect(screen.queryByText('旧联系人')).toBeNull();
+  expect(screen.getByRole('button', { name: '返回' })).toBeTruthy();
 
   fireEvent.press(screen.getByRole('button', { name: '新增联系人' }));
 
@@ -227,6 +240,8 @@ test('helpers route loads active helpers and opens the create flow', async () =>
 
 test('new helper route persists a local helper and returns to helper list', async () => {
   render(<NewHelperRoute />);
+
+  expect(screen.getByRole('button', { name: '返回' })).toBeTruthy();
 
   fireEvent.changeText(screen.getByPlaceholderText('例如：林杉'), '林杉');
   fireEvent.changeText(screen.getByPlaceholderText('例如：朋友、家人'), '朋友');

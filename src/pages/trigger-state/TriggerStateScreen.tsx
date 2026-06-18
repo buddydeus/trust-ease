@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { AppScreen } from '../../components';
+import { AppScreen, BackButton } from '../../components';
 import { useI18n } from '../../i18n';
 import { CaptionMutedText, CardTitleText, ScreenTitleText } from '../../theme';
 
@@ -69,6 +69,7 @@ export interface ITriggerStateScreenProps {
   onPause?: () => void;
   onResume?: () => void;
   onResetSimulation?: () => void;
+  onBack?: () => void;
   copy?: ITriggerStateScreenCopy;
 }
 
@@ -111,6 +112,7 @@ export const TriggerStateScreen = memo<ITriggerStateScreenProps>(
     onPause,
     onResume,
     onResetSimulation,
+    onBack,
     copy
   } = {}) => {
     const { getMessage } = useI18n();
@@ -119,6 +121,7 @@ export const TriggerStateScreen = memo<ITriggerStateScreenProps>(
 
     return (
       <AppScreen>
+        {onBack ? <BackButton onPress={onBack} /> : null}
         <ScreenTitleText>
           {copy?.title || getMessage('triggerState.title')}
         </ScreenTitleText>

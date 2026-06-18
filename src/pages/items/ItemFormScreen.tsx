@@ -3,7 +3,7 @@
  */
 import { memo, useEffect, useState } from 'react';
 
-import { AppScreen } from '../../components';
+import { AppScreen, BackButton } from '../../components';
 import { useI18n } from '../../i18n';
 import {
   CardTitleText,
@@ -85,6 +85,8 @@ export interface IItemFormScreenProps {
   helperChoices?: IItemFormHelperChoice[];
   /** 提交已验证的表单值。 */
   onSubmit?: (values: IItemFormValues) => void;
+  /** 点击返回时调用；二级路由传入。 */
+  onBack?: () => void;
   /** 可选本地化文案；省略时使用内置默认。 */
   copy?: IItemFormScreenCopy;
 }
@@ -96,7 +98,7 @@ export interface IItemFormScreenProps {
  * @returns 已 memo 的表单页元素。
  */
 export const ItemFormScreen = memo<IItemFormScreenProps>(
-  ({ initialValues, helperChoices = [], onSubmit, copy } = {}) => {
+  ({ initialValues, helperChoices = [], onSubmit, onBack, copy } = {}) => {
     const { getMessage } = useI18n();
     const [title, setTitle] = useState(initialValues?.title ?? '');
     const [kind, setKind] = useState<IItemFormValues['kind']>(
@@ -146,6 +148,7 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
 
     return (
       <AppScreen>
+        {onBack ? <BackButton onPress={onBack} /> : null}
         <ScreenTitleText>
           {copy?.title || getMessage('itemForm.title')}
         </ScreenTitleText>
@@ -172,7 +175,9 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
           </MetaMutedText>
           <TypeChoiceRow>
             <OfflineKindCard
+              accessibilityState={{ selected: kind === 'offline' }}
               accessibilityRole="button"
+              selected={kind === 'offline'}
               onPress={() => setKind('offline')}
             >
               <CardTitleText>
@@ -183,7 +188,9 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
               </MetaMutedText>
             </OfflineKindCard>
             <OnlineKindCard
+              accessibilityState={{ selected: kind === 'online' }}
               accessibilityRole="button"
+              selected={kind === 'online'}
               onPress={() => setKind('online')}
             >
               <CardTitleText>

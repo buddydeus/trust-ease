@@ -91,6 +91,7 @@ const NewItemRoute = memo<INewItemRouteProps>(() => {
     <ItemFormScreen
       copy={copy}
       helperChoices={helperChoices}
+      onBack={() => router.back()}
       onSubmit={handleSubmit}
     />
   );

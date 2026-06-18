@@ -1,3 +1,5 @@
+import { router } from 'expo-router';
+
 import { memo, useEffect, useState } from 'react';
 
 import { useI18n } from '../../i18n';
@@ -111,6 +113,7 @@ const TriggerStateRoute = memo<ITriggerStateRouteProps>(() => {
     <TriggerStateScreen
       copy={copy}
       viewModel={snapshot ? createViewModel(snapshot) : void 0}
+      onBack={() => router.back()}
       onPause={() => applySnapshotMutation(pauseTriggerPolicy)}
       onResetSimulation={() => applySnapshotMutation(resetTriggerSimulation)}
       onResume={() => applySnapshotMutation(resumeTriggerPolicy)}

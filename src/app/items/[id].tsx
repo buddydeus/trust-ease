@@ -114,6 +114,7 @@ const EditItemRoute = memo<IEditItemRouteProps>(() => {
       copy={copy}
       helperChoices={helperChoices}
       initialValues={initialValues}
+      onBack={() => router.back()}
       onSubmit={handleSubmit}
     />
   );

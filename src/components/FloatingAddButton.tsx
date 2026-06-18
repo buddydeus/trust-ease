@@ -1,7 +1,8 @@
 import { memo } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { useI18n } from '../i18n';
+import { appTheme } from '../theme';
 
 import { AppText } from './AppText';
 
@@ -14,6 +15,23 @@ export interface IFloatingAddButtonProps {
   /** 纯图标按钮的无障碍名称。 */
   label?: string;
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: appTheme.color.accent
+  },
+  label: {
+    color: '#FFFFFF',
+    fontSize: 24,
+    lineHeight: 28,
+    fontWeight: '700'
+  }
+});
 
 /**
  * 事项页标题栏使用的圆形「添加」操作按钮。
@@ -29,10 +47,10 @@ export const FloatingAddButton = memo<IFloatingAddButtonProps>(
       <Pressable
         accessibilityLabel={label || getMessage('items.createLabel')}
         accessibilityRole="button"
-        className="h-[44px] w-[44px] items-center justify-center rounded-full bg-accent"
+        style={styles.button}
         onPress={onPress}
       >
-        <AppText className="text-[20px] leading-[20px] text-white">+</AppText>
+        <AppText style={styles.label}>+</AppText>
       </Pressable>
     );
   }

@@ -2,6 +2,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { fireEvent, render, screen, waitFor } from '../../support/render-app';
 
+jest.mock('expo-router', () => ({
+  router: {
+    back: jest.fn()
+  }
+}));
+
+import { router } from 'expo-router';
+
 import TriggerStateRoute from '../../../src/app/my/trigger-state';
 import zhCN from '../../../src/locals/zh-CN.json';
 import {
@@ -26,6 +34,7 @@ const baseViewModel: ITriggerStateScreenViewModel = {
 
 beforeEach(async () => {
   await AsyncStorage.clear();
+  (router.back as jest.Mock).mockClear();
 });
 
 test('renders local trigger policy status without immediate-execution copy', () => {
@@ -71,6 +80,18 @@ test('renders rehearsal, pause, resume, and reset actions', () => {
   expect(onPause).toHaveBeenCalledTimes(1);
   expect(onResume).toHaveBeenCalledTimes(1);
   expect(onResetSimulation).toHaveBeenCalledTimes(1);
+});
+
+test('trigger state screen exposes a back action when provided', () => {
+  const onBack = jest.fn();
+
+  render(<TriggerStateScreen onBack={onBack} viewModel={baseViewModel} />);
+
+  fireEvent.press(
+    screen.getByRole('button', { name: zhCN['navigation.back'] })
+  );
+
+  expect(onBack).toHaveBeenCalledTimes(1);
 });
 
 test('renders every local simulation status with a next action', () => {

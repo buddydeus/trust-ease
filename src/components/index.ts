@@ -7,5 +7,6 @@ export * from './AppPill';
 export * from './AppScreen';
 export * from './AppSwitch';
 export * from './AppText';
+export * from './BackButton';
 export * from './FloatingAddButton';
 export * from './SectionHint';

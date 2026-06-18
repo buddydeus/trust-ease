@@ -35,6 +35,8 @@
   iOS bundle 能在 Expo Go 中成功加载并显示欢迎页。
 - 阶段 5 已完成：已按确认版个人轻量设计正式改造运行界面，完成三语文案同步、
   页面测试、确定性 QA、真实 runtime 截图和 iOS 模拟器首屏加载验证。
+- 阶段 6 已完成：修复确认版 UI 的首轮反馈，二级页面补充返回按钮，事项页新增
+  按钮改为稳定圆形背景，新增事项页线上 / 线下类型选择具备明确选中态。
 - 当前 iOS 手动交互验证仍待继续：本机未开放 macOS 辅助访问，`simctl` 也没有 tap
   能力，因此“点击开始设置后进入每日申报 / 首页”等操作链路需要人工点按或补充
   Maestro / idb / Appium 等移动端自动化工具后继续。
@@ -78,6 +80,11 @@
   - 实现交接：`designs/specs/anxin-personal-lite-redesign-implementation.md`
   - 设计总览：`designs/previews/anxin-personal-lite-redesign-overview.png`
   - 当前实现主色回到确认的淡雅绿色 `#4F907C`，整体保持浅色、克制、个人工具感。
+- 已修复首轮 UI 反馈：
+  - `items/new`、`items/[id]`、`helpers`、`helpers/new`、`helpers/[id]`、
+    `my/trigger-state` 增加返回按钮。
+  - 事项页顶部 `+` 使用显式原生样式，确保圆形背景稳定显示。
+  - 新增事项页类型卡片随当前类型切换选中态，线上事项可见、可选、可提交。
 
 ## 后续需要做的内容
 

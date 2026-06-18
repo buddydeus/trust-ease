@@ -52,6 +52,21 @@ test('renders an empty state when there are no active local items', () => {
   ).toBeTruthy();
 });
 
+test('renders the add action with a stable circular accent background', () => {
+  render(<ItemsScreen items={[]} />);
+
+  expect(
+    screen.getByRole('button', { name: zhCN['items.createLabel'] }).props.style
+  ).toEqual(
+    expect.objectContaining({
+      width: 44,
+      height: 44,
+      borderRadius: 22,
+      backgroundColor: '#4F907C'
+    })
+  );
+});
+
 test('renders active local item cards from props', () => {
   render(<ItemsScreen items={activeItems} />);
 

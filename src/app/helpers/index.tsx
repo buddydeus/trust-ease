@@ -91,6 +91,7 @@ const HelpersRoute = memo<IHelpersRouteProps>(() => {
       copy={copy}
       helpers={helpers}
       onArchiveHelper={handleArchiveHelper}
+      onBack={() => router.back()}
       onCreateHelper={handleCreateHelper}
       onEditHelper={handleEditHelper}
     />

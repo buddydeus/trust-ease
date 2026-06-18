@@ -5,6 +5,7 @@ let mockSearchParams: Record<string, string> = {};
 
 jest.mock('expo-router', () => ({
   router: {
+    back: jest.fn(),
     push: jest.fn(),
     replace: jest.fn()
   },
@@ -27,6 +28,7 @@ beforeEach(async () => {
   mockSearchParams = {};
   await AsyncStorage.clear();
   (router.push as jest.Mock).mockClear();
+  (router.back as jest.Mock).mockClear();
   (router.replace as jest.Mock).mockClear();
 });
 
@@ -51,6 +53,19 @@ test('new item route renders the guided creation screen shell', async () => {
   });
   expect(screen.getByText(zhCN['itemForm.titleLabel'])).toBeTruthy();
   expect(screen.getByText(zhCN['itemForm.summaryLabel'])).toBeTruthy();
+  expect(
+    screen.getByRole('button', { name: zhCN['navigation.back'] })
+  ).toBeTruthy();
+});
+
+test('new item route exposes a back action', async () => {
+  render(<NewItemRoute />);
+
+  fireEvent.press(
+    await screen.findByRole('button', { name: zhCN['navigation.back'] })
+  );
+
+  expect(router.back).toHaveBeenCalledTimes(1);
 });
 
 test('new item route saves a local item and returns to items tab', async () => {
@@ -129,6 +144,11 @@ test('submits a validated item payload', () => {
     '  把猫交给林杉照看  '
   );
   fireEvent.press(screen.getByText(zhCN['itemForm.onlineTitle']));
+  expect(
+    screen.getByRole('button', {
+      name: new RegExp(zhCN['itemForm.onlineTitle'])
+    }).props.accessibilityState
+  ).toEqual({ selected: true });
   fireEvent.press(
     screen.getByRole('button', { name: zhCN['itemForm.saveAction'] })
   );

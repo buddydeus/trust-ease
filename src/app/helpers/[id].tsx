@@ -101,6 +101,7 @@ const EditHelperRoute = memo<IEditHelperRouteProps>(() => {
     <HelperFormScreen
       copy={copy}
       initialValues={initialValues}
+      onBack={() => router.back()}
       onSubmit={handleSubmit}
     />
   );

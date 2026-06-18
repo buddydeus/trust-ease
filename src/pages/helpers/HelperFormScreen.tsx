@@ -3,7 +3,7 @@
  */
 import { memo, useEffect, useState } from 'react';
 
-import { AppScreen } from '../../components';
+import { AppScreen, BackButton } from '../../components';
 import { useI18n } from '../../i18n';
 import {
   MetaMutedText,
@@ -46,11 +46,12 @@ export interface IHelperFormScreenCopy {
 export interface IHelperFormScreenProps {
   initialValues?: IHelperFormValues;
   onSubmit?: (values: IHelperFormValues) => void;
+  onBack?: () => void;
   copy?: IHelperFormScreenCopy;
 }
 
 export const HelperFormScreen = memo<IHelperFormScreenProps>(
-  ({ initialValues, onSubmit, copy } = {}) => {
+  ({ initialValues, onSubmit, onBack, copy } = {}) => {
     const { getMessage } = useI18n();
     const [displayName, setDisplayName] = useState(
       initialValues?.displayName ?? ''
@@ -104,6 +105,7 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
 
     return (
       <AppScreen>
+        {onBack ? <BackButton onPress={onBack} /> : null}
         <ScreenTitleText>
           {copy?.title || getMessage('helpers.formTitle')}
         </ScreenTitleText>

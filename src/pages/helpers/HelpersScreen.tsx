@@ -7,6 +7,7 @@ import {
   AppCard,
   AppScreen,
   AppText,
+  BackButton,
   FloatingAddButton
 } from '../../components';
 import { useI18n } from '../../i18n';
@@ -44,6 +45,7 @@ export interface IHelpersScreenProps {
   onCreateHelper?: () => void;
   onEditHelper?: (helperId: string) => void;
   onArchiveHelper?: (helperId: string) => void;
+  onBack?: () => void;
   copy?: IHelpersScreenCopy;
 }
 
@@ -53,12 +55,14 @@ export const HelpersScreen = memo<IHelpersScreenProps>(
     onCreateHelper,
     onEditHelper,
     onArchiveHelper,
+    onBack,
     copy
   } = {}) => {
     const { getMessage } = useI18n();
 
     return (
       <AppScreen>
+        {onBack ? <BackButton onPress={onBack} /> : null}
         <HelpersTitleRow>
           <ScreenTitleText>
             {copy?.title || getMessage('helpers.title')}

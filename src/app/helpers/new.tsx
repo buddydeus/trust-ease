@@ -51,7 +51,13 @@ const NewHelperRoute = memo<INewHelperRouteProps>(() => {
     router.replace('/helpers' as never);
   };
 
-  return <HelperFormScreen copy={copy} onSubmit={handleSubmit} />;
+  return (
+    <HelperFormScreen
+      copy={copy}
+      onBack={() => router.back()}
+      onSubmit={handleSubmit}
+    />
+  );
 });
 
 NewHelperRoute.displayName = 'NewHelperRoute';

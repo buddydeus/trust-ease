@@ -15,21 +15,17 @@ export const TypeChoiceRow = styled(View)`
   margin-top: 14px;
 `;
 
-export const OfflineKindCard = styled(Pressable)`
+export const OfflineKindCard = styled(Pressable)<{ selected: boolean }>`
   flex: 1;
   border-radius: ${p => p.theme.radius.card}px;
-  border: 1px solid ${p => p.theme.color.border};
-  background-color: ${p => p.theme.color.accentSoft};
+  border: 1px solid
+    ${p => (p.selected ? p.theme.color.accent : p.theme.color.border)};
+  background-color: ${p =>
+    p.selected ? p.theme.color.accentSoft : p.theme.color.card};
   padding: 18px;
 `;
 
-export const OnlineKindCard = styled(Pressable)`
-  flex: 1;
-  border-radius: ${p => p.theme.radius.card}px;
-  border: 1px solid ${p => p.theme.color.border};
-  background-color: ${p => p.theme.color.card};
-  padding: 18px;
-`;
+export const OnlineKindCard = styled(OfflineKindCard)``;
 
 export const WizardStepCard = styled(AppCard)`
   margin-top: 14px;
