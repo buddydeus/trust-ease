@@ -41,6 +41,8 @@ pnpm --config.registry=https://registry.npmmirror.com install
 ```bash
 pnpm install
 pnpm start
+pnpm ios:sim
+pnpm ios:sim:clear
 pnpm test
 pnpm check:type
 pnpm check:local
@@ -81,6 +83,23 @@ pnpm skin:qa:remote
 
 iOS 模拟器验证需要本机 Xcode 已安装可用 iOS Simulator runtime；如果本地
 `SDKROOT` 指向旧 SDK，运行 iOS 命令时先清理该环境变量。
+
+运行 `pnpm ios:sim` 会执行 [scripts/start_ios_simulator_app.js](./scripts/start_ios_simulator_app.js)，
+自动清理当前命令内的旧 `SDKROOT`、使用完整 Xcode developer directory、选择可用的
+iPhone 模拟器、打开 Simulator，并以 `expo start --ios --localhost` 启动 App。
+
+如果 Expo Go 或 Metro 出现缓存旧 bundle 的情况，运行：
+
+```bash
+pnpm ios:sim:clear
+```
+
+也可以指定模拟器：
+
+```bash
+pnpm ios:sim -- --device "iPhone 17"
+IOS_SIMULATOR_UDID=<udid> pnpm ios:sim
+```
 
 ### `pnpm design`
 

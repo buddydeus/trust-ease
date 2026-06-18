@@ -11,6 +11,8 @@
   "scripts": {
     "prepare": "husky",
     "start": "expo start",
+    "ios:sim": "node scripts/start_ios_simulator_app.js",
+    "ios:sim:clear": "node scripts/start_ios_simulator_app.js --clear",
     "build:android": "expo run:android",
     "build:ios": "expo run:ios",
     "test": "jest",

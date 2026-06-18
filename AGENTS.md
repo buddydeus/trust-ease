@@ -43,6 +43,8 @@
 ```bash
 pnpm install
 pnpm start
+pnpm ios:sim
+pnpm ios:sim:clear
 pnpm test
 pnpm check:type
 pnpm check:local
@@ -81,6 +83,12 @@ pnpm fix:all
   仓库默认 registry 是官方 npm registry；如本地网络需要镜像，用
   `pnpm --config.registry=https://registry.npmmirror.com install` 临时覆盖，
   不要把镜像地址写回仓库配置。
+- `pnpm ios:sim` 使用 `scripts/start_ios_simulator_app.js` 一键启动 iOS 模拟器
+  App：脚本会清理当前命令内的旧 `SDKROOT`，使用完整 Xcode developer directory，
+  选择可用 iPhone 模拟器，打开 Simulator，并通过 `expo start --ios --localhost`
+  启动 App。
+- `pnpm ios:sim:clear` 与 `pnpm ios:sim` 相同，但额外传入 `--clear` 清理 Metro
+  缓存，适合 Expo Go 仍显示旧 bundle 时使用。
 
 ## 目录约定
 

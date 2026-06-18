@@ -1,6 +1,6 @@
 # TODO
 
-更新日期：2026-06-18
+更新日期：2026-06-19
 
 本文件用于记录当前交接状态和下一步工作。若本文件与代码、`package.json` 或
 `docs/spec/` 冲突，以当前代码和核心规格文档为准。
@@ -40,6 +40,9 @@
 - 阶段 7 已完成：完成一次全面 QA 回归，修复与当前 UI 不一致的路由 / i18n 测试断言，
   更新内置皮肤 stale `packageHash`，并用 iOS 模拟器确认当前 bundle 中二级页返回按钮、
   事项页圆形新增按钮、新增事项页线上 / 线下选择均可见。
+- 阶段 8 已完成：新增一键启动 iOS 模拟器 App 脚本，提供 `pnpm ios:sim` 与
+  `pnpm ios:sim:clear`，用于自动清理旧 `SDKROOT`、选择 / 启动 iPhone 模拟器并以
+  localhost 模式启动 Expo iOS App。
 - 当前 iOS 完整手动交互验证仍待继续：本机未开放 macOS 辅助访问，`simctl` 也没有
   tap 能力，因此“点击开始设置后进入每日申报 / 首页”等完整点按链路需要人工点按或
   补充 Maestro / idb / Appium 等移动端自动化工具后继续。
@@ -167,6 +170,8 @@
     - 2026-06-18 重新以 `--clear` 启动 Metro，并 terminate / reopen Expo Go 后确认
       当前 iOS bundle 已刷新；截图确认 `items` 页顶部 `+` 为圆形背景，
       `items/new` 页有返回按钮，且线上事项选项可见、可选。
+    - 2026-06-19 已新增 `pnpm ios:sim` / `pnpm ios:sim:clear`，后续可一键完成
+      iOS 模拟器选择、启动和 Expo iOS App 加载；可用 `--device` / `--udid` 指定设备。
   - [ ] 验证首次进入、每日申报、首页、事项、我的、触发设置、备份入口。
     - 当前脚本化验证已覆盖页面加载与深链截图；完整点按链路仍需要人工点按或安装
       移动端自动化工具继续。
