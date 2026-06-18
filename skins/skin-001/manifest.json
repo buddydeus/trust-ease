@@ -4,7 +4,7 @@
   "skinVersion": "1.0.0",
   "minFeatureVersion": "0.0",
   "maxFeatureVersion": "0.1",
-  "packageHash": "builtin:skin-001@1.0.0",
+  "packageHash": "fnv1a:5165e720",
   "assets": [],
   "palette": {
     "pageBg": "#F7FBFA",

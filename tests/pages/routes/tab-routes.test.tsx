@@ -71,7 +71,11 @@ import zhCN from '../../../src/locals/zh-CN.json';
 
 test('tab routes render their redesigned feature screens', async () => {
   render(<HomeRoute />);
-  expect(screen.getByText(zhCN['home.heroTitle'])).toBeTruthy();
+  expect(screen.getByText(zhCN['home.statusLabel'])).toBeTruthy();
+  expect(
+    screen.getAllByText(zhCN['home.dailyStatus.pending']).length
+  ).toBeGreaterThan(0);
+  expect(await screen.findByText(zhCN['home.readiness.heading'])).toBeTruthy();
 
   render(<ItemsRoute />);
   expect(screen.getByText(zhCN['items.title'])).toBeTruthy();
