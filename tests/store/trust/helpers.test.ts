@@ -83,6 +83,12 @@ describe('trusted helper mutation helpers', () => {
       displayName: '周宁',
       relationship: '家人',
       contactMethod: 'phone:13900000000',
+      contactMethods: [
+        {
+          type: 'phone',
+          value: '13900000000'
+        }
+      ],
       notes: '可以协助处理宠物照料',
       status: 'active',
       createdAt: '2026-06-05T09:00:00.000Z',
@@ -132,6 +138,31 @@ describe('trusted helper mutation helpers', () => {
     });
   });
 
+  test('creates a helper with multiple structured contact methods', () => {
+    const snapshot = baseSnapshot();
+
+    const result = createTrustedHelper(snapshot, {
+      id: 'helper-new',
+      now: '2026-06-05T09:00:00.000Z',
+      displayName: '周宁',
+      relationship: '家人',
+      contactMethods: [
+        { type: 'phone', value: '  13900000000  ' },
+        { type: 'email', value: 'zhou@example.com' }
+      ],
+      notes: ''
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.helper).toMatchObject({
+      contactMethod: 'phone:13900000000',
+      contactMethods: [
+        { type: 'phone', value: '13900000000' },
+        { type: 'email', value: 'zhou@example.com' }
+      ]
+    });
+  });
+
   test('updates only the target helper and preserves unrelated data', () => {
     const snapshot = baseSnapshot();
 
@@ -149,6 +180,12 @@ describe('trusted helper mutation helpers', () => {
       displayName: '林杉更新',
       relationship: '挚友',
       contactMethod: 'email:lin@example.com',
+      contactMethods: [
+        {
+          type: 'email',
+          value: 'lin@example.com'
+        }
+      ],
       notes: '先联系此人',
       status: 'active',
       createdAt: '2026-06-05T08:00:00.000Z',

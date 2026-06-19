@@ -31,6 +31,10 @@ export const WizardStepCard = styled(AppCard)`
   margin-top: 14px;
 `;
 
+export const OnlineTemplateCard = styled(AppCard)`
+  margin-top: 14px;
+`;
+
 export const StepCurrentValue = styled(CardTitleText)`
   margin-top: 8px;
 `;
@@ -72,6 +76,18 @@ export const SaveButton = styled(Pressable)`
 export const HelperChoiceList = styled(View)`
   margin-top: 10px;
   gap: 8px;
+`;
+
+export const HelperActionButton = styled(Pressable)`
+  min-height: 38px;
+  align-self: flex-start;
+  justify-content: center;
+  margin-top: 10px;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.color.border};
+  border-radius: 14px;
+  background-color: ${({ theme }) => theme.color.card};
+  padding-horizontal: 12px;
 `;
 
 export const HelperChoiceButton = styled(Pressable)<{ selected: boolean }>`

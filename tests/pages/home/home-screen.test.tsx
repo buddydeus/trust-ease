@@ -145,6 +145,13 @@ test('home route reads the seeded summary from the store', async () => {
   await waitFor(() => {
     expect(screen.getByText(zhCN['home.readiness.heading'])).toBeTruthy();
   });
+
+  fireEvent.press(screen.getByText(zhCN['home.readiness.section.items']));
+  expect(router.push).toHaveBeenCalledWith('/items/new');
+
+  (router.push as jest.Mock).mockClear();
+  fireEvent.press(screen.getByText(zhCN['home.readiness.section.helpers']));
+  expect(router.push).toHaveBeenCalledWith('/helpers/new');
 });
 
 test('home route renders readiness from local trust data and maps actions', async () => {
@@ -193,6 +200,14 @@ test('home route renders readiness from local trust data and maps actions', asyn
   expect(screen.getByText('1 项重要事项')).toBeTruthy();
   expect(screen.getByText('1 位协助人')).toBeTruthy();
 
+  fireEvent.press(screen.getByText(zhCN['home.readiness.section.items']));
+  expect(router.push).toHaveBeenCalledWith('/items');
+
+  (router.push as jest.Mock).mockClear();
+  fireEvent.press(screen.getByText(zhCN['home.readiness.section.helpers']));
+  expect(router.push).toHaveBeenCalledWith('/helpers');
+
+  (router.push as jest.Mock).mockClear();
   fireEvent.press(screen.getByText('查看摘要'));
 
   expect(router.push).toHaveBeenCalledWith('/my/trigger-state');

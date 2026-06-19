@@ -28,7 +28,13 @@ const HelpersRoute = memo<IHelpersRouteProps>(() => {
     emptyBody: getMessage('helpers.emptyBody'),
     localOnlyNotice: getMessage('helpers.localOnlyNotice'),
     editAction: getMessage('helpers.editAction'),
-    archiveAction: getMessage('helpers.archiveAction')
+    archiveAction: getMessage('helpers.archiveAction'),
+    ungroupedRelationship: getMessage('helpers.ungroupedRelationship'),
+    groupCountLabel: getMessage('helpers.groupCountLabel'),
+    contactMethodTypes: {
+      phone: getMessage('helpers.contactType.phone'),
+      email: getMessage('helpers.contactType.email')
+    }
   };
 
   useEffect(() => {
@@ -53,6 +59,7 @@ const HelpersRoute = memo<IHelpersRouteProps>(() => {
             displayName: helper.displayName,
             relationship: helper.relationship,
             contactMethod: helper.contactMethod,
+            contactMethods: helper.contactMethods,
             notes: helper.notes
           }))
         : [],

@@ -44,6 +44,16 @@ const createValidSnapshot = (): ITrustDataSnapshot => ({
       displayName: '林杉',
       relationship: '朋友',
       contactMethod: 'phone:13800000000',
+      contactMethods: [
+        {
+          type: 'phone',
+          value: '13800000000'
+        },
+        {
+          type: 'email',
+          value: 'lin@example.com'
+        }
+      ],
       notes: '优先联系',
       status: 'active',
       createdAt: '2026-06-05T00:00:00.000Z',

@@ -1,4 +1,9 @@
-import type { ITrustedHelper, ITrustDataSnapshot, ITrustItem } from './types';
+import type {
+  ITrustedHelper,
+  ITrustedHelperContactMethod,
+  ITrustDataSnapshot,
+  ITrustItem
+} from './types';
 
 export type TrustedHelperMutationFailureReason =
   | 'display-name-required'
@@ -13,7 +18,8 @@ export type TrustItemHelperAssignmentFailureReason =
 export interface ITrustedHelperInput {
   displayName: string;
   relationship: string;
-  contactMethod: string;
+  contactMethod?: string;
+  contactMethods?: ITrustedHelperContactMethod[];
   notes: string;
 }
 
@@ -55,10 +61,62 @@ export type TrustItemHelperAssignmentResult =
       snapshot: ITrustDataSnapshot;
     };
 
+const splitContactMethodString = (
+  value: string
+): ITrustedHelperContactMethod => {
+  const separatorIndex = value.indexOf(':');
+
+  if (separatorIndex > 0) {
+    return {
+      type: value.slice(0, separatorIndex).trim() || 'phone',
+      value: value.slice(separatorIndex + 1).trim()
+    };
+  }
+
+  return {
+    type: value.includes('@') ? 'email' : 'phone',
+    value
+  };
+};
+
+const trimContactMethodValue = (type: string, value: string): string => {
+  const normalizedType = type.trim() || 'phone';
+  const normalizedValue = value.trim();
+  const separatorIndex = normalizedValue.indexOf(':');
+
+  if (separatorIndex > 0) {
+    const prefix = normalizedValue.slice(0, separatorIndex);
+
+    if (prefix === normalizedType) {
+      return normalizedValue.slice(separatorIndex + 1).trim();
+    }
+  }
+
+  return normalizedValue;
+};
+
+const buildContactMethodString = (
+  method: ITrustedHelperContactMethod
+): string => {
+  const normalizedValue = method.value.trim();
+  const separatorIndex = normalizedValue.indexOf(':');
+
+  if (separatorIndex > 0) {
+    const prefix = normalizedValue.slice(0, separatorIndex);
+
+    if (prefix === method.type) {
+      return normalizedValue;
+    }
+  }
+
+  return `${method.type.trim() || 'phone'}:${normalizedValue}`;
+};
+
 const normalizeHelperInput = ({
   displayName,
   relationship,
   contactMethod,
+  contactMethods,
   notes
 }: ITrustedHelperInput):
   | {
@@ -66,25 +124,42 @@ const normalizeHelperInput = ({
       displayName: string;
       relationship: string;
       contactMethod: string;
+      contactMethods: ITrustedHelperContactMethod[];
       notes: string;
     }
   | { ok: false; reason: TrustedHelperMutationFailureReason } => {
   const normalizedDisplayName = displayName.trim();
-  const normalizedContactMethod = contactMethod.trim();
+  const normalizedContactMethods =
+    contactMethods
+      ?.map(method => ({
+        type: method.type.trim() || 'phone',
+        value: trimContactMethodValue(method.type, method.value)
+      }))
+      .filter(method => method.value.length > 0) ?? [];
+  const normalizedContactMethod = normalizedContactMethods[0]
+    ? buildContactMethodString(normalizedContactMethods[0])
+    : '';
+  const legacyContactMethod = contactMethod?.trim() ?? '';
 
   if (!normalizedDisplayName) {
     return { ok: false, reason: 'display-name-required' };
   }
 
-  if (!normalizedContactMethod) {
+  if (!normalizedContactMethod && !legacyContactMethod) {
     return { ok: false, reason: 'contact-method-required' };
   }
+
+  const resolvedContactMethods =
+    normalizedContactMethods.length > 0
+      ? normalizedContactMethods
+      : [splitContactMethodString(legacyContactMethod)];
 
   return {
     ok: true,
     displayName: normalizedDisplayName,
     relationship: relationship.trim(),
-    contactMethod: normalizedContactMethod,
+    contactMethod: normalizedContactMethod || legacyContactMethod,
+    contactMethods: resolvedContactMethods,
     notes: notes.trim()
   };
 };
@@ -121,6 +196,7 @@ export const createTrustedHelper = (
     displayName: normalized.displayName,
     relationship: normalized.relationship,
     contactMethod: normalized.contactMethod,
+    contactMethods: normalized.contactMethods,
     notes: normalized.notes,
     status: 'active',
     createdAt: input.now,
@@ -170,6 +246,7 @@ export const updateTrustedHelper = (
     displayName: normalized.displayName,
     relationship: normalized.relationship,
     contactMethod: normalized.contactMethod,
+    contactMethods: normalized.contactMethods,
     notes: normalized.notes,
     updatedAt: input.now
   };

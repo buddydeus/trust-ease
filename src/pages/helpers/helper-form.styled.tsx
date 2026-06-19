@@ -8,6 +8,34 @@ export const HelperFormFieldCard = styled(AppCard)`
   margin-top: 14px;
 `;
 
+export const HelperChoiceToggle = styled(Pressable)`
+  margin-top: 10px;
+  min-height: 42px;
+  justify-content: center;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.color.border};
+  border-radius: 14px;
+  background-color: ${({ theme }) => theme.color.card};
+  padding-horizontal: 12px;
+`;
+
+export const HelperChoiceList = styled(View)`
+  margin-top: 8px;
+  gap: 8px;
+`;
+
+export const HelperChoiceButton = styled(Pressable)<{ selected: boolean }>`
+  min-height: 38px;
+  justify-content: center;
+  border-width: 1px;
+  border-color: ${({ selected, theme }) =>
+    selected ? theme.color.accent : theme.color.border};
+  border-radius: 14px;
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.color.accentSoft : theme.color.card};
+  padding-horizontal: 12px;
+`;
+
 export const HelperFormInput = styled(TextInput).attrs(({ theme }) => ({
   placeholderTextColor: theme.color.muted
 }))`
@@ -25,6 +53,43 @@ export const HelperNotesInput = styled(HelperFormInput)`
   min-height: 98px;
   padding-top: 12px;
   text-align-vertical: top;
+`;
+
+export const HelperContactMethodBlock = styled(View)`
+  margin-top: 10px;
+  gap: 8px;
+`;
+
+export const HelperContactMethodRow = styled(View)`
+  gap: 8px;
+`;
+
+export const HelperContactTypeRow = styled(View)`
+  flex-direction: row;
+  gap: 8px;
+`;
+
+export const HelperContactTypeButton = styled(Pressable)<{ selected: boolean }>`
+  min-height: 34px;
+  justify-content: center;
+  border-width: 1px;
+  border-color: ${({ selected, theme }) =>
+    selected ? theme.color.accent : theme.color.border};
+  border-radius: 13px;
+  background-color: ${({ selected, theme }) =>
+    selected ? theme.color.accentSoft : theme.color.card};
+  padding-horizontal: 12px;
+`;
+
+export const HelperContactActionRow = styled(View)`
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 12px;
+`;
+
+export const HelperContactActionButton = styled(Pressable)`
+  min-height: 34px;
+  justify-content: center;
 `;
 
 export const HelperValidationText = styled(AppText)`

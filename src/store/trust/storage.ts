@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createDefaultTrustDataSnapshot } from './defaults';
 import {
   type ILocalTriggerPolicy,
+  type ITrustedHelperContactMethod,
   type ITrustDataSnapshot,
   type ITrustedHelper,
   type ITrustItem,
@@ -38,6 +39,46 @@ const parseItemKind = (value: unknown): TrustItemKind | null =>
   isString(value) && itemKinds.has(value as TrustItemKind)
     ? (value as TrustItemKind)
     : null;
+
+const parseHelperContactMethods = (
+  value: unknown
+): ITrustedHelperContactMethod[] | null => {
+  if (typeof value === 'undefined') {
+    return null;
+  }
+
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
+  const parsed = value
+    .map(method => {
+      if (
+        !isRecord(method) ||
+        !isString(method.type) ||
+        !isString(method.value)
+      ) {
+        return null;
+      }
+
+      const type = method.type.trim();
+      const contactValue = method.value.trim();
+
+      if (!type || !contactValue) {
+        return null;
+      }
+
+      return {
+        type,
+        value: contactValue
+      };
+    })
+    .filter(method => method !== null);
+
+  return parsed.length === value.length && parsed.length > 0
+    ? (parsed as ITrustedHelperContactMethod[])
+    : null;
+};
 
 const parseTrustItem = (value: unknown): ITrustItem | null => {
   if (!isRecord(value)) {
@@ -93,11 +134,14 @@ const parseTrustedHelper = (value: unknown): ITrustedHelper | null => {
     return null;
   }
 
+  const contactMethods = parseHelperContactMethods(value.contactMethods);
+
   return {
     id: value.id,
     displayName: value.displayName,
     relationship: value.relationship,
     contactMethod: value.contactMethod,
+    ...(contactMethods ? { contactMethods } : {}),
     notes: value.notes,
     status,
     createdAt: value.createdAt,

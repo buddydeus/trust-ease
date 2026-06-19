@@ -34,12 +34,20 @@ const NewItemRoute = memo<INewItemRouteProps>(() => {
     titlePlaceholder: getMessage('itemForm.titlePlaceholder'),
     summaryLabel: getMessage('itemForm.summaryLabel'),
     summaryPlaceholder: getMessage('itemForm.summaryPlaceholder'),
+    onlineSummaryLabel: getMessage('itemForm.onlineSummaryLabel'),
+    onlineSummaryPlaceholder: getMessage('itemForm.onlineSummaryPlaceholder'),
     offlineTitle: getMessage('itemForm.offlineTitle'),
     offlineSummary: getMessage('itemForm.offlineSummary'),
     onlineTitle: getMessage('itemForm.onlineTitle'),
     onlineSummary: getMessage('itemForm.onlineSummary'),
     stepLabel: getMessage('itemForm.stepLabel'),
     stepValue: getMessage('itemForm.stepValue'),
+    helperSectionLabel: getMessage('itemForm.helperSectionLabel'),
+    onlineHelperSectionLabel: getMessage('itemForm.onlineHelperSectionLabel'),
+    helperEmptyText: getMessage('itemForm.helperEmptyText'),
+    addHelperAction: getMessage('itemForm.addHelperAction'),
+    onlineTemplateTitle: getMessage('itemForm.onlineTemplateTitle'),
+    onlineTemplateBody: getMessage('itemForm.onlineTemplateBody'),
     saveAction: getMessage('itemForm.saveAction'),
     titleRequired: getMessage('itemForm.titleRequired')
   };
@@ -92,6 +100,12 @@ const NewItemRoute = memo<INewItemRouteProps>(() => {
       copy={copy}
       helperChoices={helperChoices}
       onBack={() => router.back()}
+      onCreateHelper={() =>
+        router.push({
+          pathname: '/helpers/new',
+          params: { returnTo: '/items/new' }
+        } as never)
+      }
       onSubmit={handleSubmit}
     />
   );

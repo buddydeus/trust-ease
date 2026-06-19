@@ -18,6 +18,38 @@ export const HelpersListStack = styled(View)`
   gap: 10px;
 `;
 
+export const HelperGroupStack = styled(View)`
+  gap: 8px;
+`;
+
+export const HelperGroupHeader = styled(Pressable)`
+  min-height: 42px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-width: 1px;
+  border-color: ${({ theme }) => theme.color.border};
+  border-radius: 14px;
+  background-color: ${({ theme }) => theme.color.card};
+  padding-horizontal: 14px;
+`;
+
+export const HelperGroupHeaderText = styled(AppText)`
+  color: ${({ theme }) => theme.color.foreground};
+  font-size: 14px;
+  font-weight: 800;
+`;
+
+export const HelperGroupCountText = styled(AppText)`
+  color: ${({ theme }) => theme.color.muted};
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+export const HelperGroupItems = styled(View)`
+  gap: 10px;
+`;
+
 export const HelperCardTextCol = styled(View)`
   flex: 1;
 `;

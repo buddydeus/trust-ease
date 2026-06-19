@@ -43,6 +43,9 @@
 - 阶段 8 已完成：新增一键启动 iOS 模拟器 App 脚本，提供 `pnpm ios:sim` 与
   `pnpm ios:sim:clear`，用于自动清理旧 `SDKROOT`、选择 / 启动 iPhone 模拟器并以
   localhost 模式启动 Expo iOS App。
+- 阶段 9 已完成：调整新增事项与托付联系人流程。线上事项模式进入线上输入模板，
+  可选择或新增托付联系人；联系人支持默认关系选择、自定义关系、多电话 / 邮箱；
+  托付联系人页按关系分组且可折叠；首页事项 / 联系人入口按本地数据自动进入列表或新增页。
 - 当前 iOS 完整手动交互验证仍待继续：本机未开放 macOS 辅助访问，`simctl` 也没有
   tap 能力，因此“点击开始设置后进入每日申报 / 首页”等完整点按链路需要人工点按或
   补充 Maestro / idb / Appium 等移动端自动化工具后继续。
@@ -144,6 +147,10 @@
   - `pnpm skin:package -- check skins/skin-001`：2026-06-18 发现内置皮肤
     `packageHash` 陈旧，已通过 `pnpm skin:package -- update skins/skin-001`
     更新并复查通过。
+  - `pnpm test tests/pages/helpers/helper-screen.test.tsx tests/pages/items/item-form-screen.test.tsx tests/pages/home/home-screen.test.tsx tests/store/trust/helpers.test.ts tests/store/trust/storage.test.ts tests/store/trust/backup.test.ts --runInBand`：
+    2026-06-19 通过，6 个测试套件、59 个测试通过。
+  - `pnpm check:qa`：2026-06-19 联系人 / 事项流程调整后通过，32 个测试套件、
+    189 个测试通过，远程皮肤 QA fixture 4 个测试通过。
 - 前端 QA 发现的问题记录到 `.bugs/*.md`，包含问题描述、复现路径、问题定位、
   建议修复方式和验证方式。
 - [x] iOS 构建前置配置：

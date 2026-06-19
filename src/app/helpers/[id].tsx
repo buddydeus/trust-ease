@@ -42,8 +42,23 @@ const EditHelperRoute = memo<IEditHelperRouteProps>(() => {
     displayNamePlaceholder: getMessage('helpers.displayNamePlaceholder'),
     relationshipLabel: getMessage('helpers.relationshipLabel'),
     relationshipPlaceholder: getMessage('helpers.relationshipPlaceholder'),
+    relationshipSelectPlaceholder: getMessage(
+      'helpers.relationshipSelectPlaceholder'
+    ),
+    relationshipOptions: [
+      getMessage('helpers.relationship.family'),
+      getMessage('helpers.relationship.friend'),
+      getMessage('helpers.relationship.trusted'),
+      getMessage('helpers.relationship.special')
+    ],
     contactMethodLabel: getMessage('helpers.contactMethodLabel'),
     contactMethodPlaceholder: getMessage('helpers.contactMethodPlaceholder'),
+    contactMethodTypes: [
+      { type: 'phone', label: getMessage('helpers.contactType.phone') },
+      { type: 'email', label: getMessage('helpers.contactType.email') }
+    ],
+    addContactMethodAction: getMessage('helpers.addContactMethodAction'),
+    removeContactMethodAction: getMessage('helpers.removeContactMethodAction'),
     notesLabel: getMessage('helpers.notesLabel'),
     notesPlaceholder: getMessage('helpers.notesPlaceholder'),
     localOnlyNotice: getMessage('helpers.localOnlyNotice'),
@@ -74,6 +89,7 @@ const EditHelperRoute = memo<IEditHelperRouteProps>(() => {
         displayName: currentHelper.displayName,
         relationship: currentHelper.relationship,
         contactMethod: currentHelper.contactMethod,
+        contactMethods: currentHelper.contactMethods,
         notes: currentHelper.notes
       }
     : void 0;

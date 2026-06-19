@@ -68,6 +68,36 @@ test('new item route exposes a back action', async () => {
   expect(router.back).toHaveBeenCalledTimes(1);
 });
 
+test('online item mode shows the online template without the old step copy', () => {
+  const onCreateHelper = jest.fn();
+
+  render(<ItemFormScreen onCreateHelper={onCreateHelper} />);
+
+  expect(screen.getByText(zhCN['itemForm.stepValue'])).toBeTruthy();
+
+  fireEvent.press(screen.getByText(zhCN['itemForm.onlineTitle']));
+
+  expect(screen.getByText(zhCN['itemForm.onlineTemplateLabel'])).toBeTruthy();
+  expect(screen.getByText(zhCN['itemForm.onlineTemplateTitle'])).toBeTruthy();
+  expect(screen.queryByText(zhCN['itemForm.stepValue'])).toBeNull();
+
+  fireEvent.press(screen.getByText(zhCN['itemForm.addHelperAction']));
+
+  expect(onCreateHelper).toHaveBeenCalledTimes(1);
+});
+
+test('new item route can jump to create a helper from online item mode', async () => {
+  render(<NewItemRoute />);
+
+  fireEvent.press(await screen.findByText(zhCN['itemForm.onlineTitle']));
+  fireEvent.press(screen.getByText(zhCN['itemForm.addHelperAction']));
+
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/helpers/new',
+    params: { returnTo: '/items/new' }
+  });
+});
+
 test('new item route saves a local item and returns to items tab', async () => {
   await saveTrustDataSnapshot({
     ...createDefaultTrustDataSnapshot(),

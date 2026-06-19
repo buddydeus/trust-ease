@@ -2,6 +2,7 @@ export const TRUST_DATA_SCHEMA_VERSION = 1;
 
 export type TrustRecordStatus = 'active' | 'archived';
 export type TrustItemKind = 'offline' | 'online';
+export type TrustedHelperContactMethodType = 'phone' | 'email' | string;
 
 export interface ITrustItem {
   id: string;
@@ -19,10 +20,16 @@ export interface ITrustedHelper {
   displayName: string;
   relationship: string;
   contactMethod: string;
+  contactMethods?: ITrustedHelperContactMethod[];
   notes: string;
   status: TrustRecordStatus;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ITrustedHelperContactMethod {
+  type: TrustedHelperContactMethodType;
+  value: string;
 }
 
 export interface ILocalTriggerPolicy {

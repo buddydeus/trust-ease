@@ -54,6 +54,8 @@ const HomeRoute = memo<IHomeRouteProps>(() => {
     coveredItemCount: 0,
     uncoveredItemCount: 0
   };
+  const activeItemCount = readinessCounts.activeItemCount;
+  const activeHelperCount = readinessCounts.activeHelperCount;
   const readinessCopy = {
     heading: getMessage('home.readiness.heading'),
     statusLabels: {
@@ -124,18 +126,24 @@ const HomeRoute = memo<IHomeRouteProps>(() => {
       }
 
       if (action === 'create-helper') {
-        router.push('/helpers/new' as never);
+        router.push(
+          activeHelperCount > 0
+            ? ('/helpers' as never)
+            : ('/helpers/new' as never)
+        );
         return;
       }
 
       if (action === 'review-item-assignments') {
-        router.push('/items' as never);
+        router.push(
+          activeItemCount > 0 ? ('/items' as never) : ('/items/new' as never)
+        );
         return;
       }
 
       router.push('/my/trigger-state');
     },
-    []
+    [activeHelperCount, activeItemCount]
   );
 
   return (

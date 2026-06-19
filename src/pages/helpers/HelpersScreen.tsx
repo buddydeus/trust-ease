@@ -1,7 +1,7 @@
 /**
  * 本地协助人列表：由 route 注入本地数据和动作回调，页面不直接读取存储。
  */
-import { memo } from 'react';
+import { memo, useMemo, useState } from 'react';
 
 import {
   AppCard,
@@ -17,16 +17,27 @@ import {
   HelperActionButton,
   HelperActionRow,
   HelperCardTextCol,
+  HelperGroupCountText,
+  HelperGroupHeader,
+  HelperGroupHeaderText,
+  HelperGroupItems,
+  HelperGroupStack,
   HelperNoticeText,
   HelpersListStack,
   HelpersTitleRow
 } from './helpers.styled';
+
+export interface IHelpersScreenContactMethod {
+  type: string;
+  value: string;
+}
 
 export interface IHelpersScreenHelper {
   id: string;
   displayName: string;
   relationship: string;
   contactMethod: string;
+  contactMethods?: IHelpersScreenContactMethod[];
   notes: string;
 }
 
@@ -38,6 +49,9 @@ export interface IHelpersScreenCopy {
   localOnlyNotice: string;
   editAction: string;
   archiveAction: string;
+  ungroupedRelationship?: string;
+  groupCountLabel?: string;
+  contactMethodTypes?: Record<string, string>;
 }
 
 export interface IHelpersScreenProps {
@@ -59,6 +73,77 @@ export const HelpersScreen = memo<IHelpersScreenProps>(
     copy
   } = {}) => {
     const { getMessage } = useI18n();
+    const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
+      () => new Set()
+    );
+    const ungroupedRelationship =
+      copy?.ungroupedRelationship ||
+      getMessage('helpers.ungroupedRelationship');
+    const contactMethodTypes = copy?.contactMethodTypes || {
+      phone: getMessage('helpers.contactType.phone'),
+      email: getMessage('helpers.contactType.email')
+    };
+    const groupedHelpers = useMemo(() => {
+      const groups = new Map<string, IHelpersScreenHelper[]>();
+
+      for (const helper of helpers) {
+        const groupName = helper.relationship.trim() || ungroupedRelationship;
+        groups.set(groupName, [...(groups.get(groupName) || []), helper]);
+      }
+
+      return Array.from(groups.entries()).map(
+        ([relationship, groupHelpers]) => ({
+          helpers: groupHelpers,
+          relationship
+        })
+      );
+    }, [helpers, ungroupedRelationship]);
+
+    const toggleGroup = (relationship: string) => {
+      setCollapsedGroups(currentGroups => {
+        const nextGroups = new Set(currentGroups);
+
+        if (nextGroups.has(relationship)) {
+          nextGroups.delete(relationship);
+        } else {
+          nextGroups.add(relationship);
+        }
+
+        return nextGroups;
+      });
+    };
+
+    const renderContactMethod = (method: IHelpersScreenContactMethod) => {
+      const label = contactMethodTypes[method.type] || method.type;
+
+      return `${label}: ${method.value}`;
+    };
+
+    const normalizeDisplayContactMethods = (
+      helper: IHelpersScreenHelper
+    ): IHelpersScreenContactMethod[] => {
+      if (helper.contactMethods?.length) {
+        return helper.contactMethods;
+      }
+
+      const separatorIndex = helper.contactMethod.indexOf(':');
+
+      if (separatorIndex > 0) {
+        return [
+          {
+            type: helper.contactMethod.slice(0, separatorIndex),
+            value: helper.contactMethod.slice(separatorIndex + 1)
+          }
+        ];
+      }
+
+      return [
+        {
+          type: helper.contactMethod.includes('@') ? 'email' : 'phone',
+          value: helper.contactMethod
+        }
+      ];
+    };
 
     return (
       <AppScreen>
@@ -86,46 +171,76 @@ export const HelpersScreen = memo<IHelpersScreenProps>(
               </HelperNoticeText>
             </AppCard>
           ) : (
-            helpers.map(helper => (
-              <AppCard key={helper.id}>
-                <HelperCardTextCol>
-                  <CardTitleText>{helper.displayName}</CardTitleText>
-                  <AppText className="mt-[9px] text-caption text-muted">
-                    {helper.relationship}
-                  </AppText>
-                  <AppText className="mt-[7px] text-caption text-muted">
-                    {helper.contactMethod}
-                  </AppText>
-                  {helper.notes ? (
-                    <AppText className="mt-[7px] text-caption text-muted">
-                      {helper.notes}
-                    </AppText>
-                  ) : null}
-                  <HelperNoticeText>
-                    {copy?.localOnlyNotice ||
-                      getMessage('helpers.localOnlyNotice')}
-                  </HelperNoticeText>
-                  <HelperActionRow>
-                    <HelperActionButton
-                      accessibilityRole="button"
-                      onPress={() => onEditHelper?.(helper.id)}
-                    >
-                      <AppText className="text-caption text-accent">
-                        {copy?.editAction || getMessage('helpers.editAction')}
-                      </AppText>
-                    </HelperActionButton>
-                    <HelperActionButton
-                      accessibilityRole="button"
-                      onPress={() => onArchiveHelper?.(helper.id)}
-                    >
-                      <AppText className="text-caption text-muted">
-                        {copy?.archiveAction ||
-                          getMessage('helpers.archiveAction')}
-                      </AppText>
-                    </HelperActionButton>
-                  </HelperActionRow>
-                </HelperCardTextCol>
-              </AppCard>
+            groupedHelpers.map(group => (
+              <HelperGroupStack key={group.relationship}>
+                <HelperGroupHeader
+                  accessibilityRole="button"
+                  onPress={() => toggleGroup(group.relationship)}
+                >
+                  <HelperGroupHeaderText>
+                    {group.relationship}
+                  </HelperGroupHeaderText>
+                  <HelperGroupCountText>
+                    {(
+                      copy?.groupCountLabel ||
+                      getMessage('helpers.groupCountLabel')
+                    ).replace('{count}', String(group.helpers.length))}
+                  </HelperGroupCountText>
+                </HelperGroupHeader>
+                {collapsedGroups.has(group.relationship) ? null : (
+                  <HelperGroupItems>
+                    {group.helpers.map(helper => {
+                      const contactMethods =
+                        normalizeDisplayContactMethods(helper);
+
+                      return (
+                        <AppCard key={helper.id}>
+                          <HelperCardTextCol>
+                            <CardTitleText>{helper.displayName}</CardTitleText>
+                            {contactMethods.map((method, index) => (
+                              <AppText
+                                className="mt-[7px] text-caption text-muted"
+                                key={`${method.type}-${method.value}-${index}`}
+                              >
+                                {renderContactMethod(method)}
+                              </AppText>
+                            ))}
+                            {helper.notes ? (
+                              <AppText className="mt-[7px] text-caption text-muted">
+                                {helper.notes}
+                              </AppText>
+                            ) : null}
+                            <HelperNoticeText>
+                              {copy?.localOnlyNotice ||
+                                getMessage('helpers.localOnlyNotice')}
+                            </HelperNoticeText>
+                            <HelperActionRow>
+                              <HelperActionButton
+                                accessibilityRole="button"
+                                onPress={() => onEditHelper?.(helper.id)}
+                              >
+                                <AppText className="text-caption text-accent">
+                                  {copy?.editAction ||
+                                    getMessage('helpers.editAction')}
+                                </AppText>
+                              </HelperActionButton>
+                              <HelperActionButton
+                                accessibilityRole="button"
+                                onPress={() => onArchiveHelper?.(helper.id)}
+                              >
+                                <AppText className="text-caption text-muted">
+                                  {copy?.archiveAction ||
+                                    getMessage('helpers.archiveAction')}
+                                </AppText>
+                              </HelperActionButton>
+                            </HelperActionRow>
+                          </HelperCardTextCol>
+                        </AppCard>
+                      );
+                    })}
+                  </HelperGroupItems>
+                )}
+              </HelperGroupStack>
             ))
           )}
         </HelpersListStack>

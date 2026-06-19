@@ -15,8 +15,10 @@ import {
 import {
   FormFieldCard,
   FormTextInput,
+  HelperActionButton,
   HelperChoiceButton,
   HelperChoiceList,
+  OnlineTemplateCard,
   OfflineKindCard,
   OnlineKindCard,
   SaveButton,
@@ -57,6 +59,10 @@ export interface IItemFormScreenCopy {
   summaryLabel: string;
   /** 摘要输入占位。 */
   summaryPlaceholder: string;
+  /** 线上事项摘要输入标签。 */
+  onlineSummaryLabel?: string;
+  /** 线上事项摘要输入占位。 */
+  onlineSummaryPlaceholder?: string;
   /** 线下类型卡片标题。 */
   offlineTitle: string;
   /** 线下类型卡片说明。 */
@@ -69,6 +75,18 @@ export interface IItemFormScreenCopy {
   stepLabel: string;
   /** 向导步骤值文案。 */
   stepValue: string;
+  /** 联系人选择分区标题。 */
+  helperSectionLabel?: string;
+  /** 线上事项联系人分区标题。 */
+  onlineHelperSectionLabel?: string;
+  /** 没有联系人时的提示。 */
+  helperEmptyText?: string;
+  /** 新增联系人按钮文案。 */
+  addHelperAction?: string;
+  /** 线上事项模板标题。 */
+  onlineTemplateTitle?: string;
+  /** 线上事项模板说明。 */
+  onlineTemplateBody?: string;
   /** 保存按钮文案。 */
   saveAction: string;
   /** 标题必填错误。 */
@@ -87,6 +105,8 @@ export interface IItemFormScreenProps {
   onSubmit?: (values: IItemFormValues) => void;
   /** 点击返回时调用；二级路由传入。 */
   onBack?: () => void;
+  /** 点击新增联系人时调用。 */
+  onCreateHelper?: () => void;
   /** 可选本地化文案；省略时使用内置默认。 */
   copy?: IItemFormScreenCopy;
 }
@@ -98,7 +118,14 @@ export interface IItemFormScreenProps {
  * @returns 已 memo 的表单页元素。
  */
 export const ItemFormScreen = memo<IItemFormScreenProps>(
-  ({ initialValues, helperChoices = [], onSubmit, onBack, copy } = {}) => {
+  ({
+    initialValues,
+    helperChoices = [],
+    onSubmit,
+    onBack,
+    onCreateHelper,
+    copy
+  } = {}) => {
     const { getMessage } = useI18n();
     const [title, setTitle] = useState(initialValues?.title ?? '');
     const [kind, setKind] = useState<IItemFormValues['kind']>(
@@ -107,6 +134,7 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
     const [summary, setSummary] = useState(initialValues?.summary ?? '');
     const [helperIds, setHelperIds] = useState(initialValues?.helperIds ?? []);
     const [titleErrorVisible, setTitleErrorVisible] = useState(false);
+    const isOnline = kind === 'online';
 
     useEffect(() => {
       setTitle(initialValues?.title ?? '');
@@ -204,24 +232,51 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
         </TypeSectionCard>
         <FormFieldCard>
           <MetaMutedText>
-            {copy?.summaryLabel || getMessage('itemForm.summaryLabel')}
+            {isOnline
+              ? copy?.onlineSummaryLabel ||
+                getMessage('itemForm.onlineSummaryLabel')
+              : copy?.summaryLabel || getMessage('itemForm.summaryLabel')}
           </MetaMutedText>
           <SummaryTextInput
             multiline
             placeholder={
-              copy?.summaryPlaceholder ||
-              getMessage('itemForm.summaryPlaceholder')
+              isOnline
+                ? copy?.onlineSummaryPlaceholder ||
+                  getMessage('itemForm.onlineSummaryPlaceholder')
+                : copy?.summaryPlaceholder ||
+                  getMessage('itemForm.summaryPlaceholder')
             }
             value={summary}
             onChangeText={setSummary}
           />
         </FormFieldCard>
+        {isOnline ? (
+          <OnlineTemplateCard>
+            <MetaMutedText>
+              {getMessage('itemForm.onlineTemplateLabel')}
+            </MetaMutedText>
+            <StepCurrentValue>
+              {copy?.onlineTemplateTitle ||
+                getMessage('itemForm.onlineTemplateTitle')}
+            </StepCurrentValue>
+            <MetaMutedText marginTop={8}>
+              {copy?.onlineTemplateBody ||
+                getMessage('itemForm.onlineTemplateBody')}
+            </MetaMutedText>
+          </OnlineTemplateCard>
+        ) : null}
         <WizardStepCard>
           <MetaMutedText>
-            {copy?.stepLabel || getMessage('itemForm.stepLabel')}
+            {isOnline
+              ? copy?.onlineHelperSectionLabel ||
+                getMessage('itemForm.onlineHelperSectionLabel')
+              : copy?.stepLabel || getMessage('itemForm.stepLabel')}
           </MetaMutedText>
           <StepCurrentValue>
-            {copy?.stepValue || getMessage('itemForm.stepValue')}
+            {isOnline
+              ? copy?.helperSectionLabel ||
+                getMessage('itemForm.helperSectionLabel')
+              : copy?.stepValue || getMessage('itemForm.stepValue')}
           </StepCurrentValue>
           {helperChoices.length > 0 ? (
             <HelperChoiceList>
@@ -239,6 +294,21 @@ export const ItemFormScreen = memo<IItemFormScreenProps>(
                 </HelperChoiceButton>
               ))}
             </HelperChoiceList>
+          ) : (
+            <MetaMutedText marginTop={10}>
+              {copy?.helperEmptyText || getMessage('itemForm.helperEmptyText')}
+            </MetaMutedText>
+          )}
+          {onCreateHelper ? (
+            <HelperActionButton
+              accessibilityRole="button"
+              onPress={onCreateHelper}
+            >
+              <MetaMutedText>
+                {copy?.addHelperAction ||
+                  getMessage('itemForm.addHelperAction')}
+              </MetaMutedText>
+            </HelperActionButton>
           ) : null}
         </WizardStepCard>
         <SaveButton

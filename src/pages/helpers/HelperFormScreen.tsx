@@ -6,12 +6,22 @@ import { memo, useEffect, useState } from 'react';
 import { AppScreen, BackButton } from '../../components';
 import { useI18n } from '../../i18n';
 import {
+  CardTitleText,
   MetaMutedText,
   PrimaryOnAccentLabel,
   ScreenTitleText
 } from '../../theme';
 
 import {
+  HelperChoiceButton,
+  HelperChoiceList,
+  HelperChoiceToggle,
+  HelperContactActionButton,
+  HelperContactActionRow,
+  HelperContactMethodBlock,
+  HelperContactMethodRow,
+  HelperContactTypeButton,
+  HelperContactTypeRow,
   HelperFormFieldCard,
   HelperFormInput,
   HelperNotesInput,
@@ -20,11 +30,22 @@ import {
   HelperValidationText
 } from './helper-form.styled';
 
+export interface IHelperFormContactMethod {
+  type: string;
+  value: string;
+}
+
 export interface IHelperFormValues {
   displayName: string;
   relationship: string;
   contactMethod: string;
+  contactMethods?: IHelperFormContactMethod[];
   notes: string;
+}
+
+export interface IHelperContactTypeOption {
+  type: string;
+  label: string;
 }
 
 export interface IHelperFormScreenCopy {
@@ -33,8 +54,13 @@ export interface IHelperFormScreenCopy {
   displayNamePlaceholder: string;
   relationshipLabel: string;
   relationshipPlaceholder: string;
+  relationshipOptions?: string[];
+  relationshipSelectPlaceholder?: string;
   contactMethodLabel: string;
   contactMethodPlaceholder: string;
+  contactMethodTypes?: IHelperContactTypeOption[];
+  addContactMethodAction?: string;
+  removeContactMethodAction?: string;
   notesLabel: string;
   notesPlaceholder: string;
   localOnlyNotice: string;
@@ -50,6 +76,85 @@ export interface IHelperFormScreenProps {
   copy?: IHelperFormScreenCopy;
 }
 
+const defaultRelationshipOptions = ['家人', '朋友', '信任', '特殊'];
+const defaultContactMethodTypes: IHelperContactTypeOption[] = [
+  { type: 'phone', label: '电话' },
+  { type: 'email', label: '邮箱' }
+];
+
+const splitLegacyContactMethod = (value: string): IHelperFormContactMethod => {
+  const normalizedValue = value.trim();
+  const separatorIndex = normalizedValue.indexOf(':');
+
+  if (separatorIndex > 0) {
+    return {
+      type: normalizedValue.slice(0, separatorIndex),
+      value: normalizedValue.slice(separatorIndex + 1)
+    };
+  }
+
+  return {
+    type: normalizedValue.includes('@') ? 'email' : 'phone',
+    value: normalizedValue
+  };
+};
+
+const createInitialContactMethods = (
+  initialValues?: IHelperFormValues
+): IHelperFormContactMethod[] => {
+  if (initialValues?.contactMethods?.length) {
+    return initialValues.contactMethods.map(method => ({
+      type: method.type || 'phone',
+      value: method.value
+    }));
+  }
+
+  if (initialValues?.contactMethod) {
+    return [splitLegacyContactMethod(initialValues.contactMethod)];
+  }
+
+  return [{ type: 'phone', value: '' }];
+};
+
+const buildPrimaryContactMethod = (
+  methods: IHelperFormContactMethod[]
+): string => {
+  const firstMethod = methods.find(method => method.value.trim().length > 0);
+
+  if (!firstMethod) {
+    return '';
+  }
+
+  const normalizedValue = firstMethod.value.trim();
+  const separatorIndex = normalizedValue.indexOf(':');
+
+  if (separatorIndex > 0) {
+    const prefix = normalizedValue.slice(0, separatorIndex);
+
+    if (prefix === firstMethod.type) {
+      return normalizedValue;
+    }
+  }
+
+  return `${firstMethod.type.trim() || 'phone'}:${normalizedValue}`;
+};
+
+const trimContactMethodValue = (type: string, value: string): string => {
+  const normalizedType = type.trim() || 'phone';
+  const normalizedValue = value.trim();
+  const separatorIndex = normalizedValue.indexOf(':');
+
+  if (separatorIndex > 0) {
+    const prefix = normalizedValue.slice(0, separatorIndex);
+
+    if (prefix === normalizedType) {
+      return normalizedValue.slice(separatorIndex + 1).trim();
+    }
+  }
+
+  return normalizedValue;
+};
+
 export const HelperFormScreen = memo<IHelperFormScreenProps>(
   ({ initialValues, onSubmit, onBack, copy } = {}) => {
     const { getMessage } = useI18n();
@@ -59,30 +164,72 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
     const [relationship, setRelationship] = useState(
       initialValues?.relationship ?? ''
     );
-    const [contactMethod, setContactMethod] = useState(
-      initialValues?.contactMethod ?? ''
+    const [relationshipOptionsVisible, setRelationshipOptionsVisible] =
+      useState(false);
+    const [contactMethods, setContactMethods] = useState(
+      createInitialContactMethods(initialValues)
     );
     const [notes, setNotes] = useState(initialValues?.notes ?? '');
     const [error, setError] = useState<'displayName' | 'contactMethod' | null>(
       null
     );
+    const relationshipOptions =
+      copy?.relationshipOptions || defaultRelationshipOptions;
+    const contactMethodTypes =
+      copy?.contactMethodTypes || defaultContactMethodTypes;
 
     useEffect(() => {
       setDisplayName(initialValues?.displayName ?? '');
       setRelationship(initialValues?.relationship ?? '');
-      setContactMethod(initialValues?.contactMethod ?? '');
+      setRelationshipOptionsVisible(false);
+      setContactMethods(createInitialContactMethods(initialValues));
       setNotes(initialValues?.notes ?? '');
       setError(null);
     }, [
       initialValues?.contactMethod,
+      initialValues?.contactMethods,
       initialValues?.displayName,
       initialValues?.notes,
       initialValues?.relationship
     ]);
 
+    const updateContactMethod = (
+      index: number,
+      values: Partial<IHelperFormContactMethod>
+    ) => {
+      setContactMethods(currentMethods =>
+        currentMethods.map((method, currentIndex) =>
+          currentIndex === index ? { ...method, ...values } : method
+        )
+      );
+    };
+
+    const addContactMethod = () => {
+      setContactMethods(currentMethods => [
+        ...currentMethods,
+        { type: 'phone', value: '' }
+      ]);
+    };
+
+    const removeContactMethod = (index: number) => {
+      setContactMethods(currentMethods =>
+        currentMethods.length === 1
+          ? currentMethods
+          : currentMethods.filter((_, currentIndex) => currentIndex !== index)
+      );
+    };
+
     const handleSubmit = () => {
       const normalizedDisplayName = displayName.trim();
-      const normalizedContactMethod = contactMethod.trim();
+      const normalizedContactMethods = contactMethods
+        .map(method => ({
+          type: method.type.trim() || 'phone',
+          value: trimContactMethodValue(method.type, method.value)
+        }))
+        .filter(method => method.value.length > 0);
+      const normalizedContactMethod = buildPrimaryContactMethod(
+        normalizedContactMethods
+      );
 
       if (!normalizedDisplayName) {
         setError('displayName');
@@ -99,6 +246,7 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
         displayName: normalizedDisplayName,
         relationship: relationship.trim(),
         contactMethod: normalizedContactMethod,
+        contactMethods: normalizedContactMethods,
         notes: notes.trim()
       });
     };
@@ -137,6 +285,39 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
           <MetaMutedText>
             {copy?.relationshipLabel || getMessage('helpers.relationshipLabel')}
           </MetaMutedText>
+          <HelperChoiceToggle
+            accessibilityRole="button"
+            accessibilityLabel={
+              copy?.relationshipSelectPlaceholder ||
+              getMessage('helpers.relationshipSelectPlaceholder')
+            }
+            onPress={() =>
+              setRelationshipOptionsVisible(currentVisible => !currentVisible)
+            }
+          >
+            <CardTitleText>
+              {relationship ||
+                copy?.relationshipSelectPlaceholder ||
+                getMessage('helpers.relationshipSelectPlaceholder')}
+            </CardTitleText>
+          </HelperChoiceToggle>
+          {relationshipOptionsVisible ? (
+            <HelperChoiceList>
+              {relationshipOptions.map(option => (
+                <HelperChoiceButton
+                  accessibilityRole="button"
+                  key={option}
+                  selected={relationship === option}
+                  onPress={() => {
+                    setRelationship(option);
+                    setRelationshipOptionsVisible(false);
+                  }}
+                >
+                  <MetaMutedText>{option}</MetaMutedText>
+                </HelperChoiceButton>
+              ))}
+            </HelperChoiceList>
+          ) : null}
           <HelperFormInput
             placeholder={
               copy?.relationshipPlaceholder ||
@@ -151,14 +332,56 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
             {copy?.contactMethodLabel ||
               getMessage('helpers.contactMethodLabel')}
           </MetaMutedText>
-          <HelperFormInput
-            placeholder={
-              copy?.contactMethodPlaceholder ||
-              getMessage('helpers.contactMethodPlaceholder')
-            }
-            value={contactMethod}
-            onChangeText={setContactMethod}
-          />
+          <HelperContactMethodBlock>
+            {contactMethods.map((method, index) => (
+              <HelperContactMethodRow key={`${index}-${method.type}`}>
+                <HelperContactTypeRow>
+                  {contactMethodTypes.map(typeOption => (
+                    <HelperContactTypeButton
+                      accessibilityRole="button"
+                      key={typeOption.type}
+                      selected={method.type === typeOption.type}
+                      onPress={() =>
+                        updateContactMethod(index, { type: typeOption.type })
+                      }
+                    >
+                      <MetaMutedText>{typeOption.label}</MetaMutedText>
+                    </HelperContactTypeButton>
+                  ))}
+                </HelperContactTypeRow>
+                <HelperFormInput
+                  placeholder={
+                    copy?.contactMethodPlaceholder ||
+                    getMessage('helpers.contactMethodPlaceholder')
+                  }
+                  value={method.value}
+                  onChangeText={value => updateContactMethod(index, { value })}
+                />
+                {contactMethods.length > 1 ? (
+                  <HelperContactActionButton
+                    accessibilityRole="button"
+                    onPress={() => removeContactMethod(index)}
+                  >
+                    <MetaMutedText>
+                      {copy?.removeContactMethodAction ||
+                        getMessage('helpers.removeContactMethodAction')}
+                    </MetaMutedText>
+                  </HelperContactActionButton>
+                ) : null}
+              </HelperContactMethodRow>
+            ))}
+          </HelperContactMethodBlock>
+          <HelperContactActionRow>
+            <HelperContactActionButton
+              accessibilityRole="button"
+              onPress={addContactMethod}
+            >
+              <MetaMutedText>
+                {copy?.addContactMethodAction ||
+                  getMessage('helpers.addContactMethodAction')}
+              </MetaMutedText>
+            </HelperContactActionButton>
+          </HelperContactActionRow>
           {error === 'contactMethod' ? (
             <HelperValidationText>
               {copy?.contactMethodRequired ||

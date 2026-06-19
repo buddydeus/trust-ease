@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 
 import { memo } from 'react';
 
@@ -15,8 +15,16 @@ import {
 
 export interface INewHelperRouteProps {}
 
+const resolveReturnTo = (value: string | string[] | undefined): string => {
+  const rawValue = Array.isArray(value) ? value[0] : value;
+
+  return rawValue === '/items/new' ? rawValue : '/helpers';
+};
+
 const NewHelperRoute = memo<INewHelperRouteProps>(() => {
   const { getMessage } = useI18n();
+  const params = useLocalSearchParams();
+  const returnTo = resolveReturnTo(params.returnTo);
 
   const copy = {
     title: getMessage('helpers.formTitle'),
@@ -24,8 +32,23 @@ const NewHelperRoute = memo<INewHelperRouteProps>(() => {
     displayNamePlaceholder: getMessage('helpers.displayNamePlaceholder'),
     relationshipLabel: getMessage('helpers.relationshipLabel'),
     relationshipPlaceholder: getMessage('helpers.relationshipPlaceholder'),
+    relationshipSelectPlaceholder: getMessage(
+      'helpers.relationshipSelectPlaceholder'
+    ),
+    relationshipOptions: [
+      getMessage('helpers.relationship.family'),
+      getMessage('helpers.relationship.friend'),
+      getMessage('helpers.relationship.trusted'),
+      getMessage('helpers.relationship.special')
+    ],
     contactMethodLabel: getMessage('helpers.contactMethodLabel'),
     contactMethodPlaceholder: getMessage('helpers.contactMethodPlaceholder'),
+    contactMethodTypes: [
+      { type: 'phone', label: getMessage('helpers.contactType.phone') },
+      { type: 'email', label: getMessage('helpers.contactType.email') }
+    ],
+    addContactMethodAction: getMessage('helpers.addContactMethodAction'),
+    removeContactMethodAction: getMessage('helpers.removeContactMethodAction'),
     notesLabel: getMessage('helpers.notesLabel'),
     notesPlaceholder: getMessage('helpers.notesPlaceholder'),
     localOnlyNotice: getMessage('helpers.localOnlyNotice'),
@@ -48,7 +71,7 @@ const NewHelperRoute = memo<INewHelperRouteProps>(() => {
     }
 
     await saveTrustDataSnapshot(result.snapshot);
-    router.replace('/helpers' as never);
+    router.replace(returnTo as never);
   };
 
   return (

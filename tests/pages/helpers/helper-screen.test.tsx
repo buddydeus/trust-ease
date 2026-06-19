@@ -118,7 +118,7 @@ test('renders active helpers and calls edit/archive callbacks', () => {
 
   expect(screen.getByText('林杉')).toBeTruthy();
   expect(screen.getByText('朋友')).toBeTruthy();
-  expect(screen.getByText('phone:13800000000')).toBeTruthy();
+  expect(screen.getByText('电话: 13800000000')).toBeTruthy();
   expect(screen.getByText('周宁')).toBeTruthy();
 
   fireEvent.press(screen.getAllByText('编辑')[0]);
@@ -126,6 +126,17 @@ test('renders active helpers and calls edit/archive callbacks', () => {
 
   expect(onEditHelper).toHaveBeenCalledWith('helper-1');
   expect(onArchiveHelper).toHaveBeenCalledWith('helper-1');
+});
+
+test('helper groups can be collapsed by relationship', () => {
+  render(<HelpersScreen copy={listCopy} helpers={activeHelpers} />);
+
+  expect(screen.getByText('林杉')).toBeTruthy();
+
+  fireEvent.press(screen.getByText('朋友'));
+
+  expect(screen.queryByText('林杉')).toBeNull();
+  expect(screen.getByText('周宁')).toBeTruthy();
 });
 
 test('helper form blocks missing required fields before submit', () => {
@@ -169,7 +180,45 @@ test('helper form submits trimmed helper values', () => {
     displayName: '林杉',
     relationship: '朋友',
     contactMethod: 'phone:13800000000',
+    contactMethods: [
+      {
+        type: 'phone',
+        value: '13800000000'
+      }
+    ],
     notes: '优先联系'
+  });
+});
+
+test('helper form supports default relationship choices and multiple contact methods', () => {
+  const onSubmit = jest.fn<void, [IHelperFormValues]>();
+
+  render(<HelperFormScreen copy={formCopy} onSubmit={onSubmit} />);
+
+  fireEvent.changeText(screen.getByPlaceholderText('例如：林杉'), '林杉');
+  fireEvent.press(screen.getByRole('button', { name: '选择默认关系' }));
+  fireEvent.press(screen.getByText('家人'));
+  fireEvent.changeText(
+    screen.getByPlaceholderText('电话、邮箱或其他方式'),
+    '13800000000'
+  );
+  fireEvent.press(screen.getByText('增加联系方式'));
+  fireEvent.press(screen.getAllByText('邮箱')[1]);
+  fireEvent.changeText(
+    screen.getAllByPlaceholderText('电话、邮箱或其他方式')[1],
+    'lin@example.com'
+  );
+  fireEvent.press(screen.getByRole('button', { name: '保存' }));
+
+  expect(onSubmit).toHaveBeenCalledWith({
+    displayName: '林杉',
+    relationship: '家人',
+    contactMethod: 'phone:13800000000',
+    contactMethods: [
+      { type: 'phone', value: '13800000000' },
+      { type: 'email', value: 'lin@example.com' }
+    ],
+    notes: ''
   });
 });
 
@@ -195,7 +244,13 @@ test('helper form preloads edit values', () => {
   expect(onSubmit).toHaveBeenCalledWith({
     displayName: '新姓名',
     relationship: '朋友',
-    contactMethod: 'old@example.com',
+    contactMethod: 'email:old@example.com',
+    contactMethods: [
+      {
+        type: 'email',
+        value: 'old@example.com'
+      }
+    ],
     notes: '旧说明'
   });
 });
@@ -266,10 +321,37 @@ test('new helper route persists a local helper and returns to helper list', asyn
     displayName: '林杉',
     relationship: '朋友',
     contactMethod: 'phone:13800000000',
+    contactMethods: [
+      {
+        type: 'phone',
+        value: '13800000000'
+      }
+    ],
     notes: '优先联系',
     status: 'active'
   });
   expect(router.replace).toHaveBeenCalledWith('/helpers');
+});
+
+test('new helper route can return to the new item form when requested', async () => {
+  mockSearchParams = { returnTo: '/items/new' };
+
+  render(<NewHelperRoute />);
+
+  fireEvent.changeText(screen.getByPlaceholderText('例如：林杉'), '林杉');
+  fireEvent.changeText(
+    screen.getByPlaceholderText('电话、邮箱或其他方式'),
+    '13800000000'
+  );
+  fireEvent.press(screen.getByRole('button', { name: '保存' }));
+
+  await waitFor(async () => {
+    const currentSnapshot = await loadTrustDataSnapshot();
+
+    expect(currentSnapshot.helpers).toHaveLength(1);
+  });
+
+  expect(router.replace).toHaveBeenCalledWith('/items/new');
 });
 
 test('edit helper route preloads and updates an existing helper', async () => {
@@ -300,7 +382,13 @@ test('edit helper route preloads and updates an existing helper', async () => {
     id: 'helper-active',
     displayName: '新姓名',
     relationship: '朋友',
-    contactMethod: 'old@example.com',
+    contactMethod: 'email:old@example.com',
+    contactMethods: [
+      {
+        type: 'email',
+        value: 'old@example.com'
+      }
+    ],
     notes: '旧说明',
     createdAt: '2026-06-05T08:00:00.000Z'
   });
