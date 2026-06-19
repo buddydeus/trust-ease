@@ -1,4 +1,4 @@
-import { Pressable, View } from 'react-native';
+import { Pressable, ScrollView, View } from 'react-native';
 
 import styled from 'styled-components/native';
 
@@ -17,6 +17,15 @@ export const StatusValueLine = styled(CardTitleText)`
 export const MyScreenCardStack = styled(View)`
   margin-top: 14px;
   gap: 10px;
+`;
+
+export const MyScreenScroll = styled(ScrollView).attrs({
+  contentContainerStyle: {
+    paddingBottom: 24
+  },
+  showsVerticalScrollIndicator: false
+})`
+  flex: 1;
 `;
 
 export const PickerBlock = styled(View)`

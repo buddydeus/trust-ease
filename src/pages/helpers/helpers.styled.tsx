@@ -23,15 +23,11 @@ export const HelperGroupStack = styled(View)`
 `;
 
 export const HelperGroupHeader = styled(Pressable)`
-  min-height: 42px;
+  min-height: 28px;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  border-width: 1px;
-  border-color: ${({ theme }) => theme.color.border};
-  border-radius: 14px;
-  background-color: ${({ theme }) => theme.color.card};
-  padding-horizontal: 14px;
+  padding-horizontal: 4px;
 `;
 
 export const HelperGroupHeaderText = styled(AppText)`
@@ -50,19 +46,47 @@ export const HelperGroupItems = styled(View)`
   gap: 10px;
 `;
 
+export const HelperSwipeContent = styled(View)`
+  flex-direction: row;
+  align-items: stretch;
+`;
+
+export const HelperSwipeCardSlot = styled(View)`
+  flex-shrink: 0;
+`;
+
+export const HelperSwipeActionRail = styled(View)`
+  width: 124px;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-left: 8px;
+`;
+
+export const HelperSwipeActionButton = styled(Pressable)<{
+  $tone?: 'danger';
+}>`
+  min-width: 58px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background-color: ${({ $tone, theme }) =>
+    $tone === 'danger' ? '#9b3a3a' : theme.color.accentSoft};
+  padding-horizontal: 10px;
+`;
+
+export const HelperSwipeActionText = styled(AppText)<{
+  $tone?: 'danger';
+}>`
+  font-size: 12px;
+  font-weight: 700;
+  color: ${({ $tone, theme }) =>
+    $tone === 'danger' ? '#ffffff' : theme.color.accent};
+`;
+
 export const HelperCardTextCol = styled(View)`
   flex: 1;
-`;
-
-export const HelperActionRow = styled(View)`
-  margin-top: 12px;
-  flex-direction: row;
-  gap: 14px;
-`;
-
-export const HelperActionButton = styled(Pressable)`
-  min-height: 28px;
-  justify-content: center;
 `;
 
 export const HelperNoticeText = styled(AppText)`

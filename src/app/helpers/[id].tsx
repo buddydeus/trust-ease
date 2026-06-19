@@ -37,7 +37,7 @@ const EditHelperRoute = memo<IEditHelperRouteProps>(() => {
   const [snapshot, setSnapshot] = useState<ITrustDataSnapshot | null>(null);
 
   const copy = {
-    title: getMessage('helpers.formTitle'),
+    title: getMessage('helpers.editFormTitle'),
     displayNameLabel: getMessage('helpers.displayNameLabel'),
     displayNamePlaceholder: getMessage('helpers.displayNamePlaceholder'),
     relationshipLabel: getMessage('helpers.relationshipLabel'),

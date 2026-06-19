@@ -57,20 +57,24 @@ export const HelperNotesInput = styled(HelperFormInput)`
 
 export const HelperContactMethodBlock = styled(View)`
   margin-top: 10px;
-  gap: 8px;
+  gap: 10px;
+`;
+
+export const HelperContactMethodItem = styled(View)`
+  gap: 6px;
 `;
 
 export const HelperContactMethodRow = styled(View)`
-  gap: 8px;
-`;
-
-export const HelperContactTypeRow = styled(View)`
   flex-direction: row;
+  align-items: center;
   gap: 8px;
 `;
 
 export const HelperContactTypeButton = styled(Pressable)<{ selected: boolean }>`
-  min-height: 34px;
+  min-height: 44px;
+  min-width: 58px;
+  flex-direction: row;
+  align-items: center;
   justify-content: center;
   border-width: 1px;
   border-color: ${({ selected, theme }) =>
@@ -78,7 +82,32 @@ export const HelperContactTypeButton = styled(Pressable)<{ selected: boolean }>`
   border-radius: 13px;
   background-color: ${({ selected, theme }) =>
     selected ? theme.color.accentSoft : theme.color.card};
-  padding-horizontal: 12px;
+  padding-horizontal: 10px;
+`;
+
+export const HelperContactTypeIconText = styled(AppText)`
+  font-size: 16px;
+  font-weight: 800;
+  color: ${({ theme }) => theme.color.accent};
+`;
+
+export const HelperContactTypeCaretText = styled(AppText)`
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: ${({ theme }) => theme.color.muted};
+`;
+
+export const HelperContactTypeMenu = styled(View)`
+  flex-direction: row;
+  gap: 8px;
+  padding-left: 2px;
+`;
+
+export const HelperContactInput = styled(HelperFormInput)`
+  margin-top: 0;
+  min-width: 0;
+  flex: 1;
 `;
 
 export const HelperContactActionRow = styled(View)`

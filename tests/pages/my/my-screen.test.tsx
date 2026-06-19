@@ -79,6 +79,7 @@ beforeEach(async () => {
 test('renders the calm my page with trigger-state and identity sections', () => {
   render(<MyScreen />);
 
+  expect(screen.getByTestId('my-screen-scroll')).toBeTruthy();
   expect(screen.getByText(zhCN['my.title'])).toBeTruthy();
   expect(screen.getByText(zhCN['my.triggerStateTitle'])).toBeTruthy();
   expect(screen.getByText(zhCN['my.helpersTitle'])).toBeTruthy();

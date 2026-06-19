@@ -2,6 +2,7 @@
  * 本地协助人列表：由 route 注入本地数据和动作回调，页面不直接读取存储。
  */
 import { memo, useMemo, useState } from 'react';
+import { ScrollView, useWindowDimensions } from 'react-native';
 
 import {
   AppCard,
@@ -14,8 +15,6 @@ import { useI18n } from '../../i18n';
 import { CardTitleText, ScreenTitleText } from '../../theme';
 
 import {
-  HelperActionButton,
-  HelperActionRow,
   HelperCardTextCol,
   HelperGroupCountText,
   HelperGroupHeader,
@@ -23,6 +22,11 @@ import {
   HelperGroupItems,
   HelperGroupStack,
   HelperNoticeText,
+  HelperSwipeActionButton,
+  HelperSwipeActionRail,
+  HelperSwipeActionText,
+  HelperSwipeCardSlot,
+  HelperSwipeContent,
   HelpersListStack,
   HelpersTitleRow
 } from './helpers.styled';
@@ -73,9 +77,11 @@ export const HelpersScreen = memo<IHelpersScreenProps>(
     copy
   } = {}) => {
     const { getMessage } = useI18n();
+    const { width } = useWindowDimensions();
     const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(
       () => new Set()
     );
+    const helperCardWidth = Math.max(width - 36, 280);
     const ungroupedRelationship =
       copy?.ungroupedRelationship ||
       getMessage('helpers.ungroupedRelationship');
@@ -194,48 +200,68 @@ export const HelpersScreen = memo<IHelpersScreenProps>(
                         normalizeDisplayContactMethods(helper);
 
                       return (
-                        <AppCard key={helper.id}>
-                          <HelperCardTextCol>
-                            <CardTitleText>{helper.displayName}</CardTitleText>
-                            {contactMethods.map((method, index) => (
-                              <AppText
-                                className="mt-[7px] text-caption text-muted"
-                                key={`${method.type}-${method.value}-${index}`}
-                              >
-                                {renderContactMethod(method)}
-                              </AppText>
-                            ))}
-                            {helper.notes ? (
-                              <AppText className="mt-[7px] text-caption text-muted">
-                                {helper.notes}
-                              </AppText>
-                            ) : null}
-                            <HelperNoticeText>
-                              {copy?.localOnlyNotice ||
-                                getMessage('helpers.localOnlyNotice')}
-                            </HelperNoticeText>
-                            <HelperActionRow>
-                              <HelperActionButton
+                        <ScrollView
+                          horizontal
+                          key={helper.id}
+                          bounces={false}
+                          showsHorizontalScrollIndicator={false}
+                          testID={`helper-swipe-row-${helper.id}`}
+                        >
+                          <HelperSwipeContent>
+                            <HelperSwipeCardSlot
+                              style={{ width: helperCardWidth }}
+                            >
+                              <AppCard>
+                                <HelperCardTextCol>
+                                  <CardTitleText>
+                                    {helper.displayName}
+                                  </CardTitleText>
+                                  {contactMethods.map((method, index) => (
+                                    <AppText
+                                      className="mt-[7px] text-caption text-muted"
+                                      key={`${method.type}-${method.value}-${index}`}
+                                    >
+                                      {renderContactMethod(method)}
+                                    </AppText>
+                                  ))}
+                                  {helper.notes ? (
+                                    <AppText className="mt-[7px] text-caption text-muted">
+                                      {helper.notes}
+                                    </AppText>
+                                  ) : null}
+                                  <HelperNoticeText>
+                                    {copy?.localOnlyNotice ||
+                                      getMessage('helpers.localOnlyNotice')}
+                                  </HelperNoticeText>
+                                </HelperCardTextCol>
+                              </AppCard>
+                            </HelperSwipeCardSlot>
+                            <HelperSwipeActionRail>
+                              <HelperSwipeActionButton
                                 accessibilityRole="button"
                                 onPress={() => onEditHelper?.(helper.id)}
                               >
-                                <AppText className="text-caption text-accent">
+                                <HelperSwipeActionText numberOfLines={1}>
                                   {copy?.editAction ||
                                     getMessage('helpers.editAction')}
-                                </AppText>
-                              </HelperActionButton>
-                              <HelperActionButton
+                                </HelperSwipeActionText>
+                              </HelperSwipeActionButton>
+                              <HelperSwipeActionButton
+                                $tone="danger"
                                 accessibilityRole="button"
                                 onPress={() => onArchiveHelper?.(helper.id)}
                               >
-                                <AppText className="text-caption text-muted">
+                                <HelperSwipeActionText
+                                  $tone="danger"
+                                  numberOfLines={1}
+                                >
                                   {copy?.archiveAction ||
                                     getMessage('helpers.archiveAction')}
-                                </AppText>
-                              </HelperActionButton>
-                            </HelperActionRow>
-                          </HelperCardTextCol>
-                        </AppCard>
+                                </HelperSwipeActionText>
+                              </HelperSwipeActionButton>
+                            </HelperSwipeActionRail>
+                          </HelperSwipeContent>
+                        </ScrollView>
                       );
                     })}
                   </HelperGroupItems>

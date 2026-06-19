@@ -18,10 +18,14 @@ import {
   HelperChoiceToggle,
   HelperContactActionButton,
   HelperContactActionRow,
+  HelperContactInput,
+  HelperContactMethodItem,
   HelperContactMethodBlock,
   HelperContactMethodRow,
   HelperContactTypeButton,
-  HelperContactTypeRow,
+  HelperContactTypeCaretText,
+  HelperContactTypeIconText,
+  HelperContactTypeMenu,
   HelperFormFieldCard,
   HelperFormInput,
   HelperNotesInput,
@@ -81,6 +85,14 @@ const defaultContactMethodTypes: IHelperContactTypeOption[] = [
   { type: 'phone', label: '电话' },
   { type: 'email', label: '邮箱' }
 ];
+
+const getContactTypeIcon = (type: string): string => {
+  if (type === 'email') {
+    return '@';
+  }
+
+  return '☎';
+};
 
 const splitLegacyContactMethod = (value: string): IHelperFormContactMethod => {
   const normalizedValue = value.trim();
@@ -169,6 +181,9 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
     const [contactMethods, setContactMethods] = useState(
       createInitialContactMethods(initialValues)
     );
+    const [openContactTypeIndex, setOpenContactTypeIndex] = useState<
+      number | null
+    >(null);
     const [notes, setNotes] = useState(initialValues?.notes ?? '');
     const [error, setError] = useState<'displayName' | 'contactMethod' | null>(
       null
@@ -183,6 +198,7 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
       setRelationship(initialValues?.relationship ?? '');
       setRelationshipOptionsVisible(false);
       setContactMethods(createInitialContactMethods(initialValues));
+      setOpenContactTypeIndex(null);
       setNotes(initialValues?.notes ?? '');
       setError(null);
     }, [
@@ -209,6 +225,7 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
         ...currentMethods,
         { type: 'phone', value: '' }
       ]);
+      setOpenContactTypeIndex(null);
     };
 
     const removeContactMethod = (index: number) => {
@@ -217,6 +234,7 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
           ? currentMethods
           : currentMethods.filter((_, currentIndex) => currentIndex !== index)
       );
+      setOpenContactTypeIndex(null);
     };
 
     const handleSubmit = () => {
@@ -334,41 +352,70 @@ export const HelperFormScreen = memo<IHelperFormScreenProps>(
           </MetaMutedText>
           <HelperContactMethodBlock>
             {contactMethods.map((method, index) => (
-              <HelperContactMethodRow key={`${index}-${method.type}`}>
-                <HelperContactTypeRow>
-                  {contactMethodTypes.map(typeOption => (
-                    <HelperContactTypeButton
-                      accessibilityRole="button"
-                      key={typeOption.type}
-                      selected={method.type === typeOption.type}
-                      onPress={() =>
-                        updateContactMethod(index, { type: typeOption.type })
-                      }
-                    >
-                      <MetaMutedText>{typeOption.label}</MetaMutedText>
-                    </HelperContactTypeButton>
-                  ))}
-                </HelperContactTypeRow>
-                <HelperFormInput
-                  placeholder={
-                    copy?.contactMethodPlaceholder ||
-                    getMessage('helpers.contactMethodPlaceholder')
-                  }
-                  value={method.value}
-                  onChangeText={value => updateContactMethod(index, { value })}
-                />
-                {contactMethods.length > 1 ? (
-                  <HelperContactActionButton
+              <HelperContactMethodItem key={`${index}-${method.type}`}>
+                <HelperContactMethodRow>
+                  <HelperContactTypeButton
                     accessibilityRole="button"
-                    onPress={() => removeContactMethod(index)}
+                    accessibilityLabel={
+                      contactMethodTypes.find(
+                        typeOption => typeOption.type === method.type
+                      )?.label || method.type
+                    }
+                    selected
+                    onPress={() =>
+                      setOpenContactTypeIndex(currentIndex =>
+                        currentIndex === index ? null : index
+                      )
+                    }
                   >
-                    <MetaMutedText>
-                      {copy?.removeContactMethodAction ||
-                        getMessage('helpers.removeContactMethodAction')}
-                    </MetaMutedText>
-                  </HelperContactActionButton>
+                    <HelperContactTypeIconText>
+                      {getContactTypeIcon(method.type)}
+                    </HelperContactTypeIconText>
+                    <HelperContactTypeCaretText>⌄</HelperContactTypeCaretText>
+                  </HelperContactTypeButton>
+                  <HelperContactInput
+                    placeholder={
+                      copy?.contactMethodPlaceholder ||
+                      getMessage('helpers.contactMethodPlaceholder')
+                    }
+                    value={method.value}
+                    onChangeText={value =>
+                      updateContactMethod(index, { value })
+                    }
+                  />
+                  {contactMethods.length > 1 ? (
+                    <HelperContactActionButton
+                      accessibilityRole="button"
+                      onPress={() => removeContactMethod(index)}
+                    >
+                      <MetaMutedText>
+                        {copy?.removeContactMethodAction ||
+                          getMessage('helpers.removeContactMethodAction')}
+                      </MetaMutedText>
+                    </HelperContactActionButton>
+                  ) : null}
+                </HelperContactMethodRow>
+                {openContactTypeIndex === index ? (
+                  <HelperContactTypeMenu>
+                    {contactMethodTypes.map(typeOption => (
+                      <HelperContactTypeButton
+                        accessibilityRole="button"
+                        accessibilityLabel={typeOption.label}
+                        key={typeOption.type}
+                        selected={method.type === typeOption.type}
+                        onPress={() => {
+                          updateContactMethod(index, {
+                            type: typeOption.type
+                          });
+                          setOpenContactTypeIndex(null);
+                        }}
+                      >
+                        <MetaMutedText>{typeOption.label}</MetaMutedText>
+                      </HelperContactTypeButton>
+                    ))}
+                  </HelperContactTypeMenu>
                 ) : null}
-              </HelperContactMethodRow>
+              </HelperContactMethodItem>
             ))}
           </HelperContactMethodBlock>
           <HelperContactActionRow>

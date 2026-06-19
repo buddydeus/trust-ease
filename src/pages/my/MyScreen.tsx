@@ -24,6 +24,7 @@ import {
   BackupPreviewValue,
   BackupStatusText,
   MyScreenCardStack,
+  MyScreenScroll,
   StatusHighlightCard,
   StatusValueLine
 } from './my.styled';
@@ -73,209 +74,214 @@ export const MyScreen = memo<IMyScreenProps>(
     };
 
     return (
-      <AppScreen>
-        <ScreenTitleText>
-          {copy?.title || getMessage('my.title')}
-        </ScreenTitleText>
-        <StatusHighlightCard>
-          <CaptionMutedText>
-            {copy?.statusLabel || getMessage('my.statusLabel')}
-          </CaptionMutedText>
-          <StatusValueLine>
-            {copy?.statusValue || getMessage('my.statusValue')}
-          </StatusValueLine>
-        </StatusHighlightCard>
-        <MyScreenCardStack>
-          <SettingsCard
-            accessibilityLabel={
-              copy?.openTriggerState || getMessage('my.openTriggerState')
-            }
-            title={
-              copy?.triggerStateTitle || getMessage('my.triggerStateTitle')
-            }
-            summary={
-              copy?.triggerStateSummary || getMessage('my.triggerStateSummary')
-            }
-            onPress={onOpenTriggerState}
-          />
-          <SettingsCard
-            accessibilityLabel={
-              copy?.openHelpers || getMessage('my.openHelpers')
-            }
-            title={copy?.helpersTitle || getMessage('my.helpersTitle')}
-            summary={copy?.helpersSummary || getMessage('my.helpersSummary')}
-            onPress={onOpenHelpers}
-          />
-          <SettingsCard
-            title={copy?.identityTitle || getMessage('my.identityTitle')}
-            summary={copy?.identitySummary || getMessage('my.identitySummary')}
-          />
-          <AppCard>
-            <CardTitleText>
-              {copy?.backupTitle || getMessage('my.backupTitle')}
-            </CardTitleText>
-            <MetaMutedText marginTop={8}>
-              {copy?.backupSummary || getMessage('my.backupSummary')}
-            </MetaMutedText>
-            <BackupNoticeText>
-              {copy?.backupLocalOnlyNotice ||
-                getMessage('my.backupLocalOnlyNotice')}
-            </BackupNoticeText>
-            <BackupNoticeText>
-              {copy?.backupSensitiveNotice ||
-                getMessage('my.backupSensitiveNotice')}
-            </BackupNoticeText>
-            {backupStatusMessage ? (
-              <BackupStatusText>{backupStatusMessage}</BackupStatusText>
-            ) : null}
-            {backupErrorMessage ? (
-              <BackupStatusText $tone="error">
-                {backupErrorMessage}
-              </BackupStatusText>
-            ) : null}
-            <BackupActionRow>
-              <BackupActionButton
-                accessibilityLabel={
-                  copy?.backupExportAction ||
-                  getMessage('my.backupExportAction')
-                }
-                accessibilityRole="button"
-                onPress={onExportBackup}
-              >
-                <BackupActionLabel>
-                  {copy?.backupExportAction ||
-                    getMessage('my.backupExportAction')}
-                </BackupActionLabel>
-              </BackupActionButton>
-              <BackupActionButton
-                $variant="secondary"
-                accessibilityLabel={
-                  copy?.backupImportAction ||
-                  getMessage('my.backupImportAction')
-                }
-                accessibilityRole="button"
-                onPress={onImportBackup}
-              >
-                <BackupActionLabel $variant="secondary">
-                  {copy?.backupImportAction ||
-                    getMessage('my.backupImportAction')}
-                </BackupActionLabel>
-              </BackupActionButton>
-            </BackupActionRow>
-            {backupPreview ? (
-              <BackupPreviewBlock>
-                <CardTitleText>
-                  {copy?.backupPreviewTitle ||
-                    getMessage('my.backupPreviewTitle')}
-                </CardTitleText>
-                <BackupPreviewRow>
-                  <BackupPreviewLabel>
-                    {copy?.backupPreviewExportedAt ||
-                      getMessage('my.backupPreviewExportedAt')}
-                  </BackupPreviewLabel>
-                  <BackupPreviewValue>
-                    {backupPreview.exportedAt}
-                  </BackupPreviewValue>
-                </BackupPreviewRow>
-                <BackupPreviewRow>
-                  <BackupPreviewLabel>
-                    {copy?.backupPreviewItems ||
-                      getMessage('my.backupPreviewItems')}
-                  </BackupPreviewLabel>
-                  <BackupPreviewValue>
-                    {backupPreview.activeItemCount} /{' '}
-                    {backupPreview.archivedItemCount}
-                  </BackupPreviewValue>
-                </BackupPreviewRow>
-                <BackupPreviewRow>
-                  <BackupPreviewLabel>
-                    {copy?.backupPreviewHelpers ||
-                      getMessage('my.backupPreviewHelpers')}
-                  </BackupPreviewLabel>
-                  <BackupPreviewValue>
-                    {backupPreview.activeHelperCount} /{' '}
-                    {backupPreview.archivedHelperCount}
-                  </BackupPreviewValue>
-                </BackupPreviewRow>
-                <BackupNoticeText>
-                  {backupPreview.missingStateEnabled
-                    ? copy?.backupPreviewTriggerOn ||
-                      getMessage('my.backupPreviewTriggerOn')
-                    : copy?.backupPreviewTriggerOff ||
-                      getMessage('my.backupPreviewTriggerOff')}
-                </BackupNoticeText>
-                <BackupNoticeText>
-                  {backupPreview.simulationEnabled
-                    ? copy?.backupPreviewSimulationOn ||
-                      getMessage('my.backupPreviewSimulationOn')
-                    : copy?.backupPreviewSimulationOff ||
-                      getMessage('my.backupPreviewSimulationOff')}
-                </BackupNoticeText>
+      <AppScreen style={{ paddingBottom: 0 }}>
+        <MyScreenScroll testID="my-screen-scroll">
+          <ScreenTitleText>
+            {copy?.title || getMessage('my.title')}
+          </ScreenTitleText>
+          <StatusHighlightCard>
+            <CaptionMutedText>
+              {copy?.statusLabel || getMessage('my.statusLabel')}
+            </CaptionMutedText>
+            <StatusValueLine>
+              {copy?.statusValue || getMessage('my.statusValue')}
+            </StatusValueLine>
+          </StatusHighlightCard>
+          <MyScreenCardStack>
+            <SettingsCard
+              accessibilityLabel={
+                copy?.openTriggerState || getMessage('my.openTriggerState')
+              }
+              title={
+                copy?.triggerStateTitle || getMessage('my.triggerStateTitle')
+              }
+              summary={
+                copy?.triggerStateSummary ||
+                getMessage('my.triggerStateSummary')
+              }
+              onPress={onOpenTriggerState}
+            />
+            <SettingsCard
+              accessibilityLabel={
+                copy?.openHelpers || getMessage('my.openHelpers')
+              }
+              title={copy?.helpersTitle || getMessage('my.helpersTitle')}
+              summary={copy?.helpersSummary || getMessage('my.helpersSummary')}
+              onPress={onOpenHelpers}
+            />
+            <SettingsCard
+              title={copy?.identityTitle || getMessage('my.identityTitle')}
+              summary={
+                copy?.identitySummary || getMessage('my.identitySummary')
+              }
+            />
+            <AppCard>
+              <CardTitleText>
+                {copy?.backupTitle || getMessage('my.backupTitle')}
+              </CardTitleText>
+              <MetaMutedText marginTop={8}>
+                {copy?.backupSummary || getMessage('my.backupSummary')}
+              </MetaMutedText>
+              <BackupNoticeText>
+                {copy?.backupLocalOnlyNotice ||
+                  getMessage('my.backupLocalOnlyNotice')}
+              </BackupNoticeText>
+              <BackupNoticeText>
+                {copy?.backupSensitiveNotice ||
+                  getMessage('my.backupSensitiveNotice')}
+              </BackupNoticeText>
+              {backupStatusMessage ? (
+                <BackupStatusText>{backupStatusMessage}</BackupStatusText>
+              ) : null}
+              {backupErrorMessage ? (
                 <BackupStatusText $tone="error">
-                  {copy?.backupReplaceWarning ||
-                    getMessage('my.backupReplaceWarning')}
+                  {backupErrorMessage}
                 </BackupStatusText>
-                <BackupActionRow>
-                  <BackupActionButton
-                    accessibilityLabel={
-                      copy?.backupConfirmImport ||
-                      getMessage('my.backupConfirmImport')
-                    }
-                    accessibilityRole="button"
-                    onPress={onConfirmBackupImport}
-                  >
-                    <BackupActionLabel>
-                      {copy?.backupConfirmImport ||
-                        getMessage('my.backupConfirmImport')}
-                    </BackupActionLabel>
-                  </BackupActionButton>
-                  <BackupActionButton
-                    $variant="secondary"
-                    accessibilityLabel={
-                      copy?.backupCancelImport ||
-                      getMessage('my.backupCancelImport')
-                    }
-                    accessibilityRole="button"
-                    onPress={onCancelBackupImport}
-                  >
-                    <BackupActionLabel $variant="secondary">
-                      {copy?.backupCancelImport ||
-                        getMessage('my.backupCancelImport')}
-                    </BackupActionLabel>
-                  </BackupActionButton>
-                </BackupActionRow>
-              </BackupPreviewBlock>
-            ) : null}
-          </AppCard>
-          <AppCard>
-            <LanguagePicker
-              copy={copy}
-              isOpen={isLanguagePickerOpen}
-              onToggle={() => setIsLanguagePickerOpen(value => !value)}
-              onClose={() => setIsLanguagePickerOpen(false)}
-              onUseSystemLocale={onUseSystemLocale}
-              onSetManualLocale={onSetManualLocale}
-            />
-          </AppCard>
-          <AppCard>
-            <SkinRuntimeStatus
-              copy={copy}
-              skinOptions={skinOptions}
-              status={resolvedSkinRuntimeStatus}
-            />
-          </AppCard>
-          <AppCard>
-            <SkinPicker
-              copy={copy}
-              skinOptions={skinOptions}
-              activeSkinId={activeSkinId}
-              isOpen={isSkinPickerOpen}
-              onToggle={() => setIsSkinPickerOpen(value => !value)}
-              onClose={() => setIsSkinPickerOpen(false)}
-              onSetActiveSkin={onSetActiveSkin}
-            />
-          </AppCard>
-        </MyScreenCardStack>
+              ) : null}
+              <BackupActionRow>
+                <BackupActionButton
+                  accessibilityLabel={
+                    copy?.backupExportAction ||
+                    getMessage('my.backupExportAction')
+                  }
+                  accessibilityRole="button"
+                  onPress={onExportBackup}
+                >
+                  <BackupActionLabel>
+                    {copy?.backupExportAction ||
+                      getMessage('my.backupExportAction')}
+                  </BackupActionLabel>
+                </BackupActionButton>
+                <BackupActionButton
+                  $variant="secondary"
+                  accessibilityLabel={
+                    copy?.backupImportAction ||
+                    getMessage('my.backupImportAction')
+                  }
+                  accessibilityRole="button"
+                  onPress={onImportBackup}
+                >
+                  <BackupActionLabel $variant="secondary">
+                    {copy?.backupImportAction ||
+                      getMessage('my.backupImportAction')}
+                  </BackupActionLabel>
+                </BackupActionButton>
+              </BackupActionRow>
+              {backupPreview ? (
+                <BackupPreviewBlock>
+                  <CardTitleText>
+                    {copy?.backupPreviewTitle ||
+                      getMessage('my.backupPreviewTitle')}
+                  </CardTitleText>
+                  <BackupPreviewRow>
+                    <BackupPreviewLabel>
+                      {copy?.backupPreviewExportedAt ||
+                        getMessage('my.backupPreviewExportedAt')}
+                    </BackupPreviewLabel>
+                    <BackupPreviewValue>
+                      {backupPreview.exportedAt}
+                    </BackupPreviewValue>
+                  </BackupPreviewRow>
+                  <BackupPreviewRow>
+                    <BackupPreviewLabel>
+                      {copy?.backupPreviewItems ||
+                        getMessage('my.backupPreviewItems')}
+                    </BackupPreviewLabel>
+                    <BackupPreviewValue>
+                      {backupPreview.activeItemCount} /{' '}
+                      {backupPreview.archivedItemCount}
+                    </BackupPreviewValue>
+                  </BackupPreviewRow>
+                  <BackupPreviewRow>
+                    <BackupPreviewLabel>
+                      {copy?.backupPreviewHelpers ||
+                        getMessage('my.backupPreviewHelpers')}
+                    </BackupPreviewLabel>
+                    <BackupPreviewValue>
+                      {backupPreview.activeHelperCount} /{' '}
+                      {backupPreview.archivedHelperCount}
+                    </BackupPreviewValue>
+                  </BackupPreviewRow>
+                  <BackupNoticeText>
+                    {backupPreview.missingStateEnabled
+                      ? copy?.backupPreviewTriggerOn ||
+                        getMessage('my.backupPreviewTriggerOn')
+                      : copy?.backupPreviewTriggerOff ||
+                        getMessage('my.backupPreviewTriggerOff')}
+                  </BackupNoticeText>
+                  <BackupNoticeText>
+                    {backupPreview.simulationEnabled
+                      ? copy?.backupPreviewSimulationOn ||
+                        getMessage('my.backupPreviewSimulationOn')
+                      : copy?.backupPreviewSimulationOff ||
+                        getMessage('my.backupPreviewSimulationOff')}
+                  </BackupNoticeText>
+                  <BackupStatusText $tone="error">
+                    {copy?.backupReplaceWarning ||
+                      getMessage('my.backupReplaceWarning')}
+                  </BackupStatusText>
+                  <BackupActionRow>
+                    <BackupActionButton
+                      accessibilityLabel={
+                        copy?.backupConfirmImport ||
+                        getMessage('my.backupConfirmImport')
+                      }
+                      accessibilityRole="button"
+                      onPress={onConfirmBackupImport}
+                    >
+                      <BackupActionLabel>
+                        {copy?.backupConfirmImport ||
+                          getMessage('my.backupConfirmImport')}
+                      </BackupActionLabel>
+                    </BackupActionButton>
+                    <BackupActionButton
+                      $variant="secondary"
+                      accessibilityLabel={
+                        copy?.backupCancelImport ||
+                        getMessage('my.backupCancelImport')
+                      }
+                      accessibilityRole="button"
+                      onPress={onCancelBackupImport}
+                    >
+                      <BackupActionLabel $variant="secondary">
+                        {copy?.backupCancelImport ||
+                          getMessage('my.backupCancelImport')}
+                      </BackupActionLabel>
+                    </BackupActionButton>
+                  </BackupActionRow>
+                </BackupPreviewBlock>
+              ) : null}
+            </AppCard>
+            <AppCard>
+              <LanguagePicker
+                copy={copy}
+                isOpen={isLanguagePickerOpen}
+                onToggle={() => setIsLanguagePickerOpen(value => !value)}
+                onClose={() => setIsLanguagePickerOpen(false)}
+                onUseSystemLocale={onUseSystemLocale}
+                onSetManualLocale={onSetManualLocale}
+              />
+            </AppCard>
+            <AppCard>
+              <SkinRuntimeStatus
+                copy={copy}
+                skinOptions={skinOptions}
+                status={resolvedSkinRuntimeStatus}
+              />
+            </AppCard>
+            <AppCard>
+              <SkinPicker
+                copy={copy}
+                skinOptions={skinOptions}
+                activeSkinId={activeSkinId}
+                isOpen={isSkinPickerOpen}
+                onToggle={() => setIsSkinPickerOpen(value => !value)}
+                onClose={() => setIsSkinPickerOpen(false)}
+                onSetActiveSkin={onSetActiveSkin}
+              />
+            </AppCard>
+          </MyScreenCardStack>
+        </MyScreenScroll>
       </AppScreen>
     );
   }

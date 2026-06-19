@@ -35,7 +35,7 @@ const listCopy = {
   emptyBody: '先记录一个你信任的人，后续可以关联到重要事项。',
   localOnlyNotice: '这里只是本地记录，不会自动发送消息或产生法律授权。',
   editAction: '编辑',
-  archiveAction: '归档'
+  archiveAction: '删除'
 };
 
 const formCopy = {
@@ -103,7 +103,7 @@ test('helper list exposes a back action when provided', () => {
   expect(onBack).toHaveBeenCalledTimes(1);
 });
 
-test('renders active helpers and calls edit/archive callbacks', () => {
+test('renders active helpers and calls edit/delete callbacks from swipe actions', () => {
   const onEditHelper = jest.fn();
   const onArchiveHelper = jest.fn();
 
@@ -120,9 +120,10 @@ test('renders active helpers and calls edit/archive callbacks', () => {
   expect(screen.getByText('朋友')).toBeTruthy();
   expect(screen.getByText('电话: 13800000000')).toBeTruthy();
   expect(screen.getByText('周宁')).toBeTruthy();
+  expect(screen.getByTestId('helper-swipe-row-helper-1')).toBeTruthy();
 
   fireEvent.press(screen.getAllByText('编辑')[0]);
-  fireEvent.press(screen.getAllByText('归档')[0]);
+  fireEvent.press(screen.getAllByText('删除')[0]);
 
   expect(onEditHelper).toHaveBeenCalledWith('helper-1');
   expect(onArchiveHelper).toHaveBeenCalledWith('helper-1');
@@ -203,7 +204,8 @@ test('helper form supports default relationship choices and multiple contact met
     '13800000000'
   );
   fireEvent.press(screen.getByText('增加联系方式'));
-  fireEvent.press(screen.getAllByText('邮箱')[1]);
+  fireEvent.press(screen.getAllByRole('button', { name: '电话' })[1]);
+  fireEvent.press(screen.getByRole('button', { name: '邮箱' }));
   fireEvent.changeText(
     screen.getAllByPlaceholderText('电话、邮箱或其他方式')[1],
     'lin@example.com'
@@ -374,6 +376,7 @@ test('edit helper route preloads and updates an existing helper', async () => {
 
   render(<EditHelperRoute />);
 
+  expect(await screen.findByText('编辑联系人')).toBeTruthy();
   fireEvent.changeText(await screen.findByDisplayValue('旧姓名'), '新姓名');
   fireEvent.press(screen.getByRole('button', { name: '保存' }));
 
@@ -395,13 +398,13 @@ test('edit helper route preloads and updates an existing helper', async () => {
   expect(router.replace).toHaveBeenCalledWith('/helpers');
 });
 
-test('helpers route archives local helpers and removes them from active list', async () => {
+test('helpers route deletes local helpers from the active list', async () => {
   await saveTrustDataSnapshot({
     ...createDefaultTrustDataSnapshot(),
     helpers: [
       {
         id: 'helper-active',
-        displayName: '可归档协助人',
+        displayName: '可删除协助人',
         relationship: '朋友',
         contactMethod: 'phone:13800000000',
         notes: '优先联系',
@@ -414,8 +417,8 @@ test('helpers route archives local helpers and removes them from active list', a
 
   render(<HelpersRoute />);
 
-  expect(await screen.findByText('可归档协助人')).toBeTruthy();
-  fireEvent.press(screen.getByText('归档'));
+  expect(await screen.findByText('可删除协助人')).toBeTruthy();
+  fireEvent.press(screen.getByText('删除'));
 
   expect(await screen.findByText('还没有协助人')).toBeTruthy();
   const stored = await loadTrustDataSnapshot();
